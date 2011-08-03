@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" client="administrator" type="language" method="upgrade">      
+<name>Localisation_jxtendent_Finder_on_Ru</name>  
+<tag>ru-RU</tag>    
+<creationDate>June 2010</creationDate>      
+<author>savatop</author>      
+<copyright>GPL</copyright>      
+<authorEmail> savatop@gmail.com This e-mail address is being protected from spambots, you need JavaScript enabled to view it </authorEmail>      
+<authorUrl>www.savatop.ru</authorUrl>      
+<version>1.0</version>      
+<description>Русская локализация компонента Finder  - Лицевая панель.
+ Сайт разработчика - http://www.savatop.ru</description>      
+<files>                      
+<filename>ru-RU.com_finder.ini</filename>            
+<filename>ru-RU.mod_finder_status.ini</filename>            
+<filename>ru-RU.plg_finder_catalog_nodes.ini</filename>            
+<filename>ru-RU.plg_finder_comments_comments.ini</filename>            
+<filename>ru-RU.plg_finder_joomla_articles.ini</filename> 
+<filename>ru-RU.plg_finder_joomla_categories.ini</filename>    
+<filename>ru-RU.plg_finder_joomla_contacts.ini</filename>    
+<filename>ru-RU.plg_finder_joomla_sections.ini</filename>    
+<filename>ru-RU.plg_finder_joomla_weblinks.ini</filename>    
+<filename>ru-RU.plg_finder_labels_labels.ini</filename>    
+<filename>ru-RU.plg_finder_zine_authors.ini</filename>    
+<filename>ru-RU.plg_finder_zine_issues.ini</filename>    
+<filename>ru-RU.plg_finder_zine_publications.ini</filename>    
+<filename>ru-RU.plg_system_finder.ini</filename>                     
+</files>      
+</install>

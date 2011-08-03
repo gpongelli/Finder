@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: zine_publications.xml 1092 2010-11-17 22:35:06Z robs $ -->
+<install version="1.5" type="plugin" group="finder" method="upgrade">
+	<name>Finder - Magazine Publications</name>
+	<group>finder</group>
+	<version>2.0.1</version>
+	<creationDate>November 2010</creationDate>
+	<author>JXtended</author>
+	<authorEmail>info@jxtended.com</authorEmail>
+	<authorUrl>http://jxtended.com/</authorUrl>
+	<copyright>Copyright 2008 - 2010 JXtended, LLC. All rights reserved.</copyright>
+	<description>FINDER_ZINE_PUBLICATIONS_DESC</description>
+
+	<files>
+		<file plugin="zine_publications">zine_publications.php</file>
+	</files>
+	
+	<languages>
+		<language tag="en-GB">en-GB.plg_finder_zine_publications.ini</language>
+	</languages>
+	
+	<params />
+</install>

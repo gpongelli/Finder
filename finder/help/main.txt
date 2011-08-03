@@ -1,0 +1,32 @@
+FINDER(1)                     JXtended Finder                          FINDER(1)
+
+NAME
+       finder - JXtended Finder ancillary CLI script.
+
+SYNOPSIS
+       finder command [options]
+
+DESCRIPTION
+       JXtended Finder is a Joomla! native search engine that indexes the
+       content on your site so that it can be found using keyword relevance.
+       Finder also generates an taxonomy based on your site's content that can
+       be used to filter search results.  This script provides a command line 
+       interface for JXtended Finder so that utility methods can be run via cron
+       job or be invoked independent of the Internet.
+
+COMMANDS
+       help           Show this help screen.
+
+       index          Update the content index.
+
+OPTIONS
+       --rows={ROWS}  Run the method on a batch of rows the size of {ROWS} where
+                      {ROWS} is an integer.
+
+EXAMPLES
+       finder help
+            This command simply writes the help info to the standard out.
+
+       finder index
+       	    This command will regenerate the content index based on the content
+       	    present in your Joomla! installation.

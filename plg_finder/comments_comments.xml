@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<install version="1.5" type="plugin" group="finder" method="upgrade">
+	<name>Finder - Comments</name>
+	<group>finder</group>
+	<version>2.0.1</version>
+	<creationDate>November 2010</creationDate>
+	<author>JXtended</author>
+	<authorEmail>info@jxtended.com</authorEmail>
+	<authorUrl>http://jxtended.com/</authorUrl>
+	<copyright>Copyright 2008 - 2010 JXtended, LLC. All rights reserved.</copyright>
+	<description>FINDER_COMMENTS_COMMENTS_DESC</description>
+
+	<files>
+		<file plugin="comments_comments">comments_comments.php</file>
+	</files>
+	
+	<languages>
+		<language tag="en-GB">en-GB.plg_finder_comments_comments.ini</language>
+	</languages>
+	
+	<params />
+</install>

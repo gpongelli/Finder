@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id$ -->
+<install type="module" version="1.5.10" client="administrator">
+	<name>Finder Status</name>
+	<author>JXtended</author>
+	<copyright>Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.</copyright>
+	<creationDate>November 2010</creationDate>
+	<license>GNU General Public License</license>
+	<authorEmail>info@jxtended.com</authorEmail>
+	<authorUrl>http://jxtended.com/</authorUrl>
+	<version>2.0.1</version>
+	<description>MOD_FINDER_STATUS_DESC</description>
+
+	<files>
+		<folder>media</folder>
+		<file>index.html</file>
+		<file module="mod_finder_status">mod_finder_status.php</file>
+		<file>mod_finder_status.xml</file>
+	</files>
+</install>

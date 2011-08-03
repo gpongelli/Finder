@@ -1,0 +1,1 @@
+-- <?php /* $Id: upgradesql.1_1_1_beta2.mysql.utf8.php 981 2010-06-15 18:38:02Z robs $ */ defined('_JEXEC') or die ?>;

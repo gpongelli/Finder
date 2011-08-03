@@ -1,0 +1,57 @@
+<?php
+/**
+ * @version		$Id: default_result.php 992 2010-06-24 04:21:05Z robs $
+ * @package		JXtended.Finder
+ * @subpackage	com_finder
+ * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
+ * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @link		http://jxtended.com
+ */
+
+defined('_JEXEC') or die;
+
+// Get the mime type class.
+$mime = !empty($this->result->mime) ? 'mime-'.$this->result->mime : null;
+
+// Get the base url.
+$base = JURI::getInstance()->toString(array('scheme', 'host', 'port'));
+
+// Get the route with highlighting information.
+if (!empty($this->query->highlight) && empty($this->result->mime) && $this->params->get('highlight_content_search_terms', 1) && class_exists('plgSystemFinder', false)) {
+	$route = $this->result->route.'&qh='.base64_encode(serialize($this->query->highlight));
+} else {
+	$route = $this->result->route;
+}
+?>
+
+<h2 class="title <?php echo $mime; ?>">
+	<a href="<?php echo JRoute::_($route); ?>"><?php echo $this->result->title; ?></a>
+</h2>
+
+<?php
+// Show the start date if set.
+if (intval($this->result->start_date) && $this->params->get('show_date_filters', 0)):
+?>
+	<span class="start-date">
+		<?php echo JHtml::date($this->result->start_date, $this->params->get('date_format', '%A %d %B %Y')); ?>
+	</span>
+<?php
+endif;
+
+// Show the summary.
+if ($this->params->get('show_description', 1)):
+?>
+	<div class="description">
+		<?php echo JHtml::_('string.truncate', $this->result->description, $this->params->get('description_length', 255)); ?>
+	</div>
+<?php
+endif;
+
+// Show the URL.
+if ($this->params->get('show_url', 1)):
+?>
+	<p class="url">
+		<?php echo $base.JRoute::_($this->result->route); ?><?php echo ($this->result->size) ? ' - '.JHtml::_('string.size', $this->result->size) : null; ?>
+	</p>
+<?php
+endif;

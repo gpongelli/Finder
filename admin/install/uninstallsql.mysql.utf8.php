@@ -1,0 +1,27 @@
+-- <?php /* $Id: uninstallsql.mysql.utf8.php 1097 2010-11-17 22:42:05Z robs $ */ defined('_JEXEC') or die ?>;
+
+DROP TABLE IF EXISTS `#__jxfinder_filters`;
+DROP TABLE IF EXISTS `#__jxfinder_links`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms0`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms1`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms2`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms3`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms4`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms5`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms6`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms7`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms8`;
+DROP TABLE IF EXISTS `#__jxfinder_links_terms9`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termsa`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termsb`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termsc`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termsd`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termse`;
+DROP TABLE IF EXISTS `#__jxfinder_links_termsf`;
+DROP TABLE IF EXISTS `#__jxfinder_taxonomy`;
+DROP TABLE IF EXISTS `#__jxfinder_taxonomy_map`;
+DROP TABLE IF EXISTS `#__jxfinder_terms`;
+DROP TABLE IF EXISTS `#__jxfinder_terms_common`;
+DROP TABLE IF EXISTS `#__jxfinder_tokens`;
+DROP TABLE IF EXISTS `#__jxfinder_tokens_aggregate`;
+DROP TABLE IF EXISTS `#__jxfinder_types`;

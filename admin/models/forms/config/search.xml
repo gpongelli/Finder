@@ -1,0 +1,76 @@
+<config>
+	<params>
+		<param
+			name="show_description"
+			type="radio"
+			default="1"
+			label="FINDER_CONFIG_SHOW_DESCRIPTION_LABEL"
+			description="FINDER_CONFIG_SHOW_DESCRIPTION_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+		<param
+			name="description_length"
+			type="text"
+			size="5"
+			default="255"
+			label="FINDER_CONFIG_DESCRIPTION_LENGTH_LABEL"
+			description="FINDER_CONFIG_DESCRIPTION_LENGTH_DESC" />
+		<param
+			name="show_url"
+			type="radio"
+			default="1"
+			label="FINDER_CONFIG_SHOW_URL"
+			description="FINDER_CONFIG_SHOW_URL_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+		<params type="spacer" />
+		<param
+			name="show_advanced"
+			type="radio"
+			default="1"
+			label="FINDER_CONFIG_SHOW_ADVANCED_LABEL"
+			description="FINDER_CONFIG_SHOW_ADVANCED_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+		<param
+			name="expand_advanced"
+			type="radio"
+			default="0"
+			label="FINDER_CONFIG_EXPAND_ADVANCED_LABEL"
+			description="FINDER_CONFIG_EXPAND_ADVANCED_DESC">
+			<option value="1">FINDER_PARAM_YES</option>
+			<option value="0">FINDER_PARAM_NO</option>
+		</param>
+		<param
+			name="show_date_filters"
+			type="radio"
+			default="0"
+			label="FINDER_CONFIG_SHOW_DATE_FILTERS"
+			description="FINDER_CONFIG_SHOW_DATE_FILTERS_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+		<params type="spacer" />
+		<param
+			name="show_labels"
+			type="radio"
+			default="1"
+			label="FINDER_CONFIG_SHOW_RESULT_LABELS_LABEL"
+			description="FINDER_CONFIG_SHOW_RESULT_LABELS_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+		<param
+			name="highlight_content_search_terms"
+			type="radio"
+			default="1"
+			label="FINDER_CONFIG_HILIGHT_CONTENT_SEARCH_TERMS_LABEL"
+			description="FINDER_CONFIG_HILIGHT_CONTENT_SEARCH_TERMS_DESC">
+			<option value="1">FINDER_PARAM_YES</option>
+			<option value="0">FINDER_PARAM_NO</option>
+		</param>
+	</params>
+</config>

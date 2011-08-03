@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id:mod_finder.xml 80 2008-04-24 19:57:50Z rob.schley $ -->
+<install
+	type="module"
+	version="1.5.0">
+	<name>Finder Search</name>
+	<author>JXtended</author>
+	<creationDate>November 2010</creationDate>
+	<copyright>Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.</copyright>
+	<license>GNU General Public License</license>
+	<authorEmail>info@jxtended.com</authorEmail>
+	<authorUrl>http://www.jxtended.com</authorUrl>
+	<version>2.0.1</version>
+	<description>This is a search module for Finder.</description>
+	<files>
+		<filename module="mod_finder">mod_finder.php</filename>
+		<filename>index.html</filename>
+
+		<folder>tmpl</folder>
+	</files>
+	<params addpath="/administrator/components/com_finder/models/elements">
+		<param
+			name="f"
+			type="searchfilter"
+			default=""
+			label="FINDER_MOD_FILTER_SEARCH_LABEL"
+			description="FINDER_MOD_FILTER_SEARCH_DESC" />
+		<param
+			name="show_autosuggest"
+			type="radio"
+			default=""
+			label="FINDER_CONFIG_SHOW_AUTOSUGGEST_LABEL"
+			description="FINDER_CONFIG_SHOW_AUTOSUGGEST_DESC">
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+			<option value="">FINDER_PARAM_USE_GLOBAL</option>
+		</param>
+		<param
+			name="show_advanced"
+			type="radio"
+			default=""
+			label="FINDER_CONFIG_SHOW_ADVANCED_LABEL"
+			description="FINDER_CONFIG_SHOW_ADVANCED_DESC">
+			<option value="2">FINDER_MOD_PARAM_LINKED</option>
+			<option value="1">FINDER_PARAM_SHOW</option>
+			<option value="0">FINDER_PARAM_HIDE</option>
+		</param>
+	</params>
+	<params group="advanced">
+		<param
+			name="moduleclass_sfx"
+			type="text"
+			default=""
+			label="Module Class Suffix"
+			description="PARAMMODULECLASSSUFFIX" />
+		<param type="spacer" />
+		<param
+			name="show_text"
+			type="radio"
+			default="1"
+			label="FINDER_MOD_SHOW_SEARCH_TEXT_LABEL"
+			description="FINDER_MOD_SHOW_SEARCH_TEXT_DESC">
+			<option value="1">FINDER_MOD_PARAM_SHOW</option>
+			<option value="0">FINDER_MOD_PARAM_HIDE</option>
+		</param>
+		<param
+			name="field_size"
+			type="text"
+			default="25"
+			label="FINDER_MOD_SEARCH_FIELD_SIZE_LABEL"
+			description="FINDER_MOD_SEARCH_FIELD_SIZE_DESC" />
+		<param
+			name="alt_label"
+			type="text"
+			label="FINDER_MOD_ALT_LABEL"
+			description="FINDER_MOD_ALT_LABEL_DESC" />
+		<param
+			name="show_label"
+			type="radio"
+			default="1"
+			label="FINDER_MOD_SHOW_SEARCH_LABEL_LABEL"
+			description="FINDER_MOD_SHOW_SEARCH_LABEL_DESC">
+			<option value="1">FINDER_MOD_PARAM_SHOW</option>
+			<option value="0">FINDER_MOD_PARAM_HIDE</option>
+		</param>
+		<param
+			name="label_pos"
+			type="list"
+			default="top"
+			label="FINDER_MOD_SEARCH_LABEL_POS_LABEL"
+			description="FINDER_MOD_SEARCH_LABEL_POS_DESC">
+			<option value="right">FINDER_MOD_PARAM_RIGHT</option>
+			<option value="left">FINDER_MOD_PARAM_LEFT</option>
+			<option value="top">FINDER_MOD_PARAM_TOP</option>
+			<option value="bottom">FINDER_MOD_PARAM_BOTTOM</option>
+		</param>
+		<param
+			name="show_button"
+			type="radio"
+			default="0"
+			label="FINDER_MOD_SHOW_SEARCH_BUTTON_LABEL"
+			description="FINDER_MOD_SHOW_SEARCH_BUTTON_DESC">
+			<option value="1">FINDER_MOD_PARAM_SHOW</option>
+			<option value="0">FINDER_MOD_PARAM_HIDE</option>
+		</param>
+		<param
+			name="button_pos"
+			type="list"
+			default="right"
+			label="FINDER_MOD_SEARCH_BUTTON_POS_LABEL"
+			description="FINDER_MOD_SEARCH_BUTTON_POS_DESC">
+			<option value="right">FINDER_MOD_PARAM_RIGHT</option>
+			<option value="left">FINDER_MOD_PARAM_LEFT</option>
+			<option value="top">FINDER_MOD_PARAM_TOP</option>
+			<option value="bottom">FINDER_MOD_PARAM_BOTTOM</option>
+		</param>
+	</params>
+</install>
