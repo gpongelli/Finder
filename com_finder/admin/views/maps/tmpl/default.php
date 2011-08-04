@@ -31,7 +31,9 @@ Joomla.submitbutton = function(pressbutton) {
 			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
 		<div class="filter-select fltrt">
-			<?php echo JHTML::_('finder.mapslist', $this->state->get('filter.branch')); ?>
+			<select name="filter_branch" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.mapslist'), 'value', 'text', $this->state->get('filter.branch'), true);?>
+			</select>
 			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
 				<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
 			</select>

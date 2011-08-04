@@ -72,17 +72,15 @@ class JHTMLFinder
 
 		// Compile the options.
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '1', JText::_('FINDER_MAPS_BRANCHES'));
+		$options[]	= JHTML::_('select.option', '1', JText::_('COM_FINDER_MAPS_BRANCHES'));
 
 		foreach ($rows as $row) {
-			$key		= $lang->hasKey('FINDER_TYPE_P_'.strtoupper($row->text)) ? 'FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
-			$string		= JText::sprintf('FINDER_ITEM_X_ONLY', JText::_($key));
+			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper($row->text)) ? 'COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
+			$string		= JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
 			$options[]	= JHTML::_('select.option', $row->value, $string);
 		}
 
-		$attributes = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
-
-		return JHTML::_('select.genericlist', $options, 'filter_branch', $attributes, 'value', 'text', $active);
+		return $options;
 	}
 
 	function statelist($active)
