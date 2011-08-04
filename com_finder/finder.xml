@@ -8,7 +8,7 @@
 	<authorEmail>info@jxtended.com</authorEmail>
 	<authorUrl>http://jxtended.com/</authorUrl>
 	<version>2.0.1</version>
-	<description>FINDER_DESC</description>
+	<description>COM_FINDER_XML_DESCRIPTION</description>
 	<menu link="option=com_finder">COM_FINDER</menu>
 	<files folder="site">
 		<filename>controller.php</filename>
@@ -55,10 +55,10 @@
 			<folder>tables</folder>
 			<folder>views</folder>
 		</files>
-		<!-- <languages folder="admin/language">
+		<languages folder="admin/language">
 			<language tag="en-GB">en-GB/en-GB.com_finder.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_finder.sys.ini</language>
-		</languages>  -->
+		</languages>
 		<menu img="../administrator/components/com_finder/media/images/icon-16-jx.png" link="option=com_finder">COM_FINDER</menu>
 	</administration>
 </extension>

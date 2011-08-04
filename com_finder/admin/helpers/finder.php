@@ -25,19 +25,19 @@ class FinderHelper
 	public static function addSubmenu($vName)
 	{
 		JSubMenuHelper::addEntry(
-			JText::_('FINDER_SUBMENU_INDEX'),
+			JText::_('COM_FINDER_SUBMENU_INDEX'),
 			'index.php?option=com_finder&view=index',
 			$vName == 'index');
 		JSubMenuHelper::addEntry(
-			JText::_('FINDER_SUBMENU_MAPS'),
+			JText::_('COM_FINDER_SUBMENU_MAPS'),
 			'index.php?option=com_finder&view=maps',
 			$vName == 'maps');
 		JSubMenuHelper::addEntry(
-			JText::_('FINDER_SUBMENU_FILTERS'),
+			JText::_('COM_FINDER_SUBMENU_FILTERS'),
 			'index.php?option=com_finder&view=filters',
 			$vName == 'filters');
 		JSubMenuHelper::addEntry(
-			JText::_('FINDER_SUBMENU_ADAPTERS'),
+			JText::_('COM_FINDER_SUBMENU_ADAPTERS'),
 			'index.php?option=com_finder&view=adapters',
 			$vName == 'adapters');
 	}

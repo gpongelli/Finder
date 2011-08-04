@@ -59,10 +59,10 @@ class FinderViewIndex extends JView
 	{
 		$canDo	= FinderHelper::getActions();
 
-		JToolBarHelper::title(JText::_('FINDER_INDEX_TOOLBAR_TITLE'), 'finder');
+		JToolBarHelper::title(JText::_('COM_FINDER_INDEX_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		$toolbar->appendButton('Popup', 'archive', 'FINDER_INDEX', 'index.php?option=com_finder&view=indexer&tmpl=component', 500, 210);
+		$toolbar->appendButton('Popup', 'archive', 'COM_FINDER_INDEX', 'index.php?option=com_finder&view=indexer&tmpl=component', 500, 210);
 		JToolBarHelper::divider();
 
 		if ($canDo->get('core.edit.state')) {
@@ -70,12 +70,12 @@ class FinderViewIndex extends JView
 			JToolBarHelper::unpublish('index.unpublish');
 			JToolBarHelper::divider();
 		}
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'index.delete', 'FINDER_INDEX_CONFIRM_DELETE_PROMPT');
+		if ($canDo->get('core.delete')) {
+			JToolBarHelper::deleteList('', 'index.delete', 'JTOOLBAR_DELETE');
 			JToolBarHelper::divider();
 		}
-		else if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::trash('index.purge', 'FINDER_INDEX_CONFIRM_PURGE_PROMPT');
+		if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::trash('index.purge', 'COM_FINDER_INDEX_TOOLBAR_PURGE');
 			JToolBarHelper::divider();
 		}
 

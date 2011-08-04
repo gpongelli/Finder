@@ -13,28 +13,49 @@ JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 $lang = &JFactory::getLanguage();
 ?>
 
-<form action="index.php?option=com_finder&amp;view=index" method="post" name="adminForm">
-	<div class="form-filter" style="float: left;">
-		<label for="filter_search"><?php echo JText::sprintf('FINDER_SEARCH_LABEL', JText::_('FINDER_ITEMS')); ?></label>
-		<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->state->get('filter.search'); ?>" class="text_area" onchange="document.adminForm.submit();" />
-		<button onclick="this.form.submit();"><?php echo JText::_('FINDER_SEARCH_GO'); ?></button>
-		<button onclick="document.getElementById('filter_search').value='';document.getElementById('filter_type').value='0';document.getElementById('filter_state').value='*';this.form.submit();"><?php echo JText::_('FINDER_SEARCH_RESET'); ?></button>
-	</div>
+<script type="text/javascript">
+Joomla.submitbutton = function(pressbutton) {
+	if (pressbutton == 'index.purge') {
+		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');?>)) {
+			Joomla.submitform(pressbutton);
+		}
+	}
+	if (pressbutton == 'index.delete') {
+		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');?>)) {
+			Joomla.submitform(pressbutton);
+		}
+	}
+}
+</script>
 
-	<div class="form-filter" style="float: right;">
-		<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('FINDER_ITEMS')); ?>
-		<?php echo JHTML::_('finder.typeslist', $this->state->get('filter.type')); ?>
-		<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
-	</div>
+<form action="<?php echo JRoute::_('index.php?option=com_finder&view=index');?>" method="post" name="adminForm" id="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-search fltlft">
+			<label class="filter-search-lbl" for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL', JText::_('COM_FINDER_ITEMS')); ?></label>
+			<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_FINDER_FILTER_SEARCH_DESCRIPTION'); ?>" />
+			<button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+		</div>
+		<div class="filter-select fltrt">
+			<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('COM_FINDER_ITEMS')); ?>
+			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHTML::_('finder.typeslist', $this->state->get('filter.type')); ?>
+			</select>
+			<select name="filter_feedname" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
+			</select>
+		</div>
+	</fieldset>
+	<div class="clr"> </div>
 
 	<table class="adminlist" style="clear: both;">
 		<thead>
 			<tr>
-				<th width="5">
-					<?php echo JText::_('NUM'); ?>
+				<th width="1%">
+					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 				</th>
 				<th width="5">
-					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo (count($this->data)+1); ?>);" />
+					<?php echo JText::_('NUM'); ?>
 				</th>
 				<th nowrap="nowrap">
 					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_LINK_TITLE', 'l.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
@@ -59,10 +80,10 @@ $lang = &JFactory::getLanguage();
 				<td align="center" colspan="7">
 					<?php
 					if ($this->total == 0) {
-						echo JText::_('FINDER_INDEX_NO_DATA');
-						echo JText::_('FINDER_INDEX_TIP');
+						echo JText::_('COM_FINDER_INDEX_NO_DATA');
+						echo JText::_('COM_FINDER_INDEX_TIP');
 					} else {
-						echo JText::_('FINDER_INDEX_NO_CONTENT');
+						echo JText::_('COM_FINDER_INDEX_NO_CONTENT');
 					}
 					?>
 				</td>
@@ -72,12 +93,12 @@ $lang = &JFactory::getLanguage();
 			<?php $n = 1 + $this->state->get('list.start'); $o = 0; ?>
 			<?php foreach ($this->data as $row): ?>
 
-			<tr class="<?php echo 'row', $o; ?>">
+			<tr class="row<?php echo $i % 2; ?>">
+				<td class="center" title="<?php echo (int) $row->link_id;?>">
+					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
+				</td>
 				<td>
 					<?php echo $n; ?>
-				</td>
-				<td align="center" title="<?php echo (int) $row->link_id;?>">
-					<?php echo JHTML::_('grid.id', $n, $row->link_id); ?>
 				</td>
 				<td>
 					<?php if (intval($row->publish_start_date) OR intval($row->publish_end_date) OR intval($row->start_date) OR intval($row->end_date)) : ?>
