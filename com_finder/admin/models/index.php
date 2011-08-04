@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: index.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -9,7 +8,6 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.model');
-jx('jx.database.databasequery');
 
 /**
  * Index model class for Finder.
@@ -18,12 +16,13 @@ jx('jx.database.databasequery');
  * @subpackage	com_finder
  * @version		1.0
  */
+// @TODO: Determine which JModel variant is best to extend and move forward
 class FinderModelIndex extends JModel
 {
 	/**
 	 * @var		boolean		Flag to indicate model state initialization.
 	 */
-	private $__state_set;
+	protected $__state_set;
 
 	/**
 	 * @var		array		Container for index information.
@@ -74,7 +73,7 @@ class FinderModelIndex extends JModel
 			$this->setState('list.direction', $application->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
 
 			// Load the check parameters.
-			if ($this->_state->get('filter.state') === '*') {
+			if ($this->state->get('filter.state') === '*') {
 				$this->setState('check.state', false);
 			} else {
 				$this->setState('check.state', true);
@@ -374,35 +373,36 @@ class FinderModelIndex extends JModel
 
 	protected function _getIndexQuery()
 	{
-		$sql = new JDatabaseQuery();
-		$sql->select('l.link_id, l.title, l.type_id, l.url, l.indexdate, l.state, l.published');
-		$sql->select('l.publish_start_date, l.publish_end_date, l.start_date, l.end_date');
-		$sql->select('t.title AS t_title');
-		$sql->from('#__jxfinder_links AS l');
-		$sql->join('INNER', '#__jxfinder_types AS t ON t.id = l.type_id');
+		$db		= JFactory::getDBO();
+		$query	= $db->getQuery(true);
+		$query->select('l.link_id, l.title, l.type_id, l.url, l.indexdate, l.state, l.published');
+		$query->select('l.publish_start_date, l.publish_end_date, l.start_date, l.end_date');
+		$query->select('t.title AS t_title');
+		$query->from('#__jxfinder_links AS l');
+		$query->join('INNER', '#__jxfinder_types AS t ON t.id = l.type_id');
 
 		// Check the type filter.
 		if ($this->getState('filter.type') !== 0) {
-			$sql->where('l.type_id = '.(int)$this->getState('filter.type'));
+			$query->where('l.type_id = '.(int)$this->getState('filter.type'));
 		}
 
 		// Check for state filter.
 		if ($this->getState('check.state')) {
-			$sql->where('l.published = '.(int)$this->getState('filter.state'));
+			$query->where('l.published = '.(int)$this->getState('filter.state'));
 		}
 
 		// Check the search phrase.
 		if ($this->getState('filter.search') != '')
 		{
 			$search = $this->_db->getEscaped($this->getState('filter.search'));
-			$sql->where('l.title LIKE "%'.$this->_db->getEscaped($search).'%"' .
+			$query->where('l.title LIKE "%'.$this->_db->getEscaped($search).'%"' .
 						' OR l.url LIKE "%'.$this->_db->getEscaped($search).'%"' .
 				 		' OR l.indexdate LIKE "%'.$this->_db->getEscaped($search).'%"');
 		}
 
-		$sql->order($this->_db->getEscaped($this->getState('list.ordering')).' '.$this->getState('list.direction'));
+		$query->order($this->_db->getEscaped($this->getState('list.ordering')).' '.$this->getState('list.direction'));
 
-		return $sql;
+		return $query;
 	}
 
 	protected function _getUrlQuery($cid)

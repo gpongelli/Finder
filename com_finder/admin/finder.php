@@ -10,6 +10,8 @@
 
 defined('_JEXEC') or die;
 
+jimport('joomla.application.component.controller');
+
 // Detect if we have full UTF-8 and unicode support.
 define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
 
@@ -21,21 +23,9 @@ if (!function_exists('jx'))
 {
 	// Import the setup helper class.
 	require_once(dirname(__FILE__).'/helpers/setup.php');
-
-	// Attempt to setup the libraries.
-	if (!JXtendedSetupHelper::setupLibraries()) {
-		return;
-	}
 }
-
-// Check to make sure dependencies are met.
-if (!FinderVersion::checkDependencies()) {
-	return;
-}
-
-jx('jx.application.component.helper.controller');
 
 // Execute the task.
-$controller	= JControllerHelper::getInstance('Finder');
+$controller	= JController::getInstance('Finder');
 $controller->execute(JRequest::getCmd('task'));
 $controller->redirect();

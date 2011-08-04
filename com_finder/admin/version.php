@@ -92,26 +92,6 @@ final class FinderVersion
 	private static $upgrades = array();
 
 	/**
-	 * Method to check for dependencies.
-	 *
-	 * @return	boolean	True if dependencies are met.
-	 * @since	2.0
-	 */
-	public static function checkDependencies()
-	{
-		if (self::LIBRARIES_MINIMUM)
-		{
-			if (!defined('JXVERSION') || !version_compare(JXVERSION, self::LIBRARIES_MINIMUM, '>='))
-			{
-				JError::raiseWarning(500, JText::sprintf('JX_Libraries_Outdated', self::LIBRARIES_MINIMUM));
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Method to get the build number from the source control revision string.
 	 *
 	 * @return	integer	The version build number.

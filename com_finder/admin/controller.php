@@ -22,6 +22,12 @@ jimport('joomla.application.component.controller');
 class FinderController extends JController
 {
 	/**
+	 * @var		string	The default view.
+	 * @since	1.6
+	 */
+	protected $default_view = 'index';
+
+	/**
 	 * Method to display a view.
 	 *
 	 * @return	void
@@ -29,6 +35,11 @@ class FinderController extends JController
 	 */
 	public function display()
 	{
+		require_once JPATH_COMPONENT.'/helpers/finder.php';
+
+		// Load the submenu.
+		FinderHelper::addSubmenu(JRequest::getWord('view', 'index'));
+
 		// Alert the user about any upgrades.
 		FinderVersion::showUpgrades();
 
@@ -39,13 +50,11 @@ class FinderController extends JController
 		$vName		= JRequest::getWord('view', 'index');
 		$vFormat	= $document->getType();
 		$lName		= JRequest::getWord('layout', 'default');
-		$vParams	= array('base_path' => $this->_basePath);
+		$vParams	= array('base_path' => $this->basePath);
 
 		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat))
-		{
-			switch ($vName)
-			{
+		if ($view = $this->getView($vName, $vFormat)) {
+			switch ($vName) {
 				default:
 					$model = $this->getModel($vName);
 					break;
@@ -66,15 +75,7 @@ class FinderController extends JController
 			$view->set('search', (bool)JRequest::getVar('q'));
 
 			$view->display();
+		} else {
 		}
-		else {
-			// Error condition.
-		}
-
-		// Setup the sub-menu.
-		JSubMenuHelper::addEntry(JText::_('FINDER_SUBMENU_INDEX'), 'index.php?option=com_finder&view=index', $vName == 'index');
-		JSubMenuHelper::addEntry(JText::_('FINDER_SUBMENU_MAPS'), 'index.php?option=com_finder&view=maps', $vName == 'maps');
-		JSubMenuHelper::addEntry(JText::_('FINDER_SUBMENU_FILTERS'), 'index.php?option=com_finder&view=filters', $vName == 'filters');
-		JSubMenuHelper::addEntry(JText::_('FINDER_SUBMENU_ADAPTERS'), 'index.php?option=com_finder&view=adapters', $vName == 'adapters');
 	}
 }
