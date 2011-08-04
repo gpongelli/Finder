@@ -28,12 +28,12 @@ $label	= '';
 
 if ($params->get('show_label', 1)) {
 	$label	= '<label for="'.$fldId.'" class="finder'.$suffix.'">'
-			. $params->get('alt_label', JText::_('FINDER_MOD_SEARCH_LABEL'))
+			. $params->get('alt_label', JText::_('JSEARCH_FILTER_SUBMIT'))
 			. '</label>';
 }
 
 if ($params->get('show_button', 1)) {
-	$button	= '<button class="button'.$suffix.' finder'.$suffix.'" type="submit">'.JText::_('FINDER_MOD_SEARCH_BUTTON').'</button>';
+	$button	= '<button class="button'.$suffix.' finder'.$suffix.'" type="submit">'.JText::_('MOD_FINDER_SEARCH_BUTTON').'</button>';
 }
 
 switch ($params->get('label_pos', 'left')):
@@ -89,7 +89,7 @@ JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
 
 		// Set the input value if not already set.
 		if (!$('<?php echo $fldId; ?>').getProperty('value')) {
-			$('<?php echo $fldId; ?>').setProperty('value', '<?php echo JText::_('FINDER_MOD_SEARCH_VALUE', true); ?>');
+			$('<?php echo $fldId; ?>').setProperty('value', '<?php echo JText::_('MOD_FINDER_SEARCH_VALUE', true); ?>');
 		}
 
 		// Get the current value.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="1.6" client="site" method="upgrade">
-	<name>Finder Search</name>
+	<name>mod_finder</name>
 	<author>JXtended</author>
 	<creationDate>November 2010</creationDate>
 	<copyright>Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.</copyright>
@@ -8,7 +8,7 @@
 	<authorEmail>info@jxtended.com</authorEmail>
 	<authorUrl>http://www.jxtended.com</authorUrl>
 	<version>2.0.1</version>
-	<description>This is a search module for Finder.</description>
+	<description>MOD_FINDER_XML_DESCRIPTION</description>
 	<files>
 		<folder>tmpl</folder>
 		<filename module="mod_finder">mod_finder.php</filename>
@@ -16,40 +16,44 @@
 		<filename>index.html</filename>
 		<filename>mod_finder.xml</filename>
 	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_finder.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_finder.sys.ini</language>
+	</languages>
 	<config>
 		<fields name="fields" addpath="/administrator/components/com_finder/models/elements">
 			<fieldset name="basic">
 				<field
-					name="f"
+					name="searchfilter"
 					type="searchfilter"
 					default=""
-					label="FINDER_MOD_FILTER_SEARCH_LABEL"
-					description="FINDER_MOD_FILTER_SEARCH_DESC" />
+					label="MOD_FINDER_FIELDSET_BASIC_SEARCHFILTER_LABEL"
+					description="MOD_FINDER_FIELDSET_BASIC_SEARCHFILTER_DESCRIPTION" />
 				<field
 					name="show_autosuggest"
-					type="radio"
+					type="list"
 					default=""
-					label="FINDER_CONFIG_SHOW_AUTOSUGGEST_LABEL"
-					description="FINDER_CONFIG_SHOW_AUTOSUGGEST_DESC">
+					label="MOD_FINDER_FIELDSET_BASIC_AUTOSUGGEST_LABEL"
+					description="MOD_FINDER_FIELDSET_BASIC_AUTOSUGGEST_DESCRIPTION">
 					<option
-						value="1">FINDER_PARAM_SHOW</option>
+						value="1">JSHOW</option>
 					<option
-						value="0">FINDER_PARAM_HIDE</option>
+						value="0">JHIDE</option>
 					<option
-						value="">FINDER_PARAM_USE_GLOBAL</option>
+						value="">JGLOBAL_USE_GLOBAL</option>
 				</field>
 				<field
 					name="show_advanced"
-					type="radio"
-					default=""
-					label="FINDER_CONFIG_SHOW_ADVANCED_LABEL"
-					description="FINDER_CONFIG_SHOW_ADVANCED_DESC">
+					type="list"
+					default="0"
+					label="MOD_FINDER_FIELDSET_BASIC_SHOW_ADVANCED_LABEL"
+					description="MOD_FINDER_FIELDSET_BASIC_SHOW_ADVANCED_DESCRIPTION">
 					<option
-						value="2">FINDER_MOD_PARAM_LINKED</option>
+						value="2">MOD_FINDER_FIELDSET_BASIC_SHOW_ADVANCED_OPTION_LINK</option>
 					<option
-						value="1">FINDER_PARAM_SHOW</option>
+						value="1">JSHOW</option>
 					<option
-						value="0">FINDER_PARAM_HIDE</option>
+						value="0">JHIDE</option>
 				</field>
 			</fieldset>
 			<fieldset group="advanced">
@@ -57,81 +61,82 @@
 					name="moduleclass_sfx"
 					type="text"
 					default=""
-					label="Module Class Suffix"
-					description="PARAMMODULECLASSSUFFIX" />
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
 				<field
 					name="show_text"
 					type="radio"
 					default="1"
-					label="FINDER_MOD_SHOW_SEARCH_TEXT_LABEL"
-					description="FINDER_MOD_SHOW_SEARCH_TEXT_DESC">
+					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_TEXT_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_TEXT_DESCRIPTION">
 					<option
-						value="1">FINDER_MOD_PARAM_SHOW</option>
+						value="1">JSHOW</option>
 					<option
-						value="0">FINDER_MOD_PARAM_HIDE</option>
+						value="0">JHIDE</option>
 				</field>
 				<field
 					name="field_size"
 					type="text"
 					default="25"
-					label="FINDER_MOD_SEARCH_FIELD_SIZE_LABEL"
-					description="FINDER_MOD_SEARCH_FIELD_SIZE_DESC" />
+					filter="integer"
+					label="MOD_FINDER_FIELDSET_ADVANCED_FIELD_SIZE_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_FIELD_SIZE_DESCRIPTION" />
 				<field
 					name="alt_label"
 					type="text"
-					label="FINDER_MOD_ALT_LABEL"
-					description="FINDER_MOD_ALT_LABEL_DESC" />
+					label="MOD_FINDER_FIELDSET_ADVANCED_ALT_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_ALT_DESCRIPTION" />
 				<field
 					name="show_label"
 					type="radio"
 					default="1"
-					label="FINDER_MOD_SHOW_SEARCH_LABEL_LABEL"
-					description="FINDER_MOD_SHOW_SEARCH_LABEL_DESC">
+					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_LABEL_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_LABEL_DESCRIPTION">
 					<option
-						value="1">FINDER_MOD_PARAM_SHOW</option>
+						value="1">JSHOW</option>
 					<option
-						value="0">FINDER_MOD_PARAM_HIDE</option>
+						value="0">JHIDE</option>
 				</field>
 				<field
 					name="label_pos"
 					type="list"
 					default="top"
-					label="FINDER_MOD_SEARCH_LABEL_POS_LABEL"
-					description="FINDER_MOD_SEARCH_LABEL_POS_DESC">
+					label="MOD_FINDER_FIELDSET_ADVANCED_LABEL_POS_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_LABEL_POS_DESCRIPTION">
 					<option
-						value="right">FINDER_MOD_PARAM_RIGHT</option>
+						value="right">JGLOBAL_RIGHT</option>
 					<option
-						value="left">FINDER_MOD_PARAM_LEFT</option>
+						value="left">JGLOBAL_LEFT</option>
 					<option
-						value="top">FINDER_MOD_PARAM_TOP</option>
+						value="top">MOD_FINDER_CONFIG_OPTION_TOP</option>
 					<option
-						value="bottom">FINDER_MOD_PARAM_BOTTOM</option>
+						value="bottom">MOD_FINDER_CONFIG_OPTION_BOTTOM</option>
 				</field>
 				<field
 					name="show_button"
 					type="radio"
 					default="0"
-					label="FINDER_MOD_SHOW_SEARCH_BUTTON_LABEL"
-					description="FINDER_MOD_SHOW_SEARCH_BUTTON_DESC">
+					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_BUTTON_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_BUTTON_DESCRIPTION">
 					<option
-						value="1">FINDER_MOD_PARAM_SHOW</option>
+						value="1">JSHOW</option>
 					<option
-						value="0">FINDER_MOD_PARAM_HIDE</option>
+						value="0">JHIDE</option>
 				</field>
 				<field
 					name="button_pos"
 					type="list"
 					default="right"
-					label="FINDER_MOD_SEARCH_BUTTON_POS_LABEL"
-					description="FINDER_MOD_SEARCH_BUTTON_POS_DESC">
+					label="MOD_FINDER_FIELDSET_ADVANCED_BUTTON_POS_LABEL"
+					description="MOD_FINDER_FIELDSET_ADVANCED_BUTTON_POS_DESCRIPTION">
 					<option
-						value="right">FINDER_MOD_PARAM_RIGHT</option>
+						value="right">JGLOBAL_RIGHT</option>
 					<option
-						value="left">FINDER_MOD_PARAM_LEFT</option>
+						value="left">JGLOBAL_LEFT</option>
 					<option
-						value="top">FINDER_MOD_PARAM_TOP</option>
+						value="top">MOD_FINDER_CONFIG_OPTION_TOP</option>
 					<option
-						value="bottom">FINDER_MOD_PARAM_BOTTOM</option>
+						value="bottom">MOD_FINDER_CONFIG_OPTION_BOTTOM</option>
 				</field>
 			</fieldset>
 		</fields>
