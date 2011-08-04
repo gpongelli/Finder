@@ -32,24 +32,16 @@ class FinderViewIndexer extends JView
 	function display($tpl = null)
 	{
 		// Load the view data.
-		$data		= &$this->get('Data');
-		$total		= &$this->get('Total');
-		$pagination	= &$this->get('Pagination');
-		$state		= &$this->get('State');
-		$params		= &$state->get('params');
+		$this->data			= $this->get('Data');
+		$this->total		= $this->get('Total');
+		$this->pagination	= $this->get('Pagination');
+		$this->state		= $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-
-		// Push out the view data.
-		$this->assignRef('data',		$data);
-		$this->assignRef('total',		$total);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('state',		$state);
-		$this->assignRef('params',		$params);
 
 		parent::display();
 	}

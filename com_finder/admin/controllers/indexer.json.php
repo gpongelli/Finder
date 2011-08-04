@@ -123,7 +123,7 @@ class FinderControllerIndexer extends FinderController
 		$admin = clone(JFactory::getApplication());
 
 		// Get the site app.
-		require_once JPATH_SITE.DS.'includes'.DS.'application.php';
+		require_once JPATH_SITE.'/includes/application.php';
 		$site = JApplication::getInstance('site');
 
 		// Swap the app.
