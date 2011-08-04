@@ -9,20 +9,15 @@
 
 defined('_JEXEC') or die;
 
-JHTML::stylesheet('indexer.css', 'administrator/components/com_finder/media/css/');
-if (class_exists('plgSystemMTUpgrade')) {
-	JHTML::script('indexer12.js', 'administrator/components/com_finder/media/js/', true);
-}
-else {
-	JHTML::script('indexer.js', 'administrator/components/com_finder/media/js/', true);
-}
+JHTML::stylesheet('administrator/components/com_finder/media/css/indexer.css', false, false, false);
+JHTML::script('administrator/components/com_finder/media/js/indexer12.js', false, false);
 ?>
 
 <div id="finder-indexer-container">
 	<br /><br />
-	<h1 id="finder-progress-header"><?php echo JText::_('FINDER_INDEXER_HEADER_INIT'); ?></h1>
+	<h1 id="finder-progress-header"><?php echo JText::_('COM_FINDER_INDEXER_HEADER_INIT'); ?></h1>
 
-	<p id="finder-progress-message"><?php echo JText::_('FINDER_INDEXER_MESSAGE_INIT'); ?></p>
+	<p id="finder-progress-message"><?php echo JText::_('COM_FINDER_INDEXER_MESSAGE_INIT'); ?></p>
 
 	<form id="finder-progress-form"></form>
 

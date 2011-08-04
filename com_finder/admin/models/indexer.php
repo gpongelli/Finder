@@ -23,7 +23,7 @@ class FinderModelIndexer extends JModel
 	/**
 	 * @var		boolean		Flag to indicate model state initialization.
 	 */
-	private $__state_set;
+	protected $__state_set;
 
 	/**
 	 * Overridden method to get model state variables.
