@@ -31,9 +31,10 @@ Joomla.submitbutton = function(pressbutton) {
 			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
 		<div class="filter-select fltrt">
-			<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('FINDER_MAPS')); ?>
 			<?php echo JHTML::_('finder.mapslist', $this->state->get('filter.branch')); ?>
-			<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
+			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
+			</select>
 		</div>
 	</fieldset>
 	<div class="clr"> </div>
@@ -59,7 +60,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php if (count($this->data) == 0): ?>
 			<tr class="row0">
 				<td class="center" colspan="5">
-					<?php echo JText::_('FINDER_MAPS_NO_CONTENT'); ?>
+					<?php echo JText::_('COM_FINDER_MAPS_NO_CONTENT'); ?>
 				</td>
 			</tr>
 			<?php endif; ?>
@@ -67,7 +68,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<tr class="row0">
 				<td colspan="5" class="center">
 					<a href="#" onclick="$('filter_branch').value=1;document.adminForm.submit();">
-						<?php echo JText::_('FINDER_MAPS_RETURN_TO_BRANCHES'); ?></a>
+						<?php echo JText::_('COM_FINDER_MAPS_RETURN_TO_BRANCHES'); ?></a>
 				</td>
 			</tr>
 			<?php endif; ?>
@@ -88,7 +89,7 @@ Joomla.submitbutton = function(pressbutton) {
 						$title = $lang->hasKey($key) ? JText::_($key) : $row->title;
 					?>
 					<?php if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
-						<a href="#" onclick="$('filter_branch').value=<?php echo (int) $row->id;?>;document.adminForm.submit();" title="<?php echo JText::_('FINDER_MAPS_BRANCH_LINK'); ?>">
+						<a href="#" onclick="$('filter_branch').value=<?php echo (int) $row->id;?>;document.adminForm.submit();" title="<?php echo JText::_('COM_FINDER_MAPS_BRANCH_LINK'); ?>">
 							<?php echo $this->escape($title); ?></a>
 					<?php else: ?>
 						<?php echo $this->escape($title); ?>

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: map.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -10,7 +9,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 jimport('joomla.application.component.model');
-jx('jx.database.databasequery');
 
 /**
  * Map model for the Finder package.
@@ -21,14 +19,6 @@ jx('jx.database.databasequery');
  */
 class FinderModelMap extends JModel
 {
-	/**
-	 * Flag to indicate model state initialization.
-	 *
-	 * @access	private
-	 * @var		boolean
-	 */
-	var $__state_set	= false;
-
 	/**
 	 * Overridden method to get model state variables.
 	 *
@@ -63,11 +53,11 @@ class FinderModelMap extends JModel
 	 */
 	function purge()
 	{
-		// Remove all rows from the taxonomy table.
-		$query	= 'DELETE FROM #__jxfinder_taxonomy WHERE parent_id > 1';
-
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('parent_id').' > 1');
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum()) {
@@ -75,11 +65,10 @@ class FinderModelMap extends JModel
 			return false;
 		}
 
-		// Remove all rows from the taxonomy map table.
-		$query	= 'DELETE FROM #__jxfinder_taxonomy_map WHERE 1';
-
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$query->clear();
+		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where('1');
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum()) {
@@ -100,14 +89,17 @@ class FinderModelMap extends JModel
 	 */
 	function delete($map_ids)
 	{
+		$db		= $this->getDbo();
+
 		// Iterate the maps to delete each one.
 		foreach ($map_ids as $map_id)
 		{
-			// Remove all relevant rows from the taxonomy map table.
-			$query	= 'DELETE FROM #__jxfinder_taxonomy_map WHERE node_id = '.(int)$map_id;
+			$query	= $db->getQuery(true);
 
-			$this->_db->setQuery($query);
-			$this->_db->query();
+			// Remove all relevant rows from the taxonomy map table.
+			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where($db->quoteName('node_id').' > '.(int)$map_id);
+			$db->setQuery($query);
+			$db->query();
 
 			// Check for a database error.
 			if ($this->_db->getErrorNum()) {
@@ -115,11 +107,10 @@ class FinderModelMap extends JModel
 				return false;
 			}
 
-			// Remove the row from the taxonomy table.
-			$query	= 'DELETE FROM #__jxfinder_taxonomy WHERE id = '.(int)$map_id.' AND parent_id > 1';
-
-			$this->_db->setQuery($query);
-			$this->_db->query();
+			$query->clear();
+			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('id').' = '.(int)$map_id.' AND '.$db->quoteName('parent_id').' > 1');
+			$db->setQuery($query);
+			$db->query();
 
 			// Check for a database error.
 			if ($this->_db->getErrorNum()) {
@@ -141,12 +132,13 @@ class FinderModelMap extends JModel
 	 */
 	function publish($map_ids)
 	{
-		// Set the maps' states to publish.
-		$query	= 'UPDATE #__jxfinder_taxonomy SET state = 1'
-				. ' WHERE id = '.implode(' OR id = ', $map_ids);
-
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->update($db->quoteName('#__jxfinder_taxonomy'));
+		$query->set($db->quoteName('state').' = 1');
+		$query->where($db->quoteName('id').' = '.implode(' OR id = ', $map_ids));
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum()) {
@@ -167,12 +159,13 @@ class FinderModelMap extends JModel
 	 */
 	function unpublish($map_ids)
 	{
-		// Set the maps' states to unpublish.
-		$query	= 'UPDATE #__jxfinder_taxonomy SET state = -1'
-				. ' WHERE id = '.implode(' OR id = ', $map_ids);
-
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->update($db->quoteName('#__jxfinder_taxonomy'));
+		$query->set($db->quoteName('state').' = 0');
+		$query->where($db->quoteName('id').' = '.implode(' OR id = ', $map_ids));
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum()) {

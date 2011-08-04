@@ -1,12 +1,13 @@
 <?php
 /**
- * @version		$Id: map.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
  */
 
 defined('_JEXEC') or die;
+
+jimport('joomla.application.component.controllerform');
 
 /**
  * Map controller class for Finder.
@@ -15,7 +16,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderControllerMap extends FinderController
+class FinderControllerMap extends JControllerForm
 {
 	/**
 	 * Method to delete taxonomy map(s).
@@ -72,11 +73,11 @@ class FinderControllerMap extends FinderController
 		$return = $model->publish($cid);
 
 		if (!$return) {
-			$message = JText::sprintf('FINDER_MAP_PUBLISH_FAILED', $model->getError());
+			$message = JText::sprintf('COM_FINDER_MAP_PUBLISH_FAILED', $model->getError());
 			$this->setRedirect('index.php?option=com_finder&view=maps', $message, 'error');
 			return false;
 		} else {
-			$message = JText::_('FINDER_MAP_PUBLISH_SUCCESS');
+			$message = JText::_('COM_FINDER_MAP_PUBLISH_SUCCESS');
 			$this->setRedirect('index.php?option=com_finder&view=maps', $message);
 			return true;
 		}
@@ -105,11 +106,11 @@ class FinderControllerMap extends FinderController
 		$return = $model->unpublish($cid);
 
 		if (!$return) {
-			$message = JText::sprintf('FINDER_MAP_UNPUBLISH_FAILED', $model->getError());
+			$message = JText::sprintf('COM_FINDER_MAP_UNPUBLISH_FAILED', $model->getError());
 			$this->setRedirect('index.php?option=com_finder&view=maps', $message, 'error');
 			return false;
 		} else {
-			$message = JText::_('FINDER_MAP_UNPUBLISH_SUCCESS');
+			$message = JText::_('COM_FINDER_MAP_UNPUBLISH_SUCCESS');
 			$this->setRedirect('index.php?option=com_finder&view=maps', $message);
 			return true;
 		}
