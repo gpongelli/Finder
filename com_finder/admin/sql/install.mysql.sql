@@ -1,6 +1,4 @@
--- <?php /* $Id: installsql.mysql.utf8.php 981 2010-06-15 18:38:02Z robs $ */ defined('_JEXEC') or die ?>;
-
--- --------------------------------------------------------
+-- TODO: Restructure to remove jxtended references
 
 --
 -- Table structure for table `#__jxtended`

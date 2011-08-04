@@ -1,5 +1,3 @@
--- <?php /* $Id: uninstallsql.mysql.utf8.php 1097 2010-11-17 22:42:05Z robs $ */ defined('_JEXEC') or die ?>;
-
 DROP TABLE IF EXISTS `#__jxfinder_filters`;
 DROP TABLE IF EXISTS `#__jxfinder_links`;
 DROP TABLE IF EXISTS `#__jxfinder_links_terms0`;
