@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="finder" default="dev_head" basedir=".">
+	<target name="dev_head" description="Builds test packages based on the development head" depends="rebuild-packages">
+		<echo msg="Deleting old master builds" />
+		<delete quiet="yes" includeemptydirs="true">
+			<fileset dir="*">
+				<include name="pkg_finder_master.zip" />
+			</fileset>
+		</delete>
+		<echo msg="Build Finder package" />
+		<zip destfile="pkg_finder_master.zip">
+			<fileset dir=".">
+				<include name="packages/**" />
+				<include name="pkg_finder.xml" />
+			</fileset>
+		</zip>
+	</target>
+	<target name="release" description="Builds release packages based on the development head" depends="rebuild-packages">
+		<echo msg="Build Finder package" />
+		<zip destfile="releases/pkg_finder_201testing.zip">
+			<fileset dir=".">
+				<include name="packages/**" />
+				<include name="pkg_finder.xml" />
+			</fileset>
+		</zip>
+	</target>
+	<target name="rebuild-packages" description="Delete old packages">
+		<echo msg="Deleting packages dir" />
+		<delete quiet="yes" includeemptydirs="true">
+			<fileset dir="*">
+				<include name="packages" />
+			</fileset>
+		</delete>
+		<echo msg="Creating extension packages" />
+		<mkdir dir="packages" />
+		<zip destfile="packages/com_finder.zip" basedir="com_finder" />
+		<zip destfile="packages/mod_finder.zip" basedir="mod_finder" />
+		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
+		<zip destfile="packages/plg_system_finder.zip" basedir="plg_system_finder" />
+	</target>
+</project>
