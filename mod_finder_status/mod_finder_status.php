@@ -12,9 +12,9 @@ defined('JPATH_BASE') or die;
 
 // Pause if the main menu is disabled.
 if (JRequest::getBool('hidemainmenu')) {
-	$text = JText::_('MOD_FINDER_UPDATER_MESSAGE_PAUSE');
+	$text = JText::_('MOD_FINDER_STATUS_PAUSED');
 } else {
-	$text = JText::_('MOD_FINDER_UPDATER_MESSAGE_WAIT');
+	$text = JText::_('MOD_FINDER_STATUS_WAITING');
 	if (class_exists('plgSystemMTUpgrade')) {
 		JHtml::script('status12.js', 'administrator/modules/mod_finder_status/media/js/');
 	}

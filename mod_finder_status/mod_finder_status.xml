@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" version="1.6" client="administrator" method="upgrade">
-	<name>Finder Status</name>
+	<name>mod_finder_status</name>
 	<author>JXtended</author>
 	<copyright>Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.</copyright>
 	<creationDate>November 2010</creationDate>
@@ -8,11 +8,15 @@
 	<authorEmail>info@jxtended.com</authorEmail>
 	<authorUrl>http://jxtended.com/</authorUrl>
 	<version>2.0.1</version>
-	<description>MOD_FINDER_STATUS_DESC</description>
+	<description>MOD_FINDER_STATUS_XML_DESCRIPTION</description>
 	<files>
 		<folder>media</folder>
 		<file>index.html</file>
 		<file module="mod_finder_status">mod_finder_status.php</file>
 		<file>mod_finder_status.xml</file>
 	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_finder_status.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_finder_status.sys.ini</language>
+	</languages>
 </extension>

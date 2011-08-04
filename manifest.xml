@@ -71,38 +71,6 @@
 		</files>
 	</administration>
 
-	<!-- Modules -->
-	<modules>
-		<module module="mod_finder" position="finder" client="site">
-			<files folder="mod_finder">
-				<folder>tmpl</folder>
-
-				<file>helper.php</file>
-				<file>index.html</file>
-				<file>mod_finder.php</file>
-				<file>mod_finder.xml</file>
-			</files>
-
-			<languages folder="site/language">
-				<language tag="en-GB">en-GB/en-GB.mod_finder.ini</language>
-			</languages>
-		</module>
-
-		<module module="mod_finder_status" client="administrator" position="status" title="Finder Status">
-			<files folder="mod_finder_status">
-				<folder>media</folder>
-
-				<file>index.html</file>
-				<file>mod_finder_status.php</file>
-				<file>mod_finder_status.xml</file>
-			</files>
-
-			<languages folder="admin/language">
-				<language tag="en-GB">en-GB/en-GB.mod_finder_status.ini</language>
-			</languages>
-		</module>
-	</modules>
-
 	<!-- Plugins -->
 	<plugins>
 
