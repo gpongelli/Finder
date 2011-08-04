@@ -206,21 +206,7 @@ $rows = 0;
 			<td class="key" colspan="2"><?php echo 'JXtended Finder '.JText::_('Component'); ?></td>
 			<td><strong><?php echo JText::_('Installed'); ?></strong></td>
 		</tr>
-<?php if (count($status->modules)) : ?>
-		<tr>
-			<th><?php echo JText::_('Module'); ?></th>
-			<th><?php echo JText::_('Client'); ?></th>
-			<th></th>
-		</tr>
-	<?php foreach ($status->modules as $module) : ?>
-		<tr class="row<?php echo (++ $rows % 2); ?>">
-			<td class="key"><?php echo $module['name']; ?></td>
-			<td class="key"><?php echo ucfirst($module['client']); ?></td>
-			<td><strong><?php echo JText::_('Installed'); ?></strong></td>
-		</tr>
-	<?php endforeach;
-endif;
-if (count($status->plugins)) : ?>
+<?php if (count($status->plugins)) : ?>
 		<tr>
 			<th><?php echo JText::_('Plugin'); ?></th>
 			<th><?php echo JText::_('Group'); ?></th>
