@@ -6,3 +6,7 @@
 .project
 .settings
 .DS_Store
+
+# Packages #
+packages
+releases
