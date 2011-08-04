@@ -53,23 +53,23 @@ Joomla.submitbutton = function(pressbutton) {
 				<th width="1%">
 					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 				</th>
-				<th width="5">
+				<th width="5%">
 					<?php echo JText::_('NUM'); ?>
 				</th>
-				<th nowrap="nowrap">
-					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_LINK_TITLE', 'l.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th>
+					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'l.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap" width="6%">
-					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_LINK_PUBLISHED', 'l.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="5%">
+					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'l.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap" width="5%">
-					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_INDEX_TYPE', 'l.type_id', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="5%">
+					<?php echo JHTML::_('grid.sort', 'COM_FINDER_INDEX_HEADING_INDEX_TYPE', 'l.type_id', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap" width="20%">
-					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_LINK_URL', 'l.url', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="20%">
+					<?php echo JHTML::_('grid.sort', 'COM_FINDER_INDEX_HEADING_LINK_URL', 'l.url', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap" width="9%">
-					<?php echo JHTML::_('grid.sort', 'FINDER_INDEX_INDEX_DATE', 'l.indexdate', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="10%">
+					<?php echo JHTML::_('grid.sort', 'COM_FINDER_INDEX_HEADING_INDEX_DATE', 'l.indexdate', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 			</tr>
 		</thead>
@@ -105,15 +105,15 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php endif; ?>
 					<?php echo $this->escape($row->title); ?>
 				</td>
-				<td nowrap="nowrap" style="text-align: center">
+				<td class="center nowrap">
 					<?php echo JHTML::_('finder.state', $n, $row->published); ?>
 				</td>
-				<td nowrap="nowrap" style="text-align: center">
+				<td class="center nowrap">
 					<?php
-					$key = $lang->hasKey('FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->t_title))) ? 'FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->t_title)) : $row->t_title;
+					$key = $lang->hasKey('COM_FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->t_title))) ? 'COM_FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->t_title)) : $row->t_title;
 					echo JText::_($key); ?>
 				</td>
-				<td nowrap="nowrap">
+				<td class="nowrap">
 					<?php
 					if (strlen($row->url) > 80) {
 						echo substr($row->url, 0, 70).'...';
@@ -122,7 +122,7 @@ Joomla.submitbutton = function(pressbutton) {
 					}
 					?>
 				</td>
-				<td nowrap="nowrap" style="text-align: center;">
+				<td class="center nowrap">
 					<?php echo JHtml::date($row->indexdate, '%Y-%m-%d %H:%M:%S'); ?>
 				</td>
 			</tr>
@@ -132,7 +132,7 @@ Joomla.submitbutton = function(pressbutton) {
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="7" nowrap="nowrap">
+				<td colspan="7" class="nowrap">
 					<?php echo $this->pagination->getListFooter(); ?>
 				</td>
 			</tr>
