@@ -92,7 +92,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php $n = 1 + $this->state->get('list.start'); $o = 0; ?>
 			<?php foreach ($this->data as $row): ?>
 
-			<tr class="row<?php echo $i % 2; ?>">
+			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center" title="<?php echo (int) $row->link_id;?>">
 					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
 				</td>

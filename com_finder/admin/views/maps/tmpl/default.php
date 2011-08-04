@@ -8,53 +8,64 @@
 
 defined('_JEXEC') or die;
 
-JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
+JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHTML::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
 $lang = &JFactory::getLanguage();
 ?>
 
-<form action="index.php?option=com_finder&amp;view=maps" method="post" name="adminForm">
-	<div class="form-filter" style="float: left;">
-		<label for="filter_search"><?php echo JText::sprintf('FINDER_SEARCH_LABEL', JText::_('FINDER_MAPS')); ?></label>
-		<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->state->get('filter.search'); ?>" class="text_area" onchange="document.adminForm.submit();" />
-		<button onclick="this.form.submit();"><?php echo JText::_('FINDER_SEARCH_GO'); ?></button>
-		<button onclick="document.getElementById('filter_search').value='';document.getElementById('filter_state').value='10';this.form.submit();"><?php echo JText::_('FINDER_SEARCH_RESET'); ?></button>
-	</div>
-
-	<div class="form-filter" style="float: right;">
-		<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('FINDER_MAPS')); ?>
-		<?php echo JHTML::_('finder.mapslist', $this->state->get('filter.branch')); ?>
-		<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
-	</div>
+<script type="text/javascript">
+Joomla.submitbutton = function(pressbutton) {
+	if (pressbutton == 'map.delete') {
+		if (confirm(<?php echo JText::_('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');?>)) {
+			Joomla.submitform(pressbutton);
+		}
+	}
+}
+</script>
+<form action="<?php echo JRoute::_('index.php?option=com_finder&view=maps');?>" method="post" name="adminForm" id="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-search fltlft">
+			<label class="filter-search-lbl" for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL', JText::_('COM_FINDER_ITEMS')); ?></label>
+			<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_FINDER_FILTER_SEARCH_DESCRIPTION'); ?>" />
+			<button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+		</div>
+		<div class="filter-select fltrt">
+			<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('FINDER_MAPS')); ?>
+			<?php echo JHTML::_('finder.mapslist', $this->state->get('filter.branch')); ?>
+			<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
+		</div>
+	</fieldset>
+	<div class="clr"> </div>
 
 	<table class="adminlist" style="clear: both;">
 		<thead>
 			<tr>
-				<th width="5">
+				<th width="1%">
+					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+				</th>
+				<th width="5%">
 					<?php echo JText::_('NUM'); ?>
 				</th>
-				<th width="5">
-					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo (count($this->data)+1); ?>);" />
+				<th class="nowrap">
+					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap">
-					<?php echo JHTML::_('grid.sort', 'FINDER_MAPS_MAP_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
-				</th>
-				<th nowrap="nowrap" width="10%">
-					<?php echo JHTML::_('grid.sort', 'FINDER_MAPS_MAP_STATE', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th class="nowrap" width="10%">
+					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if (count($this->data) == 0): ?>
 			<tr class="row0">
-				<td align="center" colspan="5">
+				<td class="center" colspan="5">
 					<?php echo JText::_('FINDER_MAPS_NO_CONTENT'); ?>
 				</td>
 			</tr>
 			<?php endif; ?>
 			<?php if ($this->state->get('filter.branch') != 1) : ?>
 			<tr class="row0">
-				<td colspan="5" style="text-align:center">
+				<td colspan="5" class="center">
 					<a href="#" onclick="$('filter_branch').value=1;document.adminForm.submit();">
 						<?php echo JText::_('FINDER_MAPS_RETURN_TO_BRANCHES'); ?></a>
 				</td>
@@ -64,12 +75,12 @@ $lang = &JFactory::getLanguage();
 			<?php $n = 1; $o = 0; ?>
 			<?php foreach ($this->data as $row): ?>
 
-			<tr class="<?php echo 'row', $n % 2; ?>">
+			<tr class="row<?php echo $n % 2; ?>">
+				<td class="center">
+					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
+				</td>
 				<td>
 					<?php echo $n; ?>
-				</td>
-				<td align="center">
-					<?php echo JHTML::_('grid.id', $n, $row->id); ?>
 				</td>
 				<td>
 					<?php
@@ -88,7 +99,7 @@ $lang = &JFactory::getLanguage();
 						<small>(<?php echo $row->num_nodes; ?>)</small>
 					<?php endif; ?>
 				</td>
-				<td nowrap="nowrap" style="text-align: center">
+				<td class="center nowrap">
 					<?php echo JHTML::_('finder.state', $n, $row->state, true, 'map'); ?>
 				</td>
 			</tr>
@@ -98,7 +109,7 @@ $lang = &JFactory::getLanguage();
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="9" nowrap="nowrap">
+				<td colspan="9" class="nowrap">
 					<?php echo $this->pagination->getListFooter(); ?>
 				</td>
 			</tr>

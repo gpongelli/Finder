@@ -31,14 +31,13 @@ class FinderViewMaps extends JView
 	function display($tpl = null)
 	{
 		// Initialize variables.
-		$user		= &JFactory::getUser();
+		$user		= JFactory::getUser();
 
 		// Load the view data.
-		$data		= &$this->get('Items');
-		$total		= &$this->get('Total');
-		$pagination	= &$this->get('Pagination');
-		$state		= &$this->get('State');
-		$params		= &$state->get('params');
+		$this->data			= $this->get('Items');
+		$this->total		= $this->get('Total');
+		$this->pagination	= $this->get('Pagination');
+		$this->state		= $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -47,27 +46,11 @@ class FinderViewMaps extends JView
 		}
 
 		// Prepare the view.
-		$this->document->addStyleSheet('components/com_finder/media/css/finder.css');
-		$this->setToolbar();
+		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
+		$this->addToolbar();
 
-		JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-
-		// Push out the view data.
-		$this->assignRef('data',		$data);
-		$this->assignRef('total',		$total);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('state',		$state);
-		$this->assignRef('params',		$params);
-
-		// Load the view template.
-		$result = $this->loadTemplate($tpl);
-
-		// Check for an error.
-		if (JError::isError($result)) {
-			return $result;
-		}
-
-		echo $result;
+		JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+		parent::display($tpl);
 	}
 
 	/**
@@ -77,16 +60,25 @@ class FinderViewMaps extends JView
 	 * @return	void
 	 * @since	1.0
 	 */
-	function setToolbar()
+	function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('FINDER_MAPS_TOOLBAR_TITLE'), 'finder');
+		$canDo	= FinderHelper::getActions();
+
+		JToolBarHelper::title(JText::_('COM_FINDER_MAPS_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		$toolbar->appendButton('Standard', 'publish', 'FINDER_INDEX_TOOLBAR_PUBLISH', 'map.publish', true, false);
-		$toolbar->appendButton('Standard', 'unpublish', 'FINDER_INDEX_TOOLBAR_UNPUBLISH', 'map.unpublish', true, false);
-		$toolbar->appendButton('Confirm', 'FINDER_MAP_CONFIRM_DELETE_PROMPT', 'delete', 'Delete', 'map.delete', true, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Popup', 'config', 'FINDER_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 570, 500);
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+		if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::publish('map.publish');
+			JToolBarHelper::unpublish('map.unpublish');
+			JToolBarHelper::divider();
+		}
+		if ($canDo->get('core.delete')) {
+			JToolBarHelper::deleteList('', 'map.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::divider();
+		}
+		if ($canDo->get('core.admin')) {
+			JToolBarHelper::preferences('com_finder');
+		}
+		//$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
