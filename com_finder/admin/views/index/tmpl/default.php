@@ -37,12 +37,11 @@ Joomla.submitbutton = function(pressbutton) {
 			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
 		<div class="filter-select fltrt">
-			<?php echo JText::sprintf('FINDER_FILTER_BY', JText::_('COM_FINDER_ITEMS')); ?>
-			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<?php echo JHTML::_('finder.typeslist', $this->state->get('filter.type')); ?>
+			<select name="filter_type" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.typeslist'), 'value', 'text', $this->state->get('filter.type'), true);?>
 			</select>
-			<select name="filter_feedname" class="inputbox" onchange="this.form.submit()">
-				<?php echo JHTML::_('finder.statelist', $this->state->get('filter.state')); ?>
+			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
 			</select>
 		</div>
 	</fieldset>

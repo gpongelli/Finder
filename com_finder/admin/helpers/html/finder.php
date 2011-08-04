@@ -45,17 +45,15 @@ class JHTMLFinder
 
 		// Compile the options.
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '0', JText::_('FINDER_INDEX_TYPE_FILTER'));
+		$options[]	= JHTML::_('select.option', '0', JText::_('COM_FINDER_INDEX_TYPE_FILTER'));
 
 		foreach ($rows as $row) {
-			$key		= $lang->hasKey('FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text))) ? 'FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
-			$string		= JText::sprintf('FINDER_TYPE_X_ONLY', JText::_($key));
+			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text))) ? 'FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
+			$string		= JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
 			$options[]	= JHTML::_('select.option', $row->value, $string);
 		}
 
-		$attributes = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
-
-		return JHTML::_('select.genericlist', $options, 'filter_type', $attributes, 'value', 'text', $active);
+		return $options;
 	}
 
 	function mapslist($active, $branches = true)
@@ -78,7 +76,7 @@ class JHTMLFinder
 
 		foreach ($rows as $row) {
 			$key		= $lang->hasKey('FINDER_TYPE_P_'.strtoupper($row->text)) ? 'FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
-			$string		= JText::sprintf('FINDER_TYPE_X_ONLY', JText::_($key));
+			$string		= JText::sprintf('FINDER_ITEM_X_ONLY', JText::_($key));
 			$options[]	= JHTML::_('select.option', $row->value, $string);
 		}
 
@@ -90,13 +88,11 @@ class JHTMLFinder
 	function statelist($active)
 	{
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '*', JText::_('FINDER_INDEX_FILTER_BY_STATE'));
-		$options[]	= JHTML::_('select.option', '1', JText::sprintf('FINDER_STATE_X_ONLY', JText::_('FINDER_STATE_PUBLISHED')));
-		$options[]	= JHTML::_('select.option', '0', JText::sprintf('FINDER_STATE_X_ONLY', JText::_('FINDER_STATE_UNPUBLISHED')));
+		$options[]	= JHTML::_('select.option', '', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
+		$options[]	= JHTML::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
+		$options[]	= JHTML::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
 
-		$attributes = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
-
-		return JHTML::_('select.genericlist', $options, 'filter_state', $attributes, 'value', 'text', $active);
+		return $options;
 	}
 
 	/**
@@ -141,4 +137,3 @@ class JHTMLFinder
 		return $html;
 	}
 }
-?>
