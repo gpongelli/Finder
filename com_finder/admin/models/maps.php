@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: maps.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,8 +8,7 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.application.component.model');
-jx('jx.database.databasequery');
+jimport('joomla.application.component.modellist');
 
 /**
  * Maps model for the Finder package.
@@ -19,31 +17,26 @@ jx('jx.database.databasequery');
  * @subpackage	com_finder
  * @version		1.1
  */
-class FinderModelMaps extends JModel
+class FinderModelMaps extends JModelList
 {
 	/**
-	 * Flag to indicate model state initialization.
+	 * Constructor.
 	 *
-	 * @access	private
-	 * @var		boolean
+	 * @param	array	An optional associative array of configuration settings.
+	 * @see		JController
+	 * @since	1.6
 	 */
-	var $__state_set	= false;
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'id', 'a.id',
+				'title', 'a.title',
+			);
+		}
 
-	/**
-	 * An array of totals for the lists.
-	 *
-	 * @access	protected
-	 * @var		array
-	 */
-	var $_totals		= array();
-
-	/**
-	 * Array of lists containing items.
-	 *
-	 * @access	protected
-	 * @var		array
-	 */
-	var $_lists			= array();
+		parent::__construct($config);
+	}
 
 	/**
 	 * Overridden method to get model state variables.
@@ -81,7 +74,7 @@ class FinderModelMaps extends JModel
 			$this->setState('user.aid', (int)$user->get('aid'));
 
 			// Load the check parameters.
-			if ($this->_state->get('filter.state') === '*') {
+			if ($this->state->get('filter.state') === '*') {
 				$this->setState('check.state', false);
 			} else {
 				$this->setState('check.state', true);
@@ -103,120 +96,74 @@ class FinderModelMaps extends JModel
 	 * @return	mixed	An array of objects on success, false on failure.
 	 * @since	1.0
 	 */
-	function &getItems()
+	function getItems()
 	{
-		// Get a unique key for the current list state.
-		$key = $this->_getStoreId('finder.maps');
+		// Get a storage key.
+		$store = $this->getStoreId('getItems');
 
-		// Try to load the value from internal storage.
-		if (!empty ($this->_lists[$key])) {
-			return $this->_lists[$key];
+			// Try to load the data from internal storage.
+		if (!empty($this->cache[$store])) {
+			return $this->cache[$store];
 		}
 
-		// Load the list.
-		$query	= $this->_getListQuery();
-		$rows	= $this->_getList($query->toString(), $this->getState('list.start'), $this->getState('list.limit'));
+		// Load the list items.
+		$items = parent::getItems();
 
-		// Add the rows to the internal storage.
-		$this->_lists[$key] = $rows;
+		// If emtpy or an error, just return.
+		if (empty($items)) {
+			return array();
+		}
 
-		return $this->_lists[$key];
+		// Add the items to the internal cache.
+		$this->cache[$store] = $items;
+
+		return $this->cache[$store];
 	}
 
 	/**
-	 * Method to get a list pagination object.
+	 * Build an SQL query to load the list data.
 	 *
-	 * @access	public
-	 * @return	object	A JPagination object.
-	 * @since	1.0
+	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
+	 * @since	1.6
 	 */
-	function &getPagination()
+	function getListQuery()
 	{
-		jimport('joomla.html.pagination');
-
-		// Create the pagination object.
-		$instance = new JPagination($this->getTotal(), (int)$this->getState('list.start'), (int)$this->getState('list.limit'));
-
-		return $instance;
-	}
-
-	/**
-	 * Method to get the total number of published items.
-	 *
-	 * @access	public
-	 * @return	int		The number of published items.
-	 * @since	1.0
-	 */
-	function getTotal()
-	{
-		// Get a unique key for the current list state.
-		$key = $this->_getStoreId('finder.maps');
-
-		// Try to load the value from internal storage.
-		if (!empty ($this->_totals[$key])) {
-			return $this->_totals[$key];
-		}
-
-		// Load the total.
-		$query = $this->_getListQuery();
-		$return = (int)$this->_getListCount($query->toString());
-
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-
-		// Push the value into internal storage.
-		$this->_totals[$key] = $return;
-
-		return $this->_totals[$key];
-	}
-
-	/**
-	 * Method to build an SQL query to load the list data.
-	 *
-	 * @access	protected
-	 * @return	string		An SQL query
-	 * @since	1.0
-	 */
-	function _getListQuery()
-	{
-		$query = new JDatabaseQuery();
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
 
 		// Select all fields from the table.
 		$query->select('a.*');
-		$query->from('`#__jxfinder_taxonomy` AS a');
+		$query->from($db->quoteName('#__jxfinder_taxonomy').' AS a');
 
 		// Self-join to get children.
 		$query->select('COUNT(b.id) AS num_children');
-		$query->join('LEFT', '`#__jxfinder_taxonomy` AS b ON b.parent_id=a.id');
+		$query->join('LEFT', $db->quoteName('#__jxfinder_taxonomy').' AS b ON b.parent_id=a.id');
 
 		// Join to get the map links
 		$query->select('COUNT(c.node_id) AS num_nodes');
-		$query->join('LEFT', '`#__jxfinder_taxonomy_map` AS c ON c.node_id=a.id');
+		$query->join('LEFT', $db->quoteName('#__jxfinder_taxonomy_map').' AS c ON c.node_id=a.id');
 
 		$query->group('a.id');
 
 		// If the model is set to check item state, add to the query.
 		if ($this->getState('check.state')) {
-			$query->where('a.state = '.(int)$this->getState('filter.state'));
+			$query->where($db->quoteName('a.state').' = '.(int)$this->getState('filter.state'));
 		}
 
 		// Filter the maps over the branch if set.
 		$branch_id = $this->getState('filter.branch');
 		if (!empty($branch_id)) {
-			$query->where('a.parent_id = '.(int)$branch_id);
+			$query->where($db->quoteName('a.parent_id').' = '.(int)$branch_id);
 		}
 
 		// Filter the maps over the search string if set.
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
-			$query->where('a.title LIKE '.$this->_db->Quote('%'.$search.'%'));
+			$query->where($db->quoteName('a.title').' LIKE '.$db->quote('%'.$search.'%'));
 		}
 
 		// Add the list ordering clause.
-		$query->order($this->_db->getEscaped($this->getState('list.ordering').' '.$this->_db->getEscaped($this->getState('list.direction'))));
+		$query->order($db->getEscaped($this->getState('list.ordering').' '.$db->getEscaped($this->getState('list.direction'))));
 
 		//echo nl2br(str_replace('#__','jos_',$query->toString())).'<hr/>';
 		return $query;
@@ -234,7 +181,7 @@ class FinderModelMaps extends JModel
 	 * @return	string		A store id.
 	 * @since	1.0
 	 */
-	function _getStoreId($id = '')
+	function getStoreId($id = '')
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('list.start');
@@ -245,6 +192,23 @@ class FinderModelMaps extends JModel
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.branch');
 
-		return md5($id);
+		return parent::getStoreId($id);
+	}
+
+	/**
+	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
+	 *
+	 * @param   string	$ordering	An optional ordering field.
+	 * @param   string	$direction	An optional direction.
+	 *
+	 * @since	1.7
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		// Initialise variables.
+		$app = JFactory::getApplication('administrator');
+
+		// List state information.
+		parent::populateState('a.id', 'asc');
 	}
 }
