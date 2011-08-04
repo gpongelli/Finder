@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: default.php 994 2010-06-24 04:42:48Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -9,8 +8,7 @@
 defined('_JEXEC') or die;
 
 JHTML::_('behavior.tooltip');
-JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHTML::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
+JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 $lang = &JFactory::getLanguage();
 ?>

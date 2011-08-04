@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -29,12 +28,11 @@ class FinderViewIndex extends JView
 	 */
 	function display($tpl = null)
 	{
-		// Load the view data.
-		$data		= &$this->get('Data');
-		$total		= &$this->get('Total');
-		$pagination	= &$this->get('Pagination');
-		$state		= &$this->get('State');
-		$params		= &$state->get('params');
+		// Initialise variables
+		$this->data			= $this->get('Data');
+		$this->total		= $this->get('Total');
+		$this->pagination	= $this->get('Pagination');
+		$this->state		= $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -42,15 +40,10 @@ class FinderViewIndex extends JView
 			return false;
 		}
 
-		// Configure the toolbar.
-		$this->setToolbar();
+		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
 
-		// Push out the view data.
-		$this->assignRef('data',		$data);
-		$this->assignRef('total',		$total);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('state',		$state);
-		$this->assignRef('params',		$params);
+		// Configure the toolbar.
+		$this->addToolbar();
 
 		parent::display($tpl);
 	}
@@ -62,21 +55,33 @@ class FinderViewIndex extends JView
 	 * @return	void
 	 * @since	1.0
 	 */
-	function setToolbar()
+	function addToolbar()
 	{
+		$canDo	= FinderHelper::getActions();
+
 		JToolBarHelper::title(JText::_('FINDER_INDEX_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
 		$toolbar->appendButton('Popup', 'archive', 'FINDER_INDEX', 'index.php?option=com_finder&view=indexer&tmpl=component', 500, 210);
-		$toolbar->appendButton('Confirm', 'FINDER_INDEX_CONFIRM_PURGE_PROMPT', 'trash', 'Purge', 'index.purge', false);
-		$toolbar->appendButton('Separator', 'divider');
+		JToolBarHelper::divider();
 
-		JToolBarHelper::publishList('index.publish', 'FINDER_INDEX_TOOLBAR_PUBLISH');
-		JToolBarHelper::unpublishList('index.unpublish', 'FINDER_INDEX_TOOLBAR_UNPUBLISH');
-		JToolBarHelper::deleteList('FINDER_INDEX_CONFIRM_DELETE_PROMPT', 'index.delete', 'Delete');
+		if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::publish('index.publish');
+			JToolBarHelper::unpublish('index.unpublish');
+			JToolBarHelper::divider();
+		}
+		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+			JToolBarHelper::deleteList('', 'index.delete', 'FINDER_INDEX_CONFIRM_DELETE_PROMPT');
+			JToolBarHelper::divider();
+		}
+		else if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::trash('index.purge', 'FINDER_INDEX_CONFIRM_PURGE_PROMPT');
+			JToolBarHelper::divider();
+		}
 
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Popup', 'config', 'FINDER_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 570, 500);
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+		if ($canDo->get('core.admin')) {
+			JToolBarHelper::preferences('com_finder');
+		}
+		//$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
