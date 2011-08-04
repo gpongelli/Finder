@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: filters.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,8 +8,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
-jx('jx.database.databasequery');
+jimport('joomla.application.component.modellist');
 
 /**
  * Filters model class for Finder.
@@ -19,16 +17,8 @@ jx('jx.database.databasequery');
  * @subpackage	com_finder
  * @version		1.1
  */
-class FinderModelFilters extends JModel
+class FinderModelFilters extends JModelList
 {
-	/**
-	 * Flag to indicate model state initialization.
-	 *
-	 * @access	private
-	 * @var		boolean
-	 */
-	var $__state_set		= false;
-
 	/**
 	 * Array of filter data objects.
 	 *
@@ -52,22 +42,6 @@ class FinderModelFilters extends JModel
 	 * @var		integer
 	 */
 	var $_filter_total		= null;
-
-	/**
-	 * The JPagination object.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
-	var	$_pagination		= null;
-
-	/**
-	 * The filters list data query.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
-	var $_list_query		= null;
 
 	/**
 	 * The filters list total query.
@@ -105,12 +79,12 @@ class FinderModelFilters extends JModel
 			$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
 
 			// Handle 0 limit with > 0 start offset.
-			if ($this->_state->get('list.limit') === 0) {
-				$this->_state->set('list.start', 0);
+			if ($this->state->get('list.limit') === 0) {
+				$this->state->set('list.start', 0);
 			}
 
 			// Load the check parameters.
-			if ($this->_state->get('filter.state') === '*') {
+			if ($this->state->get('filter.state') === '*') {
 				$this->setState('check.state', false);
 			} else {
 				$this->setState('check.state', true);
@@ -172,45 +146,24 @@ class FinderModelFilters extends JModel
 	 * @access	public
 	 * @return	array	An array of filter objects.
 	 */
-	function &getFilters()
+	function getFilters()
 	{
-		$false = false;
-
 		if (!empty($this->_filter_data)) {
 			return $this->_filter_data;
 		}
 
 		// Load the filters data.
-		$return	= $this->_getList($this->_getListQuery(), $this->getState('list.start'), $this->getState('list.limit'));
+		$return	= $this->_getList($this->getFilterQuery(), $this->getState('list.start'), $this->getState('list.limit'));
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum()) {
 			$this->setError($this->_db->getErrorMsg());
-			return $false;
+			return false;
 		}
 
 		$this->_filter_data = $return;
 
 		return $return;
-	}
-
-	/**
-	 * Method to get a list pagination object.
-	 *
-	 * @access	public
-	 * @return	object	A JPagination object.
-	 * @since	1.0
-	 */
-	function &getPagination()
-	{
-		if (!empty($this->_pagination)) {
-			return $this->_pagination;
-		}
-
-		jimport('joomla.html.pagination');
-		$this->_pagination = new JPagination($this->getCount(), $this->getState('list.start'), $this->getState('list.limit'));
-
-		return $this->_pagination;
 	}
 
 	/**
@@ -309,41 +262,34 @@ class FinderModelFilters extends JModel
 	}
 
 	/**
-	 * Method to generate an SQL query.
+	 * Build an SQL query to load the list data.
 	 *
-	 * @access	private
-	 * @return	string	An SQL query
-	 * @since	1.0
+	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
+	 * @since	1.6
 	 */
-	function _getListQuery()
+	function getFilterQuery()
 	{
-		if (empty($this->_list_query))
-		{
-			// Get the clauses fragments
-			$ordering	= $this->getState('list.ordering');
-			$direction	= $this->getState('list.direction');
-			$search		= $this->getState('filter.search');
-			$state		= $this->getState('filter.state');
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
 
-			$query = new JDatabaseQuery();
-			$query->select('a.*');
-			$query->from('#__jxfinder_filters AS a');
-			$query->order($ordering.' '.$direction);
+		// Select all fields from the table.
+		$query->select('a.*');
+		$query->from($db->quoteName('#__jxfinder_filters').' AS a');
 
-			// Check for a search filter.
-			if ($search) {
-				$query->where('( a.title LIKE \'%'.$this->_db->getEscaped($search).'%\' )');
-			}
-
-			// If the model is set to check item state, add to the query.
-			if ($this->getState('check.state')) {
-				$query->where('a.state = '.(int)$this->getState('filter.state'));
-			}
-
-			$this->_list_query = $query->toString();
+		// Check for a search filter.
+		if ($this->getState('filter.search')) {
+			$query->where('( '.$db->quoteName('a.title').' LIKE \'%'.$this->_db->getEscaped($this->getState('filter.search')).'%\' )');
 		}
 
-		return $this->_list_query;
+		// If the model is set to check item state, add to the query.
+		if ($this->getState('check.state')) {
+			$query->where($db->quoteName('a.state').' = '.(int)$this->getState('filter.state'));
+		}
+
+		// Add the list ordering clause.
+		$query->order($db->getEscaped($this->getState('list.ordering').' '.$db->getEscaped($this->getState('list.direction'))));
+
+		return $query;
 	}
 
 	function _getTotalQuery()
@@ -351,10 +297,11 @@ class FinderModelFilters extends JModel
 		if (empty($this->_total_query))
 		{
 			// Assemble the query.
-			$query = new JDatabaseQuery();
+			$db		= $this->getDbo();
+			$query	= $db->getQuery(true);
 			$query->select('count(a.filter_id)');
-			$query->from('#__jxfinder_filters AS a');
-			$this->_total_query = $query->toString();
+			$query->from($db->quoteName('#__jxfinder_filters').' AS a');
+			$this->_total_query = $query->__toString();
 		}
 
 		return $this->_total_query;

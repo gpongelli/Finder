@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: filters.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,6 +8,8 @@
 
 defined('_JEXEC') or die;
 
+jimport('joomla.application.component.controlleradmin');
+
 /**
  * Filters controller class for Finder.
  *
@@ -16,7 +17,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderControllerFilters extends FinderController
+class FinderControllerFilters extends JControllerAdmin
 {
 	/**
 	 * Method to delete item(s) from the database.
@@ -49,86 +50,6 @@ class FinderControllerFilters extends FinderController
 		else
 		{
 			$message = JText::_('FINDER_FILTER_DELETE_SUCCESS');
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message);
-			return true;
-		}
-	}
-
-	/**
-	 * Method to publish unpublished item(s).
-	 *
-	 * @since	1.0
-	 * @access	public
-	 * @return	void
-	 */
-	function publish()
-	{
-		JRequest::checkToken() or jexit(JText::_('JX_INVALID_TOKEN'));
-
-		$model	= &$this->getModel('Filters', 'FinderModel');
-		$cid	= JRequest::getVar('cid', null, 'post', 'array');
-
-		JArrayHelper::toInteger($cid);
-
-		// Check for items.
-		if (count( $cid ) < 1) {
-			$message = JText::_('FINDER_PUBLISH_FAILED_SELECT_AN_ITEM');
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message, 'warning');
-			return false;
-		}
-
-		// Attempt to publish the items.
-		$return = $model->setStates($cid, 1);
-
-		if ($return === false)
-		{
-			$message = JText::sprintf('FINDER_FILTER_PUBLISH_FAILED', $model->getError());
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message, 'error');
-			return false;
-		}
-		else
-		{
-			$message = JText::_('FINDER_FILTER_PUBLISH_SUCCESS');
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message);
-			return true;
-		}
-	}
-
-	/**
-	 * Method to unpublish published item(s).
-	 *
-	 * @since	1.0
-	 * @access	public
-	 * @return	void
-	 */
-	function unpublish()
-	{
-		JRequest::checkToken() or jexit(JText::_('JX_INVALID_TOKEN'));
-
-		$model	= &$this->getModel('Filters', 'FinderModel');
-		$cid	= JRequest::getVar('cid', null, 'post', 'array');
-
-		JArrayHelper::toInteger($cid);
-
-		// Check for items.
-		if (count( $cid ) < 1) {
-			$message = JText::_('FINDER_UNPUBLISH_FAILED_SELECT_AN_ITEM');
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message, 'warning');
-			return false;
-		}
-
-		// Attempt to unublish the items.
-		$return = $model->setStates($cid, 0);
-
-		if ($return === false)
-		{
-			$message = JText::sprintf('FINDER_FILTER_UNPUBLISH_FAILED', $model->getError());
-			$this->setRedirect('index.php?option=com_finder&view=filters', $message, 'error');
-			return false;
-		}
-		else
-		{
-			$message = JText::_('FINDER_FILTER_UNPUBLISH_SUCCESS');
 			$this->setRedirect('index.php?option=com_finder&view=filters', $message);
 			return true;
 		}

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -30,12 +29,11 @@ class FinderViewFilters extends JView
 	function display($tpl = null)
 	{
 		// Load the view data.
-		$user		= &JFactory::getUser();
-		$filters	= &$this->get('Filters');
-		$pagination	= &$this->get('Pagination');
-		$total		= $this->get('Total');
-		$state		= $this->get('State');
-		$params		= $state->get('params');
+		$user				= &JFactory::getUser();
+		$this->filters		= $this->get('Filters');
+		$this->pagination	= $this->get('Pagination');
+		$this->total		= $this->get('Total');
+		$this->state		= $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -43,16 +41,10 @@ class FinderViewFilters extends JView
 			return false;
 		}
 
-		// Configure the toolbar.
-		$this->setToolbar();
+		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
 
-		// Push out the view data.
-		$this->assignRef('filters', $filters);
-		$this->assignRef('pagination', $pagination);
-		$this->assignRef('user', $user);
-		$this->assign('total', $total);
-		$this->assign('state', $state);
-		$this->assign('params', $params);
+		// Configure the toolbar.
+		$this->addToolbar();
 
 		parent::display($tpl);
 	}
@@ -64,19 +56,30 @@ class FinderViewFilters extends JView
 	 * @return	void
 	 * @since	1.0
 	 */
-	function setToolbar()
+	function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('FINDER_FILTERS_TOOLBAR_TITLE'), 'finder');
+		$canDo	= FinderHelper::getActions();
+
+		JToolBarHelper::title(JText::_('COM_FINDER_FILTERS_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		$toolbar->appendButton('Standard', 'publish', 'Publish', 'filters.publish', true, false);
-		$toolbar->appendButton('Standard', 'unpublish', 'Unpublish', 'filters.unpublish', true, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Standard', 'new', 'New', 'filter.createnew', false, false);
-		$toolbar->appendButton('Standard', 'edit', 'Edit', 'filter.edit', true, false);
-		$toolbar->appendButton('Confirm', 'FINDER_FILTERS_DELETE_CONFIRMATION', 'delete', 'Delete', 'filters.delete', true, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Popup', 'config', 'FINDER_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 570, 500);
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+		if ($canDo->get('core.create')) {
+			JToolBarHelper::addNew('filter.createnew');
+			JToolBarHelper::editList('filter.edit');
+			JToolBarHelper::divider();
+		}
+		if ($canDo->get('core.edit.state')) {
+			JToolBarHelper::publish('filters.publish');
+			JToolBarHelper::unpublish('filters.unpublish');
+			JToolBarHelper::divider();
+		}
+		if ($canDo->get('core.delete')) {
+			JToolBarHelper::deleteList('', 'filters.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::divider();
+		}
+		if ($canDo->get('core.admin')) {
+			JToolBarHelper::preferences('com_finder');
+		}
+		//$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
