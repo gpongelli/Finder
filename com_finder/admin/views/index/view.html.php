@@ -66,8 +66,8 @@ class FinderViewIndex extends JView
 		JToolBarHelper::divider();
 
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publish('index.publish');
-			JToolBarHelper::unpublish('index.unpublish');
+			JToolBarHelper::publish('index.publish', 'JTOOLBAR_PUBLISH', true);
+			JToolBarHelper::unpublish('index.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete')) {
@@ -75,7 +75,7 @@ class FinderViewIndex extends JView
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::trash('index.purge', 'COM_FINDER_INDEX_TOOLBAR_PURGE');
+			JToolBarHelper::trash('index.purge', 'COM_FINDER_INDEX_TOOLBAR_PURGE', false);
 			JToolBarHelper::divider();
 		}
 
