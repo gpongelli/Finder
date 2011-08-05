@@ -31,7 +31,7 @@
 		</field>
 
 		<field
-			name="map_count" type="text" class="inputbox"
+			name="map_count" type="text" class="readonly"
 			label="COM_FINDER_FILTER_MAP_COUNT" description="COM_FINDER_FILTER_MAP_COUNT_DESCRIPTION"
 			size="10" default="0" readonly="true" />
 	</fieldset>
@@ -44,15 +44,15 @@
 			description="COM_FINDER_FILTER_WHEN_START_DATE_DESCRIPTION"
 			default=""
 			filter="string">
-			<option value="">FINDER_FILTER_WHEN_NONE</option>
-			<option value="-1">FINDER_FILTER_WHEN_BEFORE</option>
-			<option value="0">FINDER_FILTER_WHEN_EXACTLY</option>
-			<option value="1">FINDER_FILTER_WHEN_AFTER</option>
+			<option value="">JNONE</option>
+			<option value="-1">COM_FINDER_FILTER_WHEN_BEFORE</option>
+			<option value="0">COM_FINDER_FILTER_WHEN_EXACTLY</option>
+			<option value="1">COM_FINDER_FILTER_WHEN_AFTER</option>
 		</field>
 
-		<field name="d1" type="calendar" class="readonly"
+		<field name="d1" type="calendar" class="inputbox"
 			label="COM_FINDER_FILTER_START_DATE_LABEL" description="COM_FINDER_FILTER_START_DATE_DESCRIPTION"
-			size="22" readonly="true" format="%Y-%m-%d" filter="user_utc" />
+			size="22" format="%Y-%m-%d" filter="user_utc" />
 
 		<field
 			name="w2"
@@ -61,15 +61,15 @@
 			description="COM_FINDER_FILTER_WHEN_END_DATE_DESCRIPTION"
 			default=""
 			filter="string">
-			<option value="">FINDER_FILTER_WHEN_NONE</option>
-			<option value="-1">FINDER_FILTER_WHEN_BEFORE</option>
-			<option value="0">FINDER_FILTER_WHEN_EXACTLY</option>
-			<option value="1">FINDER_FILTER_WHEN_AFTER</option>
+			<option value="">JNONE</option>
+			<option value="-1">COM_FINDER_FILTER_WHEN_BEFORE</option>
+			<option value="0">COM_FINDER_FILTER_WHEN_EXACTLY</option>
+			<option value="1">COM_FINDER_FILTER_WHEN_AFTER</option>
 		</field>
 
-		<field name="d2" type="calendar" class="readonly"
+		<field name="d2" type="calendar" class="inputbox"
 			label="COM_FINDER_FILTER_END_DATE_LABEL" description="COM_FINDER_FILTER_END_DATE_DESCRIPTION"
-			size="22" readonly="true" format="%Y-%m-%d" filter="user_utc" />
+			size="22" format="%Y-%m-%d" filter="user_utc" />
 
 	</fields>	
 </form>
