@@ -60,12 +60,12 @@ class FinderTableFilter extends JTable
 		$date	= JFactory::getDate();
 		$user	= JFactory::getUser();
 
-		if ($this->id) {
+		if ($this->filter_id) {
 			// Existing item
 			$this->modified		= $date->toMySQL();
 			$this->modified_by	= $user->get('id');
 		} else {
-			// New item. A podcast's created field can be set by the user,
+			// New item. A filter's created field can be set by the user,
 			// so we don't touch it if it is set.
 			if (!intval($this->created)) {
 				$this->created = $date->toMySQL();
@@ -73,6 +73,15 @@ class FinderTableFilter extends JTable
 			if (empty($this->created_by)) {
 				$this->created_by = $user->get('id');
 			}
+		}
+
+		if (is_array($this->data)) {
+			$this->map_count	= count($this->data);
+			$this->data			= implode(',', $this->data);
+		}
+		else {
+			$this->map_count	= 0;
+			$this->data			= implode(',', array());
 		}
 
 		// Verify that the alias is unique

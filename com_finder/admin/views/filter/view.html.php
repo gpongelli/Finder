@@ -33,7 +33,6 @@ class FinderViewFilter extends JView
 	function display($tpl = null)
 	{
 		// Load the view data.
-		$this->filter	= $this->get('Filter');
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
 		$this->state	= $this->get('State');

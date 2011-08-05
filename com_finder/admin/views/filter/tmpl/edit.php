@@ -18,7 +18,7 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&id='.(int) $this->item->filter_id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&filter_id='.(int) $this->item->filter_id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 	<div class="width-60 fltlft">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_('Need a label!'); ?></legend>
@@ -30,9 +30,6 @@ JHtml::_('behavior.keepalive');
 				<?php echo $this->form->getInput('alias'); ?></li>
 			</ul>
 		</fieldset>
-	</div>
-	<div id="finder-filter-window">
-		<?php echo JHTML::_('filter.slider', array('selected_nodes' => $this->filter->data)); ?>
 	</div>
 
 	<div class="width-40 fltrt">

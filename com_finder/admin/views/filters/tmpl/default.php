@@ -19,7 +19,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <script type="text/javascript">
 Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'filters.delete') {
-		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');?>)) {
+		if (confirm(Joomla.JText._('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'))) {
 			Joomla.submitform(pressbutton);
 		}
 	}
@@ -110,7 +110,7 @@ Joomla.submitbutton = function(pressbutton) {
 						echo JHtml::_('jgrid.checkedout', $n, $filter->editor, $filter->checked_out_time, 'filters.', $canCheckin);
 					} ?>
 					<?php if ($canEdit) { ?>
-						<a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.edit&id='.(int) $filter->filter_id); ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.edit&filter_id='.(int) $filter->filter_id); ?>">
 							<?php echo $this->escape($filter->title); ?></a>
 					<?php } else {
 							echo $this->escape($filter->title);
