@@ -27,7 +27,7 @@ class JHtmlFinder
 		echo '</div>';
 	}
 
-	function typeslist($active)
+	function typeslist()
 	{
 		$lang = &JFactory::getLanguage();
 
@@ -83,10 +83,10 @@ class JHtmlFinder
 		return $options;
 	}
 
-	function statelist($active)
+	function statelist()
 	{
 		$options	= array();
-		$options[]	= JHtml::_('select.option', '', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
+		$options[]	= JHtml::_('select.option', '*', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
 		$options[]	= JHtml::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
 		$options[]	= JHtml::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
 
