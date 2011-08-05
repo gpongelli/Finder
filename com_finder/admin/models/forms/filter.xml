@@ -1,95 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: filter.xml 981 2010-06-15 18:38:02Z robs $ -->
 <form>
-	<fields>
-		<field
-			name="filter_id"
-			type="hidden"
-			id="filter_id"
-			class="inputbox"
-			label="Id"
-			size="10"
-			default="0"
-			filter="unset"
-			readonly="true" />
+	<fieldset>
+		<field name="filter_id"  type="text" class="readonly" label="JGLOBAL_FIELD_ID_LABEL"
+			description ="JGLOBAL_FIELD_ID_DESC" size="10" default="0"
+			readonly="true"  />
 
 		<field
-			name="title"
-			type="text"
-			id="title"
-			class="inputbox required"
-			label="FINDER_FILTER_TITLE_LABEL"
-			size="30"
-			default=""
-			required="true"
-			filter="string"
-			description="FINDER_FILTER_TITLE_DESC" />
+			name="title" type="text" id="title"
+			label="JGLOBAL_TITLE" description="FINDER_FILTER_TITLE_DESC"
+			size="30" default="" required="true" />
 
-		<field
-			name="alias"
-			type="text"
-			id="alias"
-			class="inputbox"
-			label="FINDER_FILTER_ALIAS_LABEL"
-			size="30"
-			default=""
-			filter="JFilterOutput::stringUrlSafe"
-			description="FINDER_FILTER_ALIAS_DESC" />
-	</fields>
+		<field name="alias" type="text" label="JFIELD_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC" class="inputbox" size="45" />
 
-	<fields group="details">
-		<field
-			name="created"
-			type="text"
-			id="created"
-			class="inputbox"
-			label="FINDER_FILTER_CREATED_LABEL"
-			size="20"
-			default=""
-			readonly="true"
-			filter="unset"
-			description="FINDER_FILTER_CREATED_DESC" />
+		<field name="created" type="calendar" label="JGLOBAL_FIELD_CREATED_LABEL"
+			description="JGLOBAL_FIELD_CREATED_DESC" class="inputbox" size="22"
+			format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
 
-		<field
-			name="modified"
-			type="text"
-			id="modified"
-			class="inputbox"
-			label="FINDER_FILTER_MODIFIED_LABEL"
-			size="20"
-			default=""
-			readonly="true"
-			filter="unset"
-			description="FINDER_FILTER_MODIFIED_DESC" />
+		<field name="modified" type="calendar" class="readonly"
+			label="JGLOBAL_FIELD_MODIFIED_LABEL" description="COM_FINDER_FIELD_MODIFIED_DESC"
+			size="22" readonly="true" format="%Y-%m-%d %H:%M:%S" filter="user_utc" />
 
-		<field
-			name="state"
-			type="list"
-			id="state"
-			class="inputbox"
-			label="FINDER_FILTER_STATE_LABEL"
-			default="1"
-			required="true"
-			filter="integer"
-			description="FINDER_FILTER_STATE_DESC">
-			<option value="0">FINDER_STATE_UNPUBLISHED</option>
-			<option value="1">FINDER_STATE_PUBLISHED</option>
+		<field name="state" type="list" label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" class="inputbox"
+			filter="intval" size="1" default="1" >
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
 		</field>
 
 		<field
-			name="map_count"
-			type="text"
-			id="map_count"
-			class="inputbox"
-			label="FINDER_FILTER_MAP_COUNT_LABEL"
-			size="10"
-			default="0"
-			description="FINDER_FILTER_MAP_COUNT_DESC"
-			readonly="true"
-			filter="unset" />
-	</fields>
+			name="map_count" type="text" class="inputbox"
+			label="FINDER_FILTER_MAP_COUNT_LABEL" description="FINDER_FILTER_MAP_COUNT_DESC"
+			size="10" default="0" readonly="true" />
+	</fieldset>
 	
-	<fields group="params" array="true" label="FINDER_FILTER_PARAMETERS">
+	<fields name="params">
 		<field
 			name="w1"
 			type="list"
@@ -103,15 +50,9 @@
 			<option value="1">FINDER_FILTER_WHEN_AFTER</option>
 		</field>
 
-		<field
-			name="d1"
-			type="calendar"
-			class="inputbox"
-			label="FINDER_FILTER_START_DATE_LABEL"
-			description="FINDER_FILTER_START_DATE_DESC"
-			default=""
-			filter="string"
-			format="%Y-%m-%d" />
+		<field name="d1" type="calendar" class="readonly"
+			label="FINDER_FILTER_START_DATE_LABEL" description="FINDER_FILTER_START_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d" filter="user_utc" />
 
 		<field
 			name="w2"
@@ -126,15 +67,9 @@
 			<option value="1">FINDER_FILTER_WHEN_AFTER</option>
 		</field>
 
-		<field
-			name="d2"
-			type="calendar"
-			id="node_date"
-			class="inputbox"
-			label="FINDER_FILTER_END_DATE_LABEL"
-			description="FINDER_FILTER_END_DATE_DESC"
-			default=""
-			filter="string"
-			format="%Y-%m-%d" />
+		<field name="d2" type="calendar" class="readonly"
+			label="FINDER_FILTER_START_DATE_LABEL" description="FINDER_FILTER_START_DATE_DESC"
+			size="22" readonly="true" format="%Y-%m-%d" filter="user_utc" />
+
 	</fields>	
 </form>

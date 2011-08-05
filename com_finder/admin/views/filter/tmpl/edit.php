@@ -28,12 +28,6 @@ JHtml::_('behavior.keepalive');
 
 				<li><?php echo $this->form->getLabel('alias'); ?>
 				<?php echo $this->form->getInput('alias'); ?></li>
-
-				<li><?php echo $this->form->getLabel('state'); ?>
-				<?php echo $this->form->getInput('state'); ?></li>
-
-				<li><?php echo $this->form->getLabel('map_count'); ?>
-				<?php echo $this->form->getInput('map_count'); ?></li>
 			</ul>
 		</fieldset>
 	</div>
@@ -41,38 +35,51 @@ JHtml::_('behavior.keepalive');
 		<?php echo JHTML::_('filter.slider', array('selected_nodes' => $this->filter->data)); ?>
 	</div>
 
-	<div style="float:left; width:400px;">
-		<fieldset>
-			<legend><?php echo JText::_('Finder Filter Parameters'); ?></legend>
+	<div class="width-40 fltrt">
+		<?php echo JHtml::_('sliders.start', 'filter-sliders-'.$this->item->filter_id, array('useCookie'=>1)); ?>
+			<?php echo JHtml::_('sliders.panel', JText::_('COM_FINDER_FILTER_FIELDSET_DETAILS'), 'filter-details'); ?>
+			<?php $details = $this->form->getGroup('details'); ?>
+			<fieldset class="panelform">
+				<ul class="adminformlist">
+					<li><?php echo $this->form->getLabel('created'); ?>
+					<?php echo $this->form->getInput('created'); ?></li>
 
-			<table class="paramlist admintable">
-				<tbody>
-					<?php foreach($this->form->getFields('params') as $field): ?>
-						<?php
-						if (strcasecmp($field->getType(), 'hidden') == 0) {
-							echo $field->input;
-							continue;
-						}
-						?>
-					<tr>
-						<td class="paramlist_key">
-							<?php echo $field->label; ?><br />
-						</td>
-						<td class="paramlist_value">
-							<?php echo $field->input; ?>
-						</td>
-					</tr>
+					<?php if ($this->item->modified_by) : ?>
+					<li><?php echo $this->form->getLabel('modified_by'); ?>
+					<?php echo $this->form->getInput('modified_by'); ?></li>
+
+					<li><?php echo $this->form->getLabel('modified'); ?>
+					<?php echo $this->form->getInput('modified'); ?></li>
+					<?php endif; ?>
+
+					<li><?php echo $this->form->getLabel('state'); ?>
+					<?php echo $this->form->getInput('state'); ?></li>
+
+					<li><?php echo $this->form->getLabel('map_count'); ?>
+					<?php echo $this->form->getInput('map_count'); ?></li>
+				</ul>
+			</fieldset>
+
+			<?php echo JHtml::_('sliders.panel', JText::_('COM_FINDER_FILTER_FIELDSET_PARAMS'), 'filter-params'); ?>
+			<fieldset class="panelform">
+				<ul class="adminformlist">
+					<?php foreach($this->form->getGroup('params') as $field): ?>
+					<li>
+						<?php if (!$field->hidden): ?>
+						<?php echo $field->label; ?>
+						<?php endif; ?>
+						<?php echo $field->input; ?>
+					</li>
 					<?php endforeach; ?>
-				</tbody>
-			</table>
-		</fieldset>
+				</ul>
+			</fieldset>
+
+			<?php echo JHtml::_('sliders.end'); ?>
 	</div>
 	<div class="clr"></div>
-
-
-	<input type="hidden" name="option" value="com_finder" />
-	<input type="hidden" name="task" value="display" />
-	<input type="hidden" name="view" value="filter" />
-	<input type="hidden" name="layout" value="edit" />
-	<?php echo JHTML::_('form.token'); ?>
+	<div>
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="return" value="<?php echo JRequest::getCmd('return');?>" />
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
 </form>
