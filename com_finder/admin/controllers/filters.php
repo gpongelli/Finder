@@ -8,7 +8,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controlleradmin');
 
 /**
  * Filters controller class for Finder.
@@ -17,7 +17,7 @@ jimport('joomla.application.component.controllerform');
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderControllerFilters extends JControllerForm
+class FinderControllerFilters extends JControllerAdmin
 {
 	/**
 	 * Proxy for getModel.
