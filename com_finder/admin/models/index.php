@@ -260,6 +260,116 @@ class FinderModelIndex extends JModelList
 	}
 
 	/**
+	 * Returns a Table object, always creating it.
+	 *
+	 * @param	type	The table type to instantiate
+	 * @param	string	A prefix for the table class name. Optional.
+	 * @param	array	Configuration array for model. Optional.
+	 *
+	 * @return	JTable	A database object
+	*/
+	public function getTable($type = 'Link', $prefix = 'FinderTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object   $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+	 * @since   11.1
+	 */
+	protected function canDelete($record)
+	{
+		$user = JFactory::getUser();
+		return $user->authorise('core.delete', $this->option);
+	}
+
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object   $record	A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 * @since   11.1
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+		return $user->authorise('core.edit.state', $this->option);
+	}
+
+	/**
+	 * Method to delete one or more records.
+	 *
+	 * @param   array    $pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 * @since   11.1
+	 */
+	public function delete(&$pks)
+	{
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$pks		= (array) $pks;
+		$table		= $this->getTable();
+
+		// Include the content plugins for the on delete events.
+		JPluginHelper::importPlugin('content');
+
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk) {
+
+			if ($table->load($pk)) {
+
+				if ($this->canDelete($table)) {
+
+					$context = $this->option.'.'.$this->name;
+
+					// Trigger the onContentBeforeDelete event.
+					$result = $dispatcher->trigger($this->event_before_delete, array($context, $table));
+					if (in_array(false, $result, true)) {
+						$this->setError($table->getError());
+						return false;
+					}
+
+					if (!$table->delete($pk)) {
+						$this->setError($table->getError());
+						return false;
+					}
+
+					// Trigger the onContentAfterDelete event.
+					$dispatcher->trigger($this->event_after_delete, array($context, $table));
+
+				} else {
+
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					$error = $this->getError();
+					if ($error) {
+						JError::raiseWarning(500, $error);
+					}
+					else {
+						JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
+					}
+				}
+
+			} else {
+				$this->setError($table->getError());
+				return false;
+			}
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
 	 * Method to publish/unpublish links in the index.
 	 *
 	 * @access	public
