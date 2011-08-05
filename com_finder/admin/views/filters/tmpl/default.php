@@ -48,16 +48,16 @@ Joomla.submitbutton = function(pressbutton) {
 				<th class="nowrap">
 					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th width="5%" class="nowrap" style="padding: 0px 15px;">
+				<th width="5%" class="nowrap">
 					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th width="10%" style="padding: 0px 15px;" class="center nowrap">
+				<th width="10%" class="center nowrap">
 					<?php echo JHTML::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by_alias', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th width="10%" style="padding: 0px 15px;" class="center nowrap">
+				<th width="10%" class="center nowrap">
 					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_TIMESTAMP', 'a.created', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th width="5%" style="padding: 0px 15px;" class="center nowrap">
+				<th width="5%" class="center nowrap">
 					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_MAP_COUNT', 'a.map_count', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 			</tr>
@@ -65,7 +65,7 @@ Joomla.submitbutton = function(pressbutton) {
 		<tbody>
 			<?php if (count($this->filters) == 0): ?>
 			<tr class="row0">
-				<td align="center" colspan="11">
+				<td class="center" colspan="11">
 					<?php
 					if ($this->total == 0):
 						echo JText::_('COM_FINDER_NO_FILTERS');
@@ -83,7 +83,12 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php endif; ?>
 
 			<?php $n = 0; $o = 0; $c = count($this->filters); ?>
-			<?php foreach ($this->filters as $filter): ?>
+			<?php foreach ($this->filters as $filter):
+			$canCreate	= $user->authorise('core.create',		'com_finder');
+			$canEdit	= $user->authorise('core.edit',			'com_finder');
+			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $filter->checked_out==$user->get('id') || $filter->checked_out==0;
+			$canChange	= $user->authorise('core.edit.state',	'com_finder') && $canCheckin;
+			?>
 
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center" title="<?php echo (int) $row->link_id;?>">
@@ -92,26 +97,27 @@ Joomla.submitbutton = function(pressbutton) {
 				<td>
 					<?php echo $n+1+$this->state->get('list.start'); ?>
 				</td>
-				<td style="padding-left: 10px; padding-right: 10px;">
-					<?php echo JHTML::_('grid.checkedOut', $filter, $n, 'filter_id'); ?>
-					<?php $filter->url = JURI::base().'index.php?option=com_finder&task=filter.edit&filter_id='.$filter->filter_id; ?>
-					<a href="<?php echo $filter->url; ?>" title="<?php echo $filter->title; ?>"><?php echo $filter->title; ?></a>
+				<td>
+					<?php if ($filter->checked_out) {
+						echo JHtml::_('jgrid.checkedout', $i, $filter->checked_out, $filter->checked_out_time, 'filters.', $canCheckin);
+					} ?>
+					<?php if ($canEdit) { ?>
+						<a href="<?php echo JRoute::_('index.php?option=com_finderer&task=filter.edit&id='.(int) $filter->filter_id); ?>">
+							<?php echo $this->escape($filter->title); ?></a>
+					<?php } else {
+							echo $this->escape($filter->title);
+					} ?>
 				</td>
-				<td class="center nowrap" style="padding: 0px 20px;">
+				<td class="center nowrap">
 					<?php echo JHTML::_('finder.state', $n, $filter->state, true, 'filters'); ?>
 				</td>
-				<td class="center nowrap" style="padding: 0px 20px;">
+				<td class="center nowrap">
 					<?php echo $filter->created_by_alias ? $filter->created_by_alias : $filter->created_by; ?>
 				</td>
-				<td class="center nowrap" style="padding: 0px 20px;">
-					<?php
-						$date = &JFactory::getDate($filter->created);
-						$date->setOffset($this->user->_params->get('timezone'));
-
-						echo $date->toFormat();
-					?>
+				<td class="center nowrap">
+					<?php echo JHtml::_('date', $filter->created, JText::_('DATE_FORMAT_LC4')); ?>
 				</td>
-				<td class="center nowrap" style="padding: 0px 20px;">
+				<td class="center nowrap">
 					<?php echo $filter->map_count; ?>
 				</td>
 			</tr>
@@ -121,16 +127,14 @@ Joomla.submitbutton = function(pressbutton) {
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="11" nowrap="nowrap">
+				<td colspan="11" class="nowrap">
 					<?php echo $this->pagination->getListFooter(); ?>
 				</td>
 			</tr>
 		</tfoot>
 	</table>
 
-	<input type="hidden" name="option" value="com_finder" />
-	<input type="hidden" name="task" value="display" />
-	<input type="hidden" name="view" value="filters" />
+	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $this->state->get('list.ordering'); ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->state->get('list.direction'); ?>" />

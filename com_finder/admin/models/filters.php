@@ -52,6 +52,28 @@ class FinderModelFilters extends JModelList
 	var $_total_query		= null;
 
 	/**
+	 * Constructor.
+	 *
+	 * @param	array	An optional associative array of configuration settings.
+	 * @see		JController
+	 * @since	1.6
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'title', 'a.title',
+				'state', 'a.state',
+				'created_by_alias', 'a.created_by_alias',
+				'created', 'a.created',
+				'map_count', 'a.map_count'
+			);
+		}
+
+		parent::__construct($config);
+	}
+
+	/**
 	 * Overridden method to get model state variables.
 	 *
 	 * @access	public
