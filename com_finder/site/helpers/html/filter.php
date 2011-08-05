@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: filter.php 1064 2010-09-30 18:01:26Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -8,8 +7,6 @@
  */
 
 defined('_JEXEC') or die;
-
-jx('jx.database.databasequery');
 
 /**
  * Filter HTML Behaviors for Finder.
@@ -32,6 +29,7 @@ class JHTMLFilter
 	function slider($options = array())
 	{
 		$db		= &JFactory::getDBO();
+		$query	= $db->getQuery(true);
 		$user	= &JFactory::getUser();
 		$aid	= (int)$user->get('aid');
 		$html	= '';
@@ -47,15 +45,13 @@ class JHTMLFilter
 		$showDates		= array_key_exists('show_date_filters', $options)	? $options['show_date_filters']	: false;
 
 		// Load the predefined filter if specified.
-		if (!empty($filterId))
-		{
-			$sql = new JDatabaseQuery();
-			$sql->select('f.data, f.params');
-			$sql->from('#__jxfinder_filters AS f');
-			$sql->where('f.filter_id = '.(int)$filterId);
+		if (!empty($filterId)) {
+			$query->select('f.data, f.params');
+			$query->from('#__jxfinder_filters AS f');
+			$query->where('f.filter_id = '.(int)$filterId);
 
 			// Load the filter data.
-			$db->setQuery($sql->toString());
+			$db->setQuery($query->__toString());
 			$filter = $db->loadObject();
 
 			// Check for an error.
@@ -70,25 +66,25 @@ class JHTMLFilter
 		}
 
 		// Build the query to get the branch data and the number of child nodes.
-		$sql = new JDatabaseQuery();
-		$sql->select('t.*, count(c.id) AS children');
-		$sql->from('#__jxfinder_taxonomy AS t');
-		$sql->join('INNER', '#__jxfinder_taxonomy AS c ON c.parent_id = t.id');
-		$sql->where('t.parent_id = 1');
-		$sql->where('t.state = 1');
-		$sql->where('t.access <= '.(int)$aid);
-		$sql->where('c.state = 1');
-		$sql->where('c.access <= '.(int)$aid);
-		$sql->group('t.id');
-		$sql->order('t.ordering, t.title');
+		$query->clear();
+		$query->select('t.*, count(c.id) AS children');
+		$query->from('#__jxfinder_taxonomy AS t');
+		$query->join('INNER', '#__jxfinder_taxonomy AS c ON c.parent_id = t.id');
+		$query->where('t.parent_id = 1');
+		$query->where('t.state = 1');
+		$query->where('t.access <= '.(int)$aid);
+		$query->where('c.state = 1');
+		$query->where('c.access <= '.(int)$aid);
+		$query->group('t.id');
+		$query->order('t.ordering, t.title');
 
 		// Limit the branch children to a predefined filter.
 		if ($filter) {
-			$sql->where('c.id IN('.$filter->data.')');
+			$query->where('c.id IN('.$filter->data.')');
 		}
 
 		// Load the branches.
-		$db->setQuery($sql->toString());
+		$db->setQuery($query->__toString());
 		$branches = $db->loadObjectList('id');
 
 		// Check for an error.

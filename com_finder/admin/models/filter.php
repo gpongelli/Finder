@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: filter.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,7 +8,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modeladmin');
 
 /**
  * Filter model class for Finder.
@@ -18,15 +17,19 @@ jimport('joomla.application.component.model');
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderModelFilter extends JModel
+class FinderModelFilter extends JModelAdmin
 {
 	/**
-	 * Flag to indicate model state initialization.
-	 *
-	 * @access	protected
-	 * @var		boolean
+	 * @var		string	The prefix to use with controller messages.
 	 */
-	var $__state_set		= null;
+	protected $text_prefix = 'COM_FINDER';
+
+	/**
+	 * Model context string.
+	 *
+	 * @var		string	The context of the model
+	 */
+	protected $_context		= 'com_finder.filter';
 
 	/**
 	 * Overridden method to get model state variables.
@@ -36,7 +39,7 @@ class FinderModelFilter extends JModel
 	 * @return	object	The property where specified, the state object where omitted.
 	 * @since	1.0
 	 */
-	function getState($property = null)
+/*	function getState($property = null)
 	{
 		if (!$this->__state_set)
 		{
@@ -63,7 +66,7 @@ class FinderModelFilter extends JModel
 
 		return parent::getState($property);
 	}
-
+*/
 
 	/**
 	 * Method to checkin a row.
@@ -73,7 +76,7 @@ class FinderModelFilter extends JModel
 	 * @param	integer	$id		The numeric id of a row
 	 * @return	boolean	True on success/false on failure
 	 */
-	function checkin($filter_id = null)
+/*	function checkin($filter_id = null)
 	{
 		// Initialize variables.
 		$user		= &JFactory::getUser();
@@ -103,7 +106,7 @@ class FinderModelFilter extends JModel
 
 		return true;
 	}
-
+*/
 	/**
 	 * Method to check-out a filter for editing.
 	 *
@@ -112,7 +115,7 @@ class FinderModelFilter extends JModel
 	 * @return	bool	False on failure or error, success otherwise.
 	 * @since	1.0
 	 */
-	function checkout($filter_id)
+/*	function checkout($filter_id)
 	{
 		// Initialize variables.
 		$user		= &JFactory::getUser();
@@ -145,28 +148,36 @@ class FinderModelFilter extends JModel
 
 		return true;
 	}
+*/
+	/**
+	* Custom clean cache method
+	*
+	* @param	string	$group		The component name
+	* @param	int		$client_id	The client ID
+	*
+	* @return	void
+	* @since	1.7
+	*/
+	function cleanCache($group = 'com_finder', $client_id = 1)
+	{
+		parent::cleanCache($group, $client_id);
+	}
 
 	/**
-	 * Method to get the form object.
+	 * Method to get the record form.
 	 *
-	 * @access	public
-	 * @return	mixed	JForm object on success, false on failure.
-	 * @since	1.0
+	 * @param	array	$data		Data for the form.
+	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return	mixed	$form		A JForm object on success, false on failure
+	 * @since	1.6
 	 */
-	function &getForm()
+	public function getForm($data = array(), $loadData = true)
 	{
-		$false	= false;
-
 		// Get the form.
-		jx('jx.form.form');
-		JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
-		JForm::addFieldPath(JPATH_COMPONENT.'/models/fields');
-		$form = JForm::getInstance('filter', 'JForm', 'filter', array('array' => 'JForm'));
-
-		// Check for an error.
-		if (JError::isError($form)) {
-			$this->setError($form->getMessage());
-			return $false;
+		$form = $this->loadForm('com_finder.filter', 'filter', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
 		}
 
 		return $form;
@@ -178,7 +189,7 @@ class FinderModelFilter extends JModel
 		$false		= false;
 
 		// Get a FinderTableFilter instance.
-		JTable::addIncludePath(JPATH_COMPONENT.DS.'tables');
+		JTable::addIncludePath(JPATH_COMPONENT.'/tables');
 		$filter = &JTable::getInstance('Filter', 'FinderTable');
 
 		// Attempt to load the row.
@@ -208,6 +219,53 @@ class FinderModelFilter extends JModel
 	}
 
 	/**
+	 * Returns a JTable object, always creating it.
+	 *
+	 * @param	string	$type	The table type to instantiate
+	 * @param	string	$prefix	A prefix for the table class name. Optional.
+	 * @param	array	$config	Configuration array for model. Optional.
+	 *
+	 * @return	JTable	A database object
+	*/
+	public function getTable($type = 'Filter', $prefix = 'FinderTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return	mixed	$data	The data for the form.
+	 * @since	1.6
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_finder.edit.filter.data', array());
+
+		if (empty($data)) {
+			$data = $this->getItem();
+		}
+		return $data;
+	}
+
+	/**
+	 * Prepare and sanitise the table data prior to saving.
+	 *
+	 * @param	JTable	$table	A JTable object.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	protected function prepareTable(&$table)
+	{
+		// Set the publish date to now
+		if($table->published == 1 && intval($table->publish_up) == 0) {
+			$table->publish_up = JFactory::getDate()->toMySQL();
+		}
+	}
+
+	/**
 	 * Method to validate the form data.
 	 *
 	 * @access	public
@@ -215,7 +273,7 @@ class FinderModelFilter extends JModel
 	 * @return	mixed	Array of filtered data if valid, false otherwise.
 	 * @since	1.0
 	 */
-	function validate($data)
+/*	function validate($data)
 	{
 		// Get the form.
 		$form = &$this->getForm();
@@ -248,8 +306,8 @@ class FinderModelFilter extends JModel
 
 		return $data;
 	}
-
-	function save($data)
+*/
+/*	function save($data)
 	{
 		$app		= &JFactory::getApplication();
 		$offset		= $app->getCfg('offset');
@@ -308,8 +366,8 @@ class FinderModelFilter extends JModel
 
 		return $filter->filter_id;
 	}
-
-	function _prepareSave($filter)
+*/
+/*	function _prepareSave($filter)
 	{
 		jimport('joomla.filter.output');
 		$date = &JFactory::getDate();
@@ -352,4 +410,5 @@ class FinderModelFilter extends JModel
 
 		return $filter;
 	}
+*/
 }

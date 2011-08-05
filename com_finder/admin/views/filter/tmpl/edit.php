@@ -9,45 +9,34 @@
 
 defined('_JEXEC') or die;
 
-JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHTML::addIncludePath(JPATH_SITE.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'html');
-JHTML::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
-JHTML::_('behavior.tooltip');
-JHTML::_('behavior.formvalidation');
+JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHTML::addIncludePath(JPATH_SITE.'/components/com_finder/helpers/html');
 
-// Get the form fields.
-$fieldsMain		= $this->form->getFields();
-$fieldsDetails	= $this->form->getFields('details');
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.keepalive');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&hidemainmenu=1'); ?>" method="post" name="adminForm">
-	<div class="col width-100" style="width: 100%">
-		<table class="adminform">
-			<tbody>
-				<tr>
-					<td>
-						<strong><?php echo $fieldsMain['title']->label; ?>:</strong><br />
-						<?php echo $fieldsMain['title']->input; ?>
-					</td>
-					<td>
-						<strong><?php echo $fieldsMain['alias']->label; ?>:</strong><br />
-						<?php echo $fieldsMain['alias']->input; ?>
-					</td>
-					<td>
-						<strong><?php echo $fieldsDetails['state']->label; ?></strong><br />
-						<?php echo $fieldsDetails['state']->input; ?>
-					</td>
-					<td>
-						<strong><?php echo $fieldsDetails['map_count']->label; ?></strong><br />
-						<?php echo $fieldsDetails['map_count']->input; ?>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+<form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&id='.(int) $this->item->filter_id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+	<div class="width-60 fltlft">
+		<fieldset class="adminform">
+			<legend><?php echo JText::_('Need a label!'); ?></legend>
+			<ul class="adminformlist">
+				<li><?php echo $this->form->getLabel('title'); ?>
+				<?php echo $this->form->getInput('title'); ?></li>
+
+				<li><?php echo $this->form->getLabel('alias'); ?>
+				<?php echo $this->form->getInput('alias'); ?></li>
+
+				<li><?php echo $this->form->getLabel('state'); ?>
+				<?php echo $this->form->getInput('state'); ?></li>
+
+				<li><?php echo $this->form->getLabel('map_count'); ?>
+				<?php echo $this->form->getInput('map_count'); ?></li>
+			</ul>
+		</fieldset>
 	</div>
-
-	<div class="clr"></div>
-
 	<div id="finder-filter-window">
 		<?php echo JHTML::_('filter.slider', array('selected_nodes' => $this->filter->data)); ?>
 	</div>

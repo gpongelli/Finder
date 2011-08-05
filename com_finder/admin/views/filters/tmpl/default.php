@@ -73,7 +73,7 @@ Joomla.submitbutton = function(pressbutton) {
 					if ($this->total == 0):
 						echo JText::_('COM_FINDER_NO_FILTERS');
 						?>
-						<a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.createnew'); ?>" title="<?php echo JText::_('COM_FINDER_CREATE_FILTER'); ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.add'); ?>" title="<?php echo JText::_('COM_FINDER_CREATE_FILTER'); ?>">
 							<?php echo JText::_('COM_FINDER_CREATE_FILTER'); ?>
 						</a>
 						<?php
@@ -124,7 +124,7 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php echo $filter->map_count; ?>
 				</td>
 				<td class="center">
-					<?php echo (int) $filter->id; ?>
+					<?php echo (int) $filter->filter_id; ?>
 				</td>
 			</tr>
 

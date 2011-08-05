@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -20,6 +19,10 @@ jimport('joomla.application.component.view');
  */
 class FinderViewFilter extends JView
 {
+	protected $form;
+	protected $item;
+	protected $state;
+
 	/**
 	 * Method to display the view.
 	 *
@@ -30,10 +33,10 @@ class FinderViewFilter extends JView
 	function display($tpl = null)
 	{
 		// Load the view data.
-		$filter	= $this->get('Filter');
-		$form	= $this->get('Form');
-		$state	= $this->get('State');
-		$params	= $state->get('params');
+		$this->filter	= $this->get('Filter');
+		$this->item		= $this->get('Item');
+		$this->form		= $this->get('Form');
+		$this->state	= $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -41,19 +44,11 @@ class FinderViewFilter extends JView
 			return false;
 		}
 
+		// Prepare the view.
+		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
+
 		// Configure the toolbar.
-		$this->setToolbar();
-
-		// Prepare the form.
-		if ($form) {
-			$form->bind($filter);
-		}
-
-		// Push out the view data.
-		$this->assignRef('filter',	$filter);
-		$this->assignRef('form',	$form);
-		$this->assignRef('state',	$state);
-		$this->assignRef('params',	$params);
+		$this->addToolbar();
 
 		parent::display($tpl);
 	}
@@ -65,18 +60,48 @@ class FinderViewFilter extends JView
 	 * @return	void
 	 * @since	1.0
 	 */
-	function setToolbar()
+	function addToolbar()
 	{
+		JRequest::setVar('hidemainmenu', true);
+
+		$user		= JFactory::getUser();
+		$userId		= $user->get('id');
+		$isNew		= ($this->item->filter_id == 0);
+		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
+		$canDo		= FinderHelper::getActions();
+
 		// Configure the toolbar.
-		JToolBarHelper::title(JText::_('FINDER_FILTER_EDIT_TOOLBAR_TITLE'), 'finder');
+		JToolBarHelper::title(JText::_('COM_FINDER_FILTER_EDIT_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		$toolbar->appendButton('Standard', 'new', 'FINDER_SAVENEW', 'filter.savenew', false, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Standard', 'save', 'SAVE', 'filter.save', false, false);
-		$toolbar->appendButton('Standard', 'apply', 'APPLY', 'filter.apply', false, false);
-		$toolbar->appendButton('Standard', 'cancel', 'CANCEL', 'filter.cancel', false, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+			// Set the actions for new and existing records.
+		if ($isNew)  {
+			// For new records, check the create permission.
+			if ($canDo->get('core.create')) {
+				JToolBarHelper::apply('filter.apply');
+				JToolBarHelper::save('filter.save');
+				JToolBarHelper::save2new('filter.save2new');
+			}
+
+			JToolBarHelper::cancel('filter.cancel');
+		} else {
+			// Since it's an existing record, check the edit permission.
+			if ($canDo->get('core.edit')) {
+				JToolBarHelper::apply('filter.apply');
+				JToolBarHelper::save('filter.save');
+
+				// We can save this record, but check the create permission to see if we can return to make a new one.
+				if ($canDo->get('core.create')) {
+					JToolBarHelper::save2new('filter.save2new');
+				}
+			}
+			// If an existing item, can save as a copy
+			if ($canDo->get('core.create')) {
+				JToolBarHelper::save2copy('filter.save2copy');
+			}
+
+			JToolBarHelper::cancel('filter.cancel', 'JTOOLBAR_CLOSE');
+		}
+		//$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
