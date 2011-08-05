@@ -7,7 +7,7 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.modellist');
 
 /**
  * Index model class for Finder.
@@ -16,23 +16,12 @@ jimport('joomla.application.component.model');
  * @subpackage	com_finder
  * @version		1.0
  */
-// @TODO: Determine which JModel variant is best to extend and move forward
-class FinderModelIndex extends JModel
+class FinderModelIndex extends JModelList
 {
-	/**
-	 * @var		boolean		Flag to indicate model state initialization.
-	 */
-	protected $__state_set;
-
 	/**
 	 * @var		array		Container for index information.
 	 */
 	protected $_index;
-
-	/**
-	 * @var		object		Container for JPagination object.
-	 */
-	protected $_pagination;
 
 	/**
 	 * @var		integer		The number of visible items in the list.
@@ -117,25 +106,6 @@ class FinderModelIndex extends JModel
 	}
 
 	/**
-	 * Method to get a list pagination object.
-	 *
-	 * @access	public
-	 * @return	object	A JPagination object.
-	 * @since	1.0
-	 */
-	public function getPagination()
-	{
-		if (!empty($this->_pagination)) {
-			return $this->_pagination;
-		}
-
-		jimport('joomla.html.pagination');
-		$this->_pagination = new JPagination($this->getCount(), $this->getState('list.start'), $this->getState('list.limit'));
-
-		return $this->_pagination;
-	}
-
-	/**
 	 * Method to get the number of relevant links.
 	 *
 	 * @access	public
@@ -202,52 +172,22 @@ class FinderModelIndex extends JModel
 	}
 
 	/**
-	 * Method to delete links from the index.
-	 *
-	 * @access	public
-	 * @param	array	$link_ids	An array of link ids.
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
-	 */
-	public function delete($link_ids)
-	{
-		// Include the indexer.
-		require_once JPATH_COMPONENT.DS.'helpers'.DS.'indexer'.DS.'indexer.php';
-
-		// Iterate the links to delete each one.
-		foreach ($link_ids as $link_id)
-		{
-			// Delete the link.
-			$return = FinderIndexer::remove($link_id);
-
-			// Check for an error.
-			if (JError::isError($return)) {
-				$this->setError($return->getMessage());
-				return false;
-			}
-		}
-
-		// Optimize the index.
-		FinderIndexer::optimize();
-
-		return true;
-	}
-
-	/**
 	 * Method to purge the index, deleting all links.
 	 *
 	 * @return	boolean		True on success, false on failure.
 	 */
 	public function purge()
 	{
+		$db		= $this->getDbo();
+
 		// Truncate the links table.
-		$this->_db->setQuery('TRUNCATE TABLE #__jxfinder_links');
-		$this->_db->query();
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_links');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Truncate the links terms tables.
@@ -256,64 +196,64 @@ class FinderModelIndex extends JModel
 			// Get the mapping table suffix.
 			$suffix = dechex($i);
 
-			$this->_db->setQuery('TRUNCATE TABLE #__jxfinder_links_terms'.$suffix);
-			$this->_db->query();
+			$db->setQuery('TRUNCATE TABLE #__jxfinder_links_terms'.$suffix);
+			$db->query();
 
 			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
+			if ($db->getErrorNum()) {
 				// Throw database error exception.
-				throw new Exception($this->_db->getErrorMsg(), 500);
+				throw new Exception($db->getErrorMsg(), 500);
 			}
 		}
 
 		// Truncate the terms table.
-		$this->_db->setQuery('TRUNCATE TABLE #__jxfinder_terms');
-		$this->_db->query();
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_terms');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Truncate the taxonomy map table.
-		$this->_db->setQuery('TRUNCATE TABLE #__jxfinder_taxonomy_map');
-		$this->_db->query();
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_taxonomy_map');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Delete all the taxonomy nodes except the root.
-		$this->_db->setQuery('DELETE FROM #__jxfinder_taxonomy WHERE id > 1');
-		$this->_db->query();
+		$db->setQuery('DELETE FROM #__jxfinder_taxonomy WHERE id > 1');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Truncate the tokens tables.
-		$this->_db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
-		$this->_db->query();
+		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Truncate the tokens aggregate table.
-		$this->_db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
-		$this->_db->query();
+		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($db->getErrorNum()) {
 			// Throw database error exception.
-			throw new Exception($this->_db->getErrorMsg(), 500);
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		return true;
@@ -329,16 +269,18 @@ class FinderModelIndex extends JModel
 	 */
 	public function publish($link_ids)
 	{
+		$db		= $this->getDbo();
+
 		// Set the links states to unpublished.
 		$query	= 'UPDATE #__jxfinder_links SET published = 1'
 				. ' WHERE link_id = '.implode(' OR link_id = ', $link_ids);
 
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
+		if ($db->getErrorNum()) {
+			$this->setError($db->getErrorMsg());
 			return false;
 		}
 
@@ -355,16 +297,18 @@ class FinderModelIndex extends JModel
 	 */
 	public function unpublish($link_ids)
 	{
+		$db		= $this->getDbo();
+
 		// Set the links states to unpublished.
 		$query	= 'UPDATE #__jxfinder_links SET published = 0'
 				. ' WHERE link_id = '.implode(' OR link_id = ', $link_ids);
 
-		$this->_db->setQuery($query);
-		$this->_db->query();
+		$db->setQuery($query);
+		$db->query();
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
+		if ($db->getErrorNum()) {
+			$this->setError($db->getErrorMsg());
 			return false;
 		}
 
