@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 // TODO: The indexer JS, both versions, are failing
+JHTML::_('behavior.mootools');
 JHTML::stylesheet('administrator/components/com_finder/media/css/indexer.css', false, false, false);
 JHTML::script('administrator/components/com_finder/media/js/indexer12.js', false, false);
 ?>
