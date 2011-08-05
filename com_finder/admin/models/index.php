@@ -260,47 +260,20 @@ class FinderModelIndex extends JModelList
 	}
 
 	/**
-	 * Method to published links in the index.
+	 * Method to publish/unpublish links in the index.
 	 *
 	 * @access	public
 	 * @param	array	$link_ids	An array of link ids.
+	 * @param	int		$state	An integer representing the state of the link
 	 * @return	bool	Returns true on success, false on failure.
 	 * @since	1.0
 	 */
-	public function publish($link_ids)
+	public function publish($link_ids, $state)
 	{
 		$db		= $this->getDbo();
 
 		// Set the links states to unpublished.
-		$query	= 'UPDATE #__jxfinder_links SET published = 1'
-				. ' WHERE link_id = '.implode(' OR link_id = ', $link_ids);
-
-		$db->setQuery($query);
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			$this->setError($db->getErrorMsg());
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to unpublish links in the index.
-	 *
-	 * @access	public
-	 * @param	array	$link_ids	An array of link ids.
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
-	 */
-	public function unpublish($link_ids)
-	{
-		$db		= $this->getDbo();
-
-		// Set the links states to unpublished.
-		$query	= 'UPDATE #__jxfinder_links SET published = 0'
+		$query	= 'UPDATE #__jxfinder_links SET published = ' . (int) $state
 				. ' WHERE link_id = '.implode(' OR link_id = ', $link_ids);
 
 		$db->setQuery($query);
