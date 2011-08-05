@@ -18,13 +18,19 @@ Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'index.purge') {
 		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');?>)) {
 			Joomla.submitform(pressbutton);
+		} else {
+			return false;
 		}
 	}
 	if (pressbutton == 'index.delete') {
 		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');?>)) {
 			Joomla.submitform(pressbutton);
+		} else {
+			return false;
 		}
 	}
+
+	Joomla.submitform(pressbutton);
 }
 </script>
 
@@ -101,7 +107,7 @@ Joomla.submitbutton = function(pressbutton) {
 				</td>
 				<td>
 					<?php if (intval($row->publish_start_date) OR intval($row->publish_end_date) OR intval($row->start_date) OR intval($row->end_date)) : ?>
-					<img src="<?php echo $this->baseurl;?>/components/com_finder/media/images/calendar.png" style="border:1;float:right" class="hasTip" title="<?php echo JText::sprintf('FINDER_INDEX_DATE_INFO', $row->publish_start_date, $row->publish_end_date, $row->start_date, $row->end_date);?>" />
+					<img src="<?php echo $this->baseurl;?>/components/com_finder/media/images/calendar.png" style="border:1;float:right" class="hasTip" title="<?php echo JText::sprintf('COM_FINDER_INDEX_DATE_INFO', $row->publish_start_date, $row->publish_end_date, $row->start_date, $row->end_date);?>" />
 					<?php endif; ?>
 					<?php echo $this->escape($row->title); ?>
 				</td>
