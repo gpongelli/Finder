@@ -62,6 +62,7 @@ class FinderModelFilters extends JModelList
 	{
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
+				'id', 'a.id',
 				'title', 'a.title',
 				'state', 'a.state',
 				'created_by_alias', 'a.created_by_alias',
