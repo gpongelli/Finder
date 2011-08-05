@@ -9,6 +9,11 @@
 defined('_JEXEC') or die;
 
 JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
+$user		= JFactory::getUser();
+$userId		= $user->get('id');
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 
 <script type="text/javascript">
@@ -46,22 +51,22 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php echo JText::_('NUM'); ?>
 				</th>
 				<th class="nowrap">
-					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%" class="nowrap">
-					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="center nowrap">
-					<?php echo JHTML::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by_alias', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', 'JGRID_HEADING_CREATED_BY', 'a.created_by_alias', $listDirn, $listOrder); ?>
 				</th>
 				<th width="10%" class="center nowrap">
-					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_TIMESTAMP', 'a.created', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_TIMESTAMP', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th width="5%" class="center nowrap">
-					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_MAP_COUNT', 'a.map_count', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', 'COM_FINDER_FILTER_MAP_COUNT', 'a.map_count', $listDirn, $listOrder); ?>
 				</th>
 				<th width="1%" class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.filter_id', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
 		</thead>
@@ -94,8 +99,8 @@ Joomla.submitbutton = function(pressbutton) {
 			?>
 
 			<tr class="row<?php echo $n % 2; ?>">
-				<td class="center" title="<?php echo (int) $row->link_id;?>">
-					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
+				<td class="center">
+					<?php echo JHtml::_('grid.id', $n, $filter->filter_id); ?>
 				</td>
 				<td>
 					<?php echo $n+1+$this->state->get('list.start'); ?>
