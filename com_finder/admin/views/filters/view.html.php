@@ -69,8 +69,8 @@ class FinderViewFilters extends JView
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publish('filters.publish');
-			JToolBarHelper::unpublish('filters.unpublish');
+			JToolBarHelper::publish('filters.publish', 'JTOOLBAR_PUBLISH', true);
+			JToolBarHelper::unpublish('filters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete')) {

@@ -94,7 +94,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php foreach ($this->items as $filter):
 			$canCreate	= $user->authorise('core.create',		'com_finder');
 			$canEdit	= $user->authorise('core.edit',			'com_finder');
-			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $filter->checked_out==$user->get('id') || $filter->checked_out==0;
+			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $filter->checked_out == $user->get('id') || $filter->checked_out == 0;
 			$canChange	= $user->authorise('core.edit.state',	'com_finder') && $canCheckin;
 			?>
 
@@ -117,7 +117,8 @@ Joomla.submitbutton = function(pressbutton) {
 					} ?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHTML::_('finder.state', $n, $filter->state, true, 'filters'); ?>
+					<?php //TODO: Why is it looking for a published field!?
+					 echo JHtml::_('jgrid.published', $filter->state, $n, 'filters.', $canChange); ?>
 				</td>
 				<td class="center nowrap">
 					<?php echo $filter->created_by_alias ? $filter->created_by_alias : $filter->user_name; ?>
