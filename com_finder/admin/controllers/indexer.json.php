@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: indexer.json.php 1058 2010-09-21 19:58:34Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,8 +8,10 @@
 
 defined('_JEXEC') or die;
 
+jimport('joomla.application.component.controller');
+
 // Register dependent classes.
-JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'indexer'.DS.'indexer.php');
+JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/indexer/indexer.php');
 
 /**
  * Indexer controller class for Finder.
@@ -18,7 +19,7 @@ JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS
  * @package		JXtended.Finder
  * @subpackage	com_finder
  */
-class FinderControllerIndexer extends FinderController
+class FinderControllerIndexer extends JController
 {
 	/**
 	 * Method to start the indexer.
@@ -269,16 +270,16 @@ class FinderIndexerResponse
 
 			// Set the appropriate messages.
 			if ($this->totalItems <= 0 && $this->complete) {
-				$this->header	= JText::_('FINDER_INDEXER_HEADER_COMPLETE');
-				$this->message	= JText::_('FINDER_INDEXER_MESSAGE_COMPLETE');
+				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_COMPLETE');
+				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_COMPLETE');
 			}
 			elseif ($this->totalItems <= 0) {
-				$this->header	= JText::_('FINDER_INDEXER_HEADER_OPTIMIZE');
-				$this->message	= JText::_('FINDER_INDEXER_MESSAGE_OPTIMIZE');
+				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_OPTIMIZE');
+				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_OPTIMIZE');
 			}
 			else {
-				$this->header	= JText::_('FINDER_INDEXER_HEADER_RUNNING');
-				$this->message	= JText::_('FINDER_INDEXER_MESSAGE_RUNNING');
+				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_RUNNING');
+				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_RUNNING');
 			}
 		}
 	}

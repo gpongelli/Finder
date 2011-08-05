@@ -16,11 +16,9 @@ if (!defined('JX_FINDER_UNICODE')) {
 }
 
 // Register dependent classes.
-JLoader::register('FinderIndexerHelper', dirname(__FILE__).DS.'helper.php');
-JLoader::register('FinderIndexerTaxonomy', dirname(__FILE__).DS.'taxonomy.php');
-JLoader::register('FinderHelperRoute', JPATH_SITE.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'route.php');
-
-jx('jx.database.databasequery');
+JLoader::register('FinderIndexerHelper', dirname(__FILE__).'/helper.php');
+JLoader::register('FinderIndexerTaxonomy', dirname(__FILE__).'/taxonomy.php');
+JLoader::register('FinderHelperRoute', JPATH_SITE.'/components/com_finder/helpers/route.php');
 
 /**
  * Query class for the Finder indexer package.
@@ -384,7 +382,7 @@ class FinderIndexerQuery
 		$db = JFactory::getDBO();
 
 		// Load the predefined filter.
-		$query = new JDatabaseQuery();
+		$query	= $db->getQuery(true);
 		$query->select('f.data, f.params');
 		$query->from('#__jxfinder_filters AS f');
 		$query->where('f.filter_id = '.(int)$filterId);
@@ -435,7 +433,7 @@ class FinderIndexerQuery
 		 * two reasons: one, it allows us to ensure that the filters being used
 		 * are real; two, we need to sort the filters by taxonomy branch.
 		 */
-		$query = new JDatabaseQuery();
+		$query->clear();
 		$query->select('t1.id, t1.title, t2.title AS branch');
 		$query->from('#__jxfinder_taxonomy AS t1');
 		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
@@ -498,7 +496,7 @@ class FinderIndexerQuery
 		 * two reasons: one, it allows us to ensure that the filters being used
 		 * are real; two, we need to sort the filters by taxonomy branch.
 		 */
-		$query = new JDatabaseQuery();
+		$query->clear();
 		$query->select('t1.id, t1.title, t2.title AS branch');
 		$query->from('#__jxfinder_taxonomy AS t1');
 		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
@@ -1100,9 +1098,9 @@ class FinderIndexerQuery
 		$db = JFactory::getDBO();
 
 		// Create a database query to build match the token.
-		$sql = new JDatabaseQuery();
-		$sql->select('t.term, t.term_id');
-		$sql->from('#__jxfinder_terms AS t');
+		$query	= $db->getQuery(true);
+		$query->select('t.term, t.term_id');
+		$query->from('#__jxfinder_terms AS t');
 
 		/*
 		 * If the token is a phrase, the lookup process is fairly simple. If
@@ -1114,26 +1112,26 @@ class FinderIndexerQuery
 		if ($token->phrase)
 		{
 			// Add the phrase to the query.
-			$sql->where('t.term = '.$db->quote($token->term));
-			$sql->where('t.phrase = 1');
+			$query->where('t.term = '.$db->quote($token->term));
+			$query->where('t.phrase = 1');
 		}
 		else {
 			// Add the term to the query.
-			$sql->where('t.term = '.$db->quote($token->term));
-			$sql->where('t.phrase = 0');
+			$query->where('t.term = '.$db->quote($token->term));
+			$query->where('t.phrase = 0');
 
 			// Clone the query, replace the WHERE clause.
-			$sub = clone($sql);
-			$sub->clear('where');
-			$sub->where('t.stem = '.$db->quote($token->stem));
-			$sub->where('t.phrase = 0');
+			$query = clone($sql);
+			$query->clear('where');
+			$query->where('t.stem = '.$db->quote($token->stem));
+			$query->where('t.phrase = 0');
 
 			// Union the two queries.
-			$sql->union($sub);
+			$query->union($sub);
 		}
 
 		// Get the terms.
-		$db->setQuery($sql);
+		$db->setQuery($query);
 		$matches = $db->loadObjectList();
 
 		// Check for a database error.
@@ -1158,14 +1156,14 @@ class FinderIndexerQuery
 		if (empty($token->matches))
 		{
 			// Create a database query to get the similar terms.
-			$sql = new JDatabaseQuery();
-			$sql->select('DISTINCT t.term_id AS id, t.term AS term');
-			$sql->from('#__jxfinder_terms AS t');
-			$sql->where('t.soundex = SOUNDEX('.$db->quote($token->term).')');
-			$sql->where('t.phrase = '.(int)$token->phrase);
+			$query->clear();
+			$query->select('DISTINCT t.term_id AS id, t.term AS term');
+			$query->from('#__jxfinder_terms AS t');
+			$query->where('t.soundex = SOUNDEX('.$db->quote($token->term).')');
+			$query->where('t.phrase = '.(int)$token->phrase);
 
 			// Get the terms.
-			$db->setQuery($sql);
+			$db->setQuery($query);
 			$results = $db->loadObjectList();
 
 			// Check for a database error.

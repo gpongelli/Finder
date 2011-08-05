@@ -16,13 +16,12 @@ if (!defined('JX_FINDER_UNICODE')) {
 }
 
 // Register dependent classes.
-JLoader::register('FinderIndexerHelper', dirname(__FILE__).DS.'helper.php');
-JLoader::register('FinderIndexerParser', dirname(__FILE__).DS.'parser.php');
-JLoader::register('FinderIndexerStemmer', dirname(__FILE__).DS.'stemmer.php');
-JLoader::register('FinderIndexerTaxonomy', dirname(__FILE__).DS.'taxonomy.php');
-JLoader::register('FinderIndexerToken', dirname(__FILE__).DS.'token.php');
+JLoader::register('FinderIndexerHelper', dirname(__FILE__).'/helper.php');
+JLoader::register('FinderIndexerParser', dirname(__FILE__).'/parser.php');
+JLoader::register('FinderIndexerStemmer', dirname(__FILE__).'/stemmer.php');
+JLoader::register('FinderIndexerTaxonomy', dirname(__FILE__).'/taxonomy.php');
+JLoader::register('FinderIndexerToken', dirname(__FILE__).'/token.php');
 
-jx('jx.database.databasequery');
 jimport('joomla.filesystem.file');
 
 /**
@@ -191,7 +190,8 @@ class FinderIndexer
 		$nd = $db->getNullDate();
 
 		// Check if the item is in the database.
-		$query = new JDatabaseQuery();
+		$db = JFactory::getDBO();
+		$query	= $db->getQuery(true);
 		$query->select('`link_id`, `md5sum`');
 		$query->from('`#__jxfinder_links`');
 		$query->where('`url` = '.$db->quote($item->url));

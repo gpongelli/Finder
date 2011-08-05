@@ -46,7 +46,7 @@ abstract class FinderIndexerStemmer
 
 		// Setup the adapter for the stemmer.
 		$adapter	= JFilterInput::clean($adapter, 'cmd');
-		$path		= dirname(__FILE__).DS.'stemmer'.DS.$adapter.'.php';
+		$path		= dirname(__FILE__).'/stemmer/'.$adapter.'.php';
 		$class		= 'FinderIndexerStemmer'.ucfirst($adapter);
 
 		// Check if a stemmer exists for the adapter.

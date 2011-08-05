@@ -10,16 +10,9 @@
 
 defined('_JEXEC') or die;
 
-// Detect if we have full UTF-8 and unicode support.
-if (!defined('JX_FINDER_UNICODE')) {
-	define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
-}
-
 // Register dependent classes.
-JLoader::register('FinderIndexerStemmer', dirname(__FILE__).DS.'stemmer.php');
-JLoader::register('FinderIndexerToken', dirname(__FILE__).DS.'token.php');
-
-jx('jx.database.databasequery');
+JLoader::register('FinderIndexerStemmer', dirname(__FILE__).'/stemmer.php');
+JLoader::register('FinderIndexerToken', dirname(__FILE__).'/token.php');
 
 /**
  * Helper class for the Finder indexer package.
@@ -279,7 +272,7 @@ class FinderIndexerHelper
 		if (empty($types))
 		{
 			// Build the query to get the types.
-			$query = new JDatabaseQuery();
+			$query	= $db->getQuery(true);
 			$query->select('*');
 			$query->from('`#__jxfinder_types`');
 
@@ -352,7 +345,7 @@ class FinderIndexerHelper
 		$db = JFactory::getDBO();
 
 		// Create the query to load all the common terms for the language.
-		$query = new JDatabaseQuery();
+		$query	= $db->getQuery(true);
 		$query->select('term');
 		$query->from('#__jxfinder_terms_common');
 		$query->where('`language` = '.$db->quote($lang));

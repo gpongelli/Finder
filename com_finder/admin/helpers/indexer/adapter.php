@@ -10,14 +10,14 @@
 
 defined('_JEXEC') or die;
 
+jimport('joomla.plugin.plugin');
+
 // Register dependent classes.
 JLoader::register('FinderIndexer', dirname(__FILE__).DS.'indexer.php');
 JLoader::register('FinderIndexerHelper', dirname(__FILE__).DS.'helper.php');
 JLoader::register('FinderIndexerQueue', dirname(__FILE__).DS.'queue.php');
 JLoader::register('FinderIndexerResult', dirname(__FILE__).DS.'result.php');
 JLoader::register('FinderIndexerTaxonomy', dirname(__FILE__).DS.'taxonomy.php');
-
-jx('jx.database.databasequery');
 
 /**
  * Prototype adapter class for the Finder indexer package.

@@ -222,7 +222,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDBO();
 
 		// Create a query to get the taxonomy branch titles.
-		$query = new JDatabaseQuery();
+		$query	= $db->getQuery(true);
 		$query->select('title');
 		$query->from('#__jxfinder_taxonomy');
 		$query->where('parent_id = 1');
@@ -255,7 +255,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDBO();
 
 		// Create a query to get the node.
-		$query = new JDatabaseQuery();
+		$query	= $db->getQuery(true);
 		$query->select('t1.*');
 		$query->from('#__jxfinder_taxonomy AS t1');
 		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
