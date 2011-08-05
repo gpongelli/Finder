@@ -71,7 +71,7 @@ Joomla.submitbutton = function(pressbutton) {
 			</tr>
 		</thead>
 		<tbody>
-			<?php if (count($this->filters) == 0): ?>
+			<?php if (count($this->items) == 0): ?>
 			<tr class="row0">
 				<td class="center" colspan="11">
 					<?php
@@ -90,8 +90,8 @@ Joomla.submitbutton = function(pressbutton) {
 			</tr>
 			<?php endif; ?>
 
-			<?php $n = 0; $o = 0; $c = count($this->filters); ?>
-			<?php foreach ($this->filters as $filter):
+			<?php $n = 0; $o = 0; $c = count($this->items); ?>
+			<?php foreach ($this->items as $filter):
 			$canCreate	= $user->authorise('core.create',		'com_finder');
 			$canEdit	= $user->authorise('core.edit',			'com_finder');
 			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $filter->checked_out==$user->get('id') || $filter->checked_out==0;
@@ -107,7 +107,7 @@ Joomla.submitbutton = function(pressbutton) {
 				</td>
 				<td>
 					<?php if ($filter->checked_out) {
-						echo JHtml::_('jgrid.checkedout', $i, $filter->checked_out, $filter->checked_out_time, 'filters.', $canCheckin);
+						echo JHtml::_('jgrid.checkedout', $n, $filter->editor, $filter->checked_out_time, 'filters.', $canCheckin);
 					} ?>
 					<?php if ($canEdit) { ?>
 						<a href="<?php echo JRoute::_('index.php?option=com_finder&task=filter.edit&id='.(int) $filter->filter_id); ?>">
@@ -120,7 +120,7 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php echo JHTML::_('finder.state', $n, $filter->state, true, 'filters'); ?>
 				</td>
 				<td class="center nowrap">
-					<?php echo $filter->created_by_alias ? $filter->created_by_alias : $filter->created_by; ?>
+					<?php echo $filter->created_by_alias ? $filter->created_by_alias : $filter->user_name; ?>
 				</td>
 				<td class="center nowrap">
 					<?php echo JHtml::_('date', $filter->created, JText::_('DATE_FORMAT_LC4')); ?>
