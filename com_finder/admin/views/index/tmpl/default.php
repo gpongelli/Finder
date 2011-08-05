@@ -91,7 +91,7 @@ Joomla.submitbutton = function(pressbutton) {
 
 			<?php $n = 1 + $this->state->get('list.start'); $o = 0; ?>
 			<?php foreach ($this->data as $row): ?>
-
+			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center" title="<?php echo (int) $row->link_id;?>">
 					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
@@ -106,7 +106,7 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php echo $this->escape($row->title); ?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHTML::_('finder.state', $n, $row->published); ?>
+					<?php echo JHtml::_('jgrid.published', $row->published, $n, 'index.', $canChange, 'cb'); ?>
 				</td>
 				<td class="center nowrap">
 					<?php
@@ -123,7 +123,7 @@ Joomla.submitbutton = function(pressbutton) {
 					?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHtml::date($row->indexdate, '%Y-%m-%d %H:%M:%S'); ?>
+					<?php echo JHtml::date($row->indexdate, 'Y-m-d H:i:s'); ?>
 				</td>
 			</tr>
 
