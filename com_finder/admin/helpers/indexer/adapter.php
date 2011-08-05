@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: adapter.php 984 2010-06-22 00:55:25Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -607,7 +606,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$return = null;
 
 		// Build a query to get the menu params.
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->select('params');
 		$sql->from('#__menu');
 		$sql->where('link = '.$this->_db->quote($url));
