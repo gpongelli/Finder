@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.0
  */
-class JHTMLFinder
+class JHtmlFinder
 {
 	function footer()
 	{
@@ -45,12 +45,12 @@ class JHTMLFinder
 
 		// Compile the options.
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '0', JText::_('COM_FINDER_INDEX_TYPE_FILTER'));
+		$options[]	= JHtml::_('select.option', '0', JText::_('COM_FINDER_INDEX_TYPE_FILTER'));
 
 		foreach ($rows as $row) {
-			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text))) ? 'FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
+			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text))) ? 'COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
 			$string		= JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
-			$options[]	= JHTML::_('select.option', $row->value, $string);
+			$options[]	= JHtml::_('select.option', $row->value, $string);
 		}
 
 		return $options;
@@ -72,12 +72,12 @@ class JHTMLFinder
 
 		// Compile the options.
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '1', JText::_('COM_FINDER_MAPS_BRANCHES'));
+		$options[]	= JHtml::_('select.option', '1', JText::_('COM_FINDER_MAPS_BRANCHES'));
 
 		foreach ($rows as $row) {
 			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper($row->text)) ? 'COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;
 			$string		= JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_($key));
-			$options[]	= JHTML::_('select.option', $row->value, $string);
+			$options[]	= JHtml::_('select.option', $row->value, $string);
 		}
 
 		return $options;
@@ -86,9 +86,9 @@ class JHTMLFinder
 	function statelist($active)
 	{
 		$options	= array();
-		$options[]	= JHTML::_('select.option', '', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
-		$options[]	= JHTML::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
-		$options[]	= JHTML::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
+		$options[]	= JHtml::_('select.option', '', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
+		$options[]	= JHtml::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
+		$options[]	= JHtml::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
 
 		return $options;
 	}
@@ -113,25 +113,5 @@ class JHTMLFinder
 		$output	= $params->render($name);
 
 		return $output;
-	}
-
-	function state($i, $state, $linked = true, $controller = 'index')
-	{
-		$img 	= ($state > 0) ? 'tick.png' : 'publish_x.png';
-		$task 	= ($state > 0) ? $controller.'.unpublish' : $controller.'.publish';
-		$alt 	= ($state > 0) ? JText::_('FINDER_STATE_PUBLISHED') : JText::_('FINDER_STATE_UNPUBLISHED');
-		$action = ($state > 0) ? JText::_('FINDER_INDEX_LINK_UNPUBLISH') : JText::_('FINDER_INDEX_LINK_PUBLISH');
-
-		$html	= '';
-
-		if ($linked === true) {
-			$html	.= '<a href="#" onclick="return listItemTask(\'cb'. $i .'\',\''. $task .'\')" title="'. $action .'">';
-			$html	.= '<img src="images/'. $img .'" border="0" alt="'. $alt .'" />';
-			$html	.= '</a>';
-		} else {
-			$html	.= '<img src="images/'. $img .'" border="0" alt="'. $alt .'" />';
-		}
-
-		return $html;
 	}
 }
