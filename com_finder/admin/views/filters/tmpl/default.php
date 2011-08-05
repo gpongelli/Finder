@@ -19,7 +19,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <script type="text/javascript">
 Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'filters.delete') {
-		if (confirm(Joomla.JText._('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'))) {
+		if (confirm('<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'); ?>')) {
 			Joomla.submitform(pressbutton);
 		}
 	}
@@ -117,8 +117,7 @@ Joomla.submitbutton = function(pressbutton) {
 					} ?>
 				</td>
 				<td class="center nowrap">
-					<?php //TODO: Why is it looking for a published field!?
-					 echo JHtml::_('jgrid.published', $filter->state, $n, 'filters.', $canChange); ?>
+					<?php echo JHtml::_('jgrid.published', $filter->state, $n, 'filters.', $canChange); ?>
 				</td>
 				<td class="center nowrap">
 					<?php echo $filter->created_by_alias ? $filter->created_by_alias : $filter->user_name; ?>
