@@ -42,7 +42,7 @@ class FinderViewAdapters extends JView
 		}
 
 		// Configure the toolbar.
-		$this->setToolbar();
+		$this->addToolbar();
 
 		// Push out the view data.
 		$this->assignRef('items',		$items);
@@ -60,15 +60,24 @@ class FinderViewAdapters extends JView
 	 *
 	 * @return	void
 	 */
-	public function setToolbar()
+	public function addToolbar()
 	{
-		JToolBarHelper::title(JText::_('FINDER_ADAPTERS_TOOLBAR_TITLE'), 'finder');
+		$canDo	= FinderHelper::getActions();
+
+		JToolBarHelper::title(JText::_('COM_FINDER_ADAPTERS_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		$toolbar->appendButton('Standard', 'publish', 'Publish', 'adapters.publish', true, false);
-		$toolbar->appendButton('Standard', 'unpublish', 'Unpublish', 'adapters.unpublish', true, false);
-		$toolbar->appendButton('Separator', 'divider');
-		$toolbar->appendButton('Popup', 'config', 'FINDER_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 570, 500);
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+		if ($canDo->get('core.edit.state')) {
+			$toolbar->appendButton('Standard', 'publish', 'Publish', 'adapters.publish', true, false);
+			$toolbar->appendButton('Standard', 'unpublish', 'Unpublish', 'adapters.unpublish', true, false);
+			JToolBarHelper::divider();
+		}
+
+		if ($canDo->get('core.admin')) {
+			JToolBarHelper::preferences('com_finder');
+		}
+		JToolBarHelper::divider();
+
+		$toolbar->appendButton('Popup', 'help', 'COM_FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
