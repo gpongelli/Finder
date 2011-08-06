@@ -9,6 +9,7 @@
 	<authorUrl>http://www.jxtended.com</authorUrl>
 	<version>2.0.1</version>
 	<description>PLG_SYSTEM_FINDER_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
 	<files>
 		<file plugin="finder">finder.php</file>
     	<filename>index.html</filename>

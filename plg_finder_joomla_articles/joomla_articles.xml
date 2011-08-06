@@ -9,6 +9,7 @@
 	<authorUrl>http://www.jxtended.com</authorUrl>
 	<version>2.0.1</version>
 	<description>PLG_FINDER_JOOMLA_ARTICLES_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
 	<files>
 		<file plugin="joomla_articles">joomla_articles.php</file>
     	<filename>index.html</filename>

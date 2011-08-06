@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: joomla_articles.php 1051 2010-09-16 16:14:31Z robs $
  * @package		JXtended.Finder
  * @subpackage	plgFinderJoomla_Articles
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
