@@ -8,8 +8,8 @@
 
 defined('_JEXEC') or die;
 
-JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHTML::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
 $lang = &JFactory::getLanguage();
 ?>
 
@@ -51,10 +51,10 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php echo JText::_('NUM'); ?>
 				</th>
 				<th class="nowrap">
-					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 				<th class="nowrap" width="10%">
-					<?php echo JHTML::_('grid.sort', 'JSTATUS', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 			</tr>
 		</thead>
@@ -76,6 +76,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php endif; ?>
 
 			<?php $n = 1; $o = 0; ?>
+			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
 			<?php foreach ($this->data as $row): ?>
 
 			<tr class="row<?php echo $n % 2; ?>">
@@ -87,7 +88,7 @@ Joomla.submitbutton = function(pressbutton) {
 				</td>
 				<td>
 					<?php
-						$key = 'FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->title));
+						$key = 'COM_FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->title));
 						$title = $lang->hasKey($key) ? JText::_($key) : $row->title;
 					?>
 					<?php if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
@@ -103,7 +104,7 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php endif; ?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHTML::_('finder.state', $n, $row->state, true, 'map'); ?>
+					<?php echo JHtml::_('jgrid.published', $row->state, $n, 'map.', $canChange, 'cb'); ?>
 				</td>
 			</tr>
 
@@ -123,7 +124,7 @@ Joomla.submitbutton = function(pressbutton) {
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $this->state->get('list.ordering') ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->state->get('list.direction') ?>" />
-	<?php echo JHTML::_('form.token'); ?>
+	<?php echo JHtml::_('form.token'); ?>
 </form>
 
 <?php JHtml::_('finder.footer'); ?>
