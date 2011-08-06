@@ -13,11 +13,6 @@ defined('JPATH_BASE') or die;
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter.php';
 
-// Load the language files for the adapter.
-$lang = JFactory::getLanguage();
-$lang->load('plg_finder_joomla_categories');
-$lang->load('plg_finder_joomla_categories.custom');
-
 /**
  * Finder adapter for Joomla Categories.
  *

@@ -38,6 +38,7 @@
 		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
 		<zip destfile="packages/plg_finder_joomla_articles.zip" basedir="plg_finder_joomla_articles" />
 		<zip destfile="packages/plg_finder_joomla_categories.zip" basedir="plg_finder_joomla_categories" />
+		<zip destfile="packages/plg_finder_joomla_contacts.zip" basedir="plg_finder_joomla_contacts" />
 		<zip destfile="packages/plg_system_finder.zip" basedir="plg_system_finder" />
 	</target>
 </project>

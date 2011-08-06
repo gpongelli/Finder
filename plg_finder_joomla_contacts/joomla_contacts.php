@@ -13,11 +13,6 @@ defined('JPATH_BASE') or die;
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter.php';
 
-// Load the language files for the adapter.
-$lang = JFactory::getLanguage();
-$lang->load('plg_finder_joomla_contacts');
-$lang->load('plg_finder_joomla_contacts.custom');
-
 /**
  * Finder adapter for Joomla Contacts.
  *
@@ -40,6 +35,21 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * @var		string		The type of content that the adapter indexes.
 	 */
 	protected $_type_title = 'Contact';
+
+	/**
+	 * Constructor
+	 *
+	 * @param	object	$subject	The object to observe
+	 * @param	array	$config		An array that holds the plugin configuration
+	 *
+	 * @return	void
+	 * @since	1.8
+	 */
+	public function __construct(&$subject, $config)
+	{
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+	}
 
 	/**
 	 * Method to reindex the link information for an item that has been saved.
@@ -343,7 +353,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	protected function _getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : new JDatabaseQuery();
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
 		$sql->select('a.id, a.name AS title, a.alias, con_position AS position, a.address');
 		$sql->select('a.suburb AS city, a.state AS region, a.country, a.postcode AS zip');
 		$sql->select('a.telephone, a.fax, a.misc AS summary, a.email_to AS email, a.mobile');
@@ -372,7 +382,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		 * so we need to use a different method for find new items. Our best
 		 * bet is to order by the primary key putting the new items first.
 		 */
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->order('a.id DESC');
 
 		return $sql;
@@ -429,7 +439,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.published AS state, c.published AS cat_state');
 		$sql->select('a.access, c.access AS cat_access');
