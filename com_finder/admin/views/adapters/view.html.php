@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 922 2010-03-11 20:17:33Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -28,12 +27,11 @@ class FinderViewAdapters extends JView
 	public function display($tpl = null)
 	{
 		// Load the view data.
-		$items		= $this->get('Items');
-		$pagination	= $this->get('Pagination');
-		$total		= $this->get('Total');
-		$state		= $this->get('State');
-		$params		= $state->get('params');
-		$user		= JFactory::getUser();
+		$this->items		= $this->get('Items');
+		$this->pagination	= $this->get('Pagination');
+		$this->total		= $this->get('Total');
+		$this->state		= $this->get('State');
+		$user				= JFactory::getUser();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -41,16 +39,10 @@ class FinderViewAdapters extends JView
 			return false;
 		}
 
+		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
+
 		// Configure the toolbar.
 		$this->addToolbar();
-
-		// Push out the view data.
-		$this->assignRef('items',		$items);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('total',		$total);
-		$this->assignRef('state',		$state);
-		$this->assignRef('params',		$params);
-		$this->assignRef('user',		$user);
 
 		parent::display($tpl);
 	}

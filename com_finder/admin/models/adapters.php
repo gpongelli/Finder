@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: adapters.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -27,6 +26,35 @@ class FinderModelAdapters extends JModelList
 	 * @var		string
 	 */
 	protected $_context = 'com_finder.adapters';
+
+	/**
+	 * The total number of extensions.
+	 *
+	 * @access	private
+	 * @var		integer
+	 */
+	var $_filter_extensions		= null;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param	array	An optional associative array of configuration settings.
+	 * @see		JController
+	 * @since	1.6
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'name', 'p.name',
+				'enabled', 'p.enabled',
+				'folder', 'p.folder',
+				'extension_id', 'p.extension_id'
+			);
+		}
+
+		parent::__construct($config);
+	}
 
 	/**
 	 *
@@ -69,59 +97,85 @@ class FinderModelAdapters extends JModelList
 	}
 
 	/**
-	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
+	 * Build an SQL query to load the list data.
 	 *
-	 * @return	object	A JDatabaseQuery object to retrieve the data set.
+	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
+	 * @since	1.6
 	 */
-	protected function _getListQuery()
+	function getListQuery()
 	{
-		// Get the plugins in the finder folder.
-		$sql = $this->_db->getQuery(true);
-		$sql->select('p.*');
-		$sql->from('#__extensions AS p');
-		$sql->where('p.type = "plugin"');
-		$sql->where('p.element = "finder"');
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
 
-		// Handle a published state filter.
-		if ($this->getState('check.state')) {
-			$sql->where('p.enabled = '.(int)$this->getState('filter.state'));
+		// Select all fields from the table.
+		$query->select('p.*');
+		$query->from($db->quoteName('#__extensions').' AS p');
+		$query->where($db->quoteName('p.type').' = '.$db->quote('plugin'));
+		$query->where($db->quoteName('p.folder').' = '.$db->quote('finder'));
+
+		// Join over the users for the checked out user.
+		$query->select('uc.name AS editor');
+		$query->join('LEFT', $db->quoteName('#__users').' AS uc ON uc.id=p.checked_out');
+
+		// Check for a search filter.
+		if ($this->getState('filter.search')) {
+			$query->where('( '.$db->quoteName('p.name').' LIKE \'%'.$this->_db->getEscaped($this->getState('filter.search')).'%\' )');
 		}
 
-		// Handle a search filter.
-		$search = $this->getState('filter.search');
-		if (!empty($search)) {
-			$search = $this->_db->getEscaped($search, true);
-			$sql->where('LOWER(p.name) LIKE "%'.$search.'%"');
+		// If the model is set to check item state, add to the query.
+		if ($this->getState('filter.state')) {
+			$query->where($db->quoteName('p.enabled').' = '.(int)$this->getState('filter.state'));
 		}
 
 		// Handle the list ordering.
 		$ordering	= $this->getState('list.ordering');
 		$direction	= $this->getState('list.direction');
 		if (!empty($ordering)) {
-			$sql->order($this->_db->getEscaped($ordering).' '.$this->_db->getEscaped($direction));
+			$query->order($db->getEscaped($ordering).' '.$db->getEscaped($direction));
 		}
 
-		return $sql;
+		return $query;
 	}
 
 	/**
-	 * Method to get a store id based on model the configuration state.
+	 * Method to get a store id based on model configuration state.
 	 *
 	 * This is necessary because the model is used by the component and
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string	An identifier string to generate the store id.
-	 * @return	string	A store id.
+	 * @param	string	$id	A prefix for the store id.
+	 * @return	string	$id	A store id.
+	 * @since	1.6
 	 */
-	protected function _getStoreId($id = '')
+	protected function getStoreId($id = '')
 	{
-		// Add the filter state.
-		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.state');
+		// Compile the store id.
+		$id.= ':' . $this->getState('filter.search');
+		$id.= ':' . $this->getState('filter.state');
 
-		// The parent class adds the list state.
-		return parent::_getStoreId($id);
+		return parent::getStoreId($id);
+	}
+
+	function getTotal()
+	{
+		// Assemble the query.
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->select('count(p.extension_id)');
+		$query->from($db->quoteName('#__extensions').' AS p');
+		$db->setQuery($query);
+		$return = $db->loadResult();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			$this->setError($db->getErrorMsg());
+			return false;
+		}
+
+		$this->_filter_total = (int)$return;
+
+		return $this->_filter_total;
 	}
 
 	/**
@@ -135,33 +189,21 @@ class FinderModelAdapters extends JModelList
 	 */
 	protected function populateState()
 	{
-		$app		= JFactory::getApplication();
-		$params		= JComponentHelper::getParams('com_finder');
-		$context	= 'com_finder.adapters.';
+		// Initialise variables.
+		$app = JFactory::getApplication('administrator');
 
 		// Load the filter state.
-		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-		$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', '*', 'string'));
+		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
 
-		// Load the list state.
-		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
-		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
-		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'p.name', 'cmd'));
-		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
-
-		// Handle 0 limit with > 0 start offset.
-		if ($this->state->get('list.limit') === 0) {
-			$this->state->set('list.start', 0);
-		}
-
-		// Load the check parameters.
-		if ($this->state->get('filter.state') === '*') {
-			$this->setState('check.state', false);
-		} else {
-			$this->setState('check.state', true);
-		}
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
+		$this->setState('filter.state', $state);
 
 		// Load the parameters.
+		$params = JComponentHelper::getParams('com_finder');
 		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState('p.name', 'asc');
 	}
 }

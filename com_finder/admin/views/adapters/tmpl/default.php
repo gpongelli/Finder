@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: default.php 922 2010-03-11 20:17:33Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -10,52 +9,58 @@
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHtml::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
+JHTML::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
+$user		= JFactory::getUser();
+$userId		= $user->get('id');
 ?>
 
-<form action="index.php?option=com_finder&amp;view=adapters" method="post" name="adminForm">
-	<div class="form-filter" style="float: left;">
-		<label for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL', JText::_('COM_FINDER_ADAPTERS')); ?></label>
-		<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->state->get('filter.search'); ?>" class="text_area" onchange="document.adminForm.submit();" />
-		<button onclick="this.form.submit();"><?php echo JText::_('COM_FINDER_SEARCH_GO'); ?></button>
-		<button onclick="document.getElementById('filter_search').value='';document.getElementById('filter_state').value='*';this.form.submit();"><?php echo JText::_('COM_FINDER_SEARCH_RESET'); ?></button>
-	</div>
-
-	<div class="form-filter" style="float: right;">
-		<?php echo JText::sprintf('COM_FINDER_FILTER_BY', JText::_('COM_FINDER_ADAPTERS')); ?>
-		<select name="filter_state" class="inputbox" onchange="this.form.submit()">
-		<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
-		</select>
-	</div>
+<form action="<?php echo JRoute::_('index.php?option=com_finder&view=adapters');?>" method="post" name="adminForm" id="adminForm">
+	<fieldset id="filter-bar">
+		<div class="filter-search fltlft">
+			<label class="filter-search-lbl" for="filter_search"><?php echo JText::sprintf('COM_FINDER_SEARCH_LABEL', JText::_('COM_FINDER_ADAPTERS')); ?></label>
+			<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_FINDER_FILTER_SEARCH_DESCRIPTION'); ?>" />
+			<button type="submit" class="btn"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+		</div>
+		<div class="filter-select fltrt">
+			<select name="filter_type" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.typeslist'), 'value', 'text', $this->state->get('filter.type'), true);?>
+			</select>
+			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
+				<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
+			</select>
+		</div>
+	</fieldset>
+	<div class="clr"> </div>
 
 	<table class="adminlist" style="clear: both;">
 		<thead>
 			<tr>
-				<th width="5">
+				<th width="1%">
+					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+				</th>
+				<th width="5%">
 					<?php echo JText::_('NUM'); ?>
 				</th>
-				<th width="5">
-					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo (count($this->items)+1); ?>);" />
+				<th class="nowrap">
+					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'p.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th nowrap="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_FINDER_ADAPTER_TITLE', 'p.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="5%" class="nowrap">
+					<?php echo JHtml::_('grid.sort', 'JSTATUS', 'p.enabled', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th width="4%" nowrap="nowrap" style="padding: 0px 15px;">
-					<?php echo JHtml::_('grid.sort', 'COM_FINDER_ADAPTER_STATE', 'p.published', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="10%" class="nowrap">
+					<?php echo JHtml::_('grid.sort', 'COM_FINDER_ADAPTER_ELEMENT', 'p.folder', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
-				<th align="center" width="10%" style="padding: 0px 15px;" nowrap="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_FINDER_ADAPTER_ELEMENT', 'p.element', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
-				</th>
-				<th align="center" width="1%" style="padding: 0px 15px;" nowrap="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_FINDER_ADAPTER_ID', 'p.id', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+				<th width="1%" class="nowrap">
+					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'p.extension_id', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if (count($this->items) == 0): ?>
 			<tr class="row0">
-				<td align="center" colspan="11">
+				<td class="center" colspan="11">
 					<?php
 					if ($this->total == 0):
 						echo JText::_('COM_FINDER_NO_ADAPTERS');
@@ -68,27 +73,33 @@ JHtml::stylesheet('finder.css', 'administrator/components/com_finder/media/css/'
 			<?php endif; ?>
 
 			<?php $n = 0; $o = 0; $c = count($this->items); ?>
-			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
-			<?php foreach ($this->items as $item): ?>
+			<?php foreach ($this->items as $item):
+			$canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+			$canChange	= $user->authorise('core.edit.state',	'com_finder') && $canCheckin;
+			?>
 
-			<tr class="<?php echo 'row', $o; ?>">
+			<tr class="row<?php echo $n % 2; ?>">
+				<td class="center">
+					<?php echo JHtml::_('grid.id', $n, $item->extension_id); ?>
+				</td>
 				<td>
 					<?php echo $n+1+$this->state->get('list.start'); ?>
 				</td>
-				<td align="center">
-					<?php echo JHtml::_('grid.checkedOut', $item, $n, 'id'); ?>
+				<td>
+					<?php if ($item->checked_out) {
+						echo JHtml::_('jgrid.checkedout', $n, $item->editor, $item->checked_out_time, 'adapters.', $canCheckin);
+					} ?>
+					<?php //TODO: Need to load the plugin .sys.ini files to get the names or come up with a way to show the names with the DB info, preferably without duplicating the strings
+					echo JText::_(strtoupper($item->name)); ?>
 				</td>
-				<td style="padding-left: 10px; padding-right: 10px;">
-					<?php echo str_replace('Finder - ', '', $item->name); ?>
+				<td class="center nowrap">
+					<?php echo JHtml::_('jgrid.published', $item->enabled, $n, 'adapters.', $canChange, 'cb'); ?>
 				</td>
-				<td nowrap="nowrap" style="padding: 0px 20px; text-align: center">
-					<?php echo JHtml::_('jgrid.published', $item->published, $n, 'adapters.', $canChange, 'cb'); ?>
+				<td class="nowrap">
+					<?php echo $item->folder; ?>
 				</td>
-				<td nowrap="nowrap" style="padding: 0px 20px;">
-					<?php echo $item->element; ?>
-				</td>
-				<td nowrap="nowrap" style="padding: 0px 20px; text-align: center">
-					<?php echo $item->id; ?>
+				<td class="center">
+					<?php echo (int) $item->extension_id; ?>
 				</td>
 			</tr>
 
