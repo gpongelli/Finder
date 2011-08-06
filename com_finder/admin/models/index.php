@@ -19,11 +19,6 @@ jimport('joomla.application.component.modellist');
 class FinderModelIndex extends JModelList
 {
 	/**
-	 * @var		integer		The total number of items.
-	 */
-	protected $_list_total;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param	array	An optional associative array of configuration settings.
@@ -187,6 +182,28 @@ class FinderModelIndex extends JModelList
 	}
 
 	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param	string		$id	A prefix for the store id.
+	 *
+	 * @return	string		A store id.
+	 * @since	1.6
+	 */
+	protected function getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id	.= ':'.$this->getState('filter.search');
+		$id	.= ':'.$this->getState('filter.state');
+		$id	.= ':'.$this->getState('filter.type');
+
+		return parent::getStoreId($id);
+	}
+
+	/**
 	 * Returns a Table object, always creating it.
 	 *
 	 * @param	type	The table type to instantiate
@@ -198,38 +215,6 @@ class FinderModelIndex extends JModelList
 	public function getTable($type = 'Link', $prefix = 'FinderTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
-	}
-
-	/**
-	 * Method to get the total number of items.
-	 *
-	 * @access	public
-	 * @return	mixed	False on failure, integer on success.
-	 * @since	1.0
-	 */
-	public function getTotal()
-	{
-		if (!empty($this->_list_total)) {
-			return $this->_list_total;
-		}
-
-		// Assemble the query.
-		$db		= $this->getDbo();
-		$query	= clone($this->getListQuery());
-		$query->clear('select')->clear('order')->clear('where');
-		$query->select('count(l.link_id)');
-		$db->setQuery($query);
-		$return = $db->loadResult();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			$this->setError($db->getErrorMsg());
-			return false;
-		}
-
-		$this->_list_total = (int)$return;
-
-		return $this->_list_total;
 	}
 
 	/**
