@@ -16,11 +16,11 @@ $pane = JPane::getInstance('tabs');
 ?>
 <div id="jx-about">
 	<div class="configuration" >
-		<?php echo JText::_('FINDER_ABOUT_TITLE'); ?>
+		<?php echo JText::_('COM_FINDER_ABOUT_TITLE'); ?>
 	</div>
 
 	<?php echo $pane->startPane('jx-finder-about'); ?>
-		<?php echo $pane->startPanel(JText::_('FINDER_ABOUT_TAB_VERSION'), 'pane-version'); ?>
+		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_VERSION'), 'pane-version'); ?>
 		<div style="text-align:center;">
 			<img src="<?php echo $this->baseurl; ?>/components/com_finder/media/images/icon-48-jx.png" alt="Logo" />
 			<h2>
@@ -30,29 +30,29 @@ $pane = JPane::getInstance('tabs');
 				<?php echo JText::sprintf('FINDER_ABOUT_VERSION_STRING', FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.' '.FinderVersion::STATUS); ?>
 			</h3>
 
-			<h4><a href="http://jxtended.com/support/finder.html" target="_new"><?php echo JText::_('FINDER_ABOUT_GET_HELP'); ?></a></h4>
+			<h4><a href="http://jxtended.com/support/finder.html" target="_new"><?php echo JText::_('COM_FINDER_ABOUT_GET_HELP'); ?></a></h4>
 		</div>
 		<?php echo $pane->endPanel(); ?>
 
-		<?php echo $pane->startPanel(JText::_('FINDER_ABOUT_TAB_HISTORY'), 'pane-history'); ?>
+		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_HISTORY'), 'pane-history'); ?>
 		<table class="adminlist">
 			<thead>
 				<tr>
 					<th>
-						<?php echo JText::_('FINDER_ABOUT_VERSION_NAME');?>
+						<?php echo JText::_('COM_FINDER_ABOUT_VERSION_NAME');?>
 					</th>
 					<th>
-						<?php echo JText::_('FINDER_ABOUT_VERSION_DATE'); ?>
+						<?php echo JText::_('COM_FINDER_ABOUT_VERSION_DATE'); ?>
 					</th>
 					<th>
-						<?php echo JText::_('FINDER_ABOUT_VERSION_LOG'); ?>
+						<?php echo JText::_('COM_FINDER_ABOUT_VERSION_LOG'); ?>
 					</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
 					<td colspan="3">
-						<?php echo JText::_('FINDER_ABOUT_VERSION_NOTE'); ?>
+						<?php echo JText::_('COM_FINDER_ABOUT_VERSION_NOTE'); ?>
 					</td>
 				</tr>
 			</tfoot>
@@ -74,7 +74,7 @@ $pane = JPane::getInstance('tabs');
 		</table>
 		<?php echo $pane->endPanel(); ?>
 
-		<?php echo $pane->startPanel(JText::_('FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
+		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
 		<p>
 			<?php echo JText::sprintf('FINDER_ABOUT_STATS_DESCRIPTION',
 			number_format($this->data->term_count),
@@ -87,10 +87,10 @@ $pane = JPane::getInstance('tabs');
 			<thead>
 				<tr>
 					<th>
-						<?php echo JText::_('FINDER_ABOUT_LINK_TYPE_HEADING');?>
+						<?php echo JText::_('COM_FINDER_ABOUT_LINK_TYPE_HEADING');?>
 					</th>
 					<th>
-						<?php echo JText::_('FINDER_ABOUT_LINK_TYPE_COUNT');?>
+						<?php echo JText::_('COM_FINDER_ABOUT_LINK_TYPE_COUNT');?>
 					</th>
 				</tr>
 			</thead>
@@ -107,7 +107,7 @@ $pane = JPane::getInstance('tabs');
 				<?php endforeach; ?>
 				<tr>
 					<td>
-						<strong><?php echo JText::_('FINDER_ABOUT_LINK_TYPE_TOTAL'); ?></strong>
+						<strong><?php echo JText::_('COM_FINDER_ABOUT_LINK_TYPE_TOTAL'); ?></strong>
 					</td>
 					<td align="right">
 						<strong><?php echo number_format($this->data->link_count); ?></strong>
