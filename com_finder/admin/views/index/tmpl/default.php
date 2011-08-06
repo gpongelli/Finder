@@ -96,8 +96,9 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php endif; ?>
 
 			<?php $n = 1 + $this->state->get('list.start'); $o = 0; ?>
-			<?php foreach ($this->data as $row): ?>
 			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
+			<?php foreach ($this->data as $row): ?>
+
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center" title="<?php echo (int) $row->link_id;?>">
 					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
