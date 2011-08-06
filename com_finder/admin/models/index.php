@@ -19,258 +19,30 @@ jimport('joomla.application.component.modellist');
 class FinderModelIndex extends JModelList
 {
 	/**
-	 * @var		array		Container for index information.
-	 */
-	protected $_index;
-
-	/**
-	 * @var		integer		The number of visible items in the list.
-	 */
-	protected $_list_count;
-
-	/**
 	 * @var		integer		The total number of items.
 	 */
 	protected $_list_total;
 
 	/**
-	 * Overridden method to get model state variables.
+	 * Constructor.
 	 *
-	 * @param	string	$property	Optional parameter name.
-	 * @return	object	The property where specified, the state object where omitted.
-	 * @since	1.0
+	 * @param	array	An optional associative array of configuration settings.
+	 * @see		JController
+	 * @since	1.6
 	 */
-	public function getState($property = null)
+	public function __construct($config = array())
 	{
-		// If the model state is uninitialized lets set some values we will need from the request.
-		if (!$this->__state_set)
-		{
-			$application	= &JFactory::getApplication('administrator');
-			$context		= 'com_finder.index.';
-
-			$this->setState('adapter.id', JRequest::getInt('adapter_id'));
-
-			// Load the filter state.
-			$this->setState('filter.search', $application->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-			$this->setState('filter.state', $application->getUserStateFromRequest($context.'filter.state', 'filter_state', '*', 'string'));
-			$this->setState('filter.type', $application->getUserStateFromRequest($context.'filter.type', 'filter_type', 0, 'int'));
-
-			// Load the list state.
-			$this->setState('list.start', $application->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
-			$this->setState('list.limit', $application->getUserStateFromRequest($context.'list.limit', 'limit', $application->getCfg('list_limit', 25), 'int'));
-			$this->setState('list.ordering', $application->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'l.link_id', 'cmd'));
-			$this->setState('list.direction', $application->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
-
-			// Load the check parameters.
-			if ($this->state->get('filter.state') === '*') {
-				$this->setState('check.state', false);
-			} else {
-				$this->setState('check.state', true);
-			}
-
-			// Load the parameters.
-			$this->setState('params', JComponentHelper::getParams('com_finder'));
-
-			$this->__state_set = true;
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'state', 'l.state',
+				'title', 'l.title',
+				'type_id', 'l.type_id',
+				'url', 'l.url',
+				'indexdate', 'l.indexdate',
+			);
 		}
 
-		return parent::getState($property);
-	}
-
-	/**
-	 * Method to get a list of indexed URLs.
-	 *
-	 * @return	mixed	False on failure, array on success.
-	 * @since	1.0
-	 */
-	public function getData()
-	{
-		$false = false;
-
-		if (!empty($this->_index)) {
-			return $this->_index;
-		}
-
-		// Load the index data.
-		$return	= $this->_getList($this->_getIndexQuery(), $this->getState('list.start'), $this->getState('list.limit'));
-
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
-			return $false;
-		}
-
-		$this->_index = $return;
-
-		return $return;
-	}
-
-	/**
-	 * Method to get the number of relevant links.
-	 *
-	 * @access	public
-	 * @return	mixed	False on failure, integer on success.
-	 * @since	1.0
-	 */
-	public function getCount()
-	{
-		$false = false;
-
-		if (!empty($this->_list_count)) {
-			return $this->_list_count;
-		}
-
-		$sql = clone($this->_getIndexQuery());
-		$sql->clear('select')->clear('order');
-		$sql->select('COUNT(l.link_id)');
-
-		// Load the indexed data count.
-		$this->_db->setQuery($sql);
-		$return = $this->_db->loadResult();
-
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
-			return $false;
-		}
-
-		$this->_list_count = (int)$return;
-
-		return $this->_list_count;
-	}
-
-	/**
-	 * Method to get the total number of items.
-	 *
-	 * @access	public
-	 * @return	mixed	False on failure, integer on success.
-	 * @since	1.0
-	 */
-	public function getTotal()
-	{
-		if (!empty($this->_list_total)) {
-			return $this->_list_total;
-		}
-
-		$sql = clone($this->_getIndexQuery());
-		$sql->clear('select')->clear('order')->clear('where');
-		$sql->select('COUNT(l.link_id)');
-
-		// Load the label total data.
-		$this->_db->setQuery($sql);
-		$return = $this->_db->loadResult();
-
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-
-		$this->_list_total = (int)$return;
-
-		return $this->_list_total;
-	}
-
-	/**
-	 * Method to purge the index, deleting all links.
-	 *
-	 * @return	boolean		True on success, false on failure.
-	 */
-	public function purge()
-	{
-		$db		= $this->getDbo();
-
-		// Truncate the links table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_links');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		// Truncate the links terms tables.
-		for ($i = 0; $i <= 15; $i++)
-		{
-			// Get the mapping table suffix.
-			$suffix = dechex($i);
-
-			$db->setQuery('TRUNCATE TABLE #__jxfinder_links_terms'.$suffix);
-			$db->query();
-
-			// Check for a database error.
-			if ($db->getErrorNum()) {
-				// Throw database error exception.
-				throw new Exception($db->getErrorMsg(), 500);
-			}
-		}
-
-		// Truncate the terms table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_terms');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		// Truncate the taxonomy map table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_taxonomy_map');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		// Delete all the taxonomy nodes except the root.
-		$db->setQuery('DELETE FROM #__jxfinder_taxonomy WHERE id > 1');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Returns a Table object, always creating it.
-	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 *
-	 * @return	JTable	A database object
-	*/
-	public function getTable($type = 'Link', $prefix = 'FinderTable', $config = array())
-	{
-		return JTable::getInstance($type, $prefix, $config);
+		parent::__construct($config);
 	}
 
 	/**
@@ -370,6 +142,216 @@ class FinderModelIndex extends JModelList
 	}
 
 	/**
+	 * Build an SQL query to load the list data.
+	 *
+	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
+	 * @since	1.6
+	 */
+	function getListQuery()
+	{
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+
+		$query->select('l.*');
+		$query->select('t.title AS t_title');
+		$query->from($db->quoteName('#__jxfinder_links').' AS l');
+		$query->join('INNER', $db->quoteName('#__jxfinder_types').' AS t ON t.id = l.type_id');
+
+		// Check the type filter.
+		if ($this->getState('filter.type')) {
+			$query->where($db->quoteName('l.type_id').' = '.(int)$this->getState('filter.type'));
+		}
+
+		// Check for state filter.
+		if ($this->getState('filter.state')) {
+			$query->where($db->quoteName('l.state').' = '.(int)$this->getState('filter.state'));
+		}
+
+		// Check the search phrase.
+		if ($this->getState('filter.search') != '')
+		{
+			$search = $this->_db->getEscaped($this->getState('filter.search'));
+			$query->where($db->quoteName('l.title').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
+						' OR '.$db->quoteName('l.url').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
+				 		' OR '.$db->quoteName('l.indexdate').' LIKE "%'.$this->_db->getEscaped($search).'%"');
+		}
+
+		// Handle the list ordering.
+		$ordering	= $this->getState('list.ordering');
+		$direction	= $this->getState('list.direction');
+		if (!empty($ordering)) {
+			$query->order($db->getEscaped($ordering).' '.$db->getEscaped($direction));
+		}
+
+		return $query;
+	}
+
+	/**
+	 * Returns a Table object, always creating it.
+	 *
+	 * @param	type	The table type to instantiate
+	 * @param	string	A prefix for the table class name. Optional.
+	 * @param	array	Configuration array for model. Optional.
+	 *
+	 * @return	JTable	A database object
+	*/
+	public function getTable($type = 'Link', $prefix = 'FinderTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
+
+	/**
+	 * Method to get the total number of items.
+	 *
+	 * @access	public
+	 * @return	mixed	False on failure, integer on success.
+	 * @since	1.0
+	 */
+	public function getTotal()
+	{
+		if (!empty($this->_list_total)) {
+			return $this->_list_total;
+		}
+
+		// Assemble the query.
+		$db		= $this->getDbo();
+		$query	= clone($this->getListQuery());
+		$query->clear('select')->clear('order')->clear('where');
+		$query->select('count(l.link_id)');
+		$db->setQuery($query);
+		$return = $db->loadResult();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			$this->setError($db->getErrorMsg());
+			return false;
+		}
+
+		$this->_list_total = (int)$return;
+
+		return $this->_list_total;
+	}
+
+	/**
+	 * Method to purge the index, deleting all links.
+	 *
+	 * @return	boolean		True on success, false on failure.
+	 */
+	public function purge()
+	{
+		$db		= $this->getDbo();
+
+		// Truncate the links table.
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_links');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		// Truncate the links terms tables.
+		for ($i = 0; $i <= 15; $i++)
+		{
+			// Get the mapping table suffix.
+			$suffix = dechex($i);
+
+			$db->setQuery('TRUNCATE TABLE #__jxfinder_links_terms'.$suffix);
+			$db->query();
+
+			// Check for a database error.
+			if ($db->getErrorNum()) {
+				// Throw database error exception.
+				throw new Exception($db->getErrorMsg(), 500);
+			}
+		}
+
+		// Truncate the terms table.
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_terms');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		// Truncate the taxonomy map table.
+		$db->setQuery('TRUNCATE TABLE #__jxfinder_taxonomy_map');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		// Delete all the taxonomy nodes except the root.
+		$db->setQuery('DELETE FROM #__jxfinder_taxonomy WHERE id > 1');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		// Truncate the tokens tables.
+		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		// Truncate the tokens aggregate table.
+		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
+		$db->query();
+
+		// Check for a database error.
+		if ($db->getErrorNum()) {
+			// Throw database error exception.
+			throw new Exception($db->getErrorMsg(), 500);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
+	 *
+	 * @param   string	$ordering	An optional ordering field.
+	 * @param   string	$direction	An optional direction.
+	 *
+	 * @since	1.7
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		// Initialise variables.
+		$app = JFactory::getApplication('administrator');
+
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
+		$this->setState('filter.state', $state);
+
+		$type = $this->getUserStateFromRequest($this->context.'.filter.type', 'filter_type', '', 'string');
+		$this->setState('filter.type', $type);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_finder');
+		$this->setState('params', $params);
+
+		// List state information.
+		parent::populateState('l.title', 'asc');
+	}
+
+	/**
 	 * Method to change the published state of one or more records.
 	 *
 	 * @param   array    $pks    A list of the primary keys to change.
@@ -423,47 +405,5 @@ class FinderModelIndex extends JModelList
 		$this->cleanCache();
 
 		return true;
-	}
-
-	protected function _getIndexQuery()
-	{
-		$db		= JFactory::getDBO();
-		$query	= $db->getQuery(true);
-		$query->select('l.link_id, l.title, l.type_id, l.url, l.indexdate, l.state, l.published');
-		$query->select('l.publish_start_date, l.publish_end_date, l.start_date, l.end_date');
-		$query->select('t.title AS t_title');
-		$query->from('#__jxfinder_links AS l');
-		$query->join('INNER', '#__jxfinder_types AS t ON t.id = l.type_id');
-
-		// Check the type filter.
-		if ($this->getState('filter.type') !== 0) {
-			$query->where('l.type_id = '.(int)$this->getState('filter.type'));
-		}
-
-		// Check for state filter.
-		if ($this->getState('check.state')) {
-			$query->where('l.published = '.(int)$this->getState('filter.state'));
-		}
-
-		// Check the search phrase.
-		if ($this->getState('filter.search') != '')
-		{
-			$search = $this->_db->getEscaped($this->getState('filter.search'));
-			$query->where('l.title LIKE "%'.$this->_db->getEscaped($search).'%"' .
-						' OR l.url LIKE "%'.$this->_db->getEscaped($search).'%"' .
-				 		' OR l.indexdate LIKE "%'.$this->_db->getEscaped($search).'%"');
-		}
-
-		$query->order($this->_db->getEscaped($this->getState('list.ordering')).' '.$this->getState('list.direction'));
-
-		return $query;
-	}
-
-	protected function _getUrlQuery($cid)
-	{
-		$query	= 'SELECT url FROM #__jxfinder_links'
-				. ' WHERE link_id = '.implode(' OR link_id = ', $cid);
-
-		return $query;
 	}
 }

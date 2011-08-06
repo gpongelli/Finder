@@ -44,6 +44,7 @@ Joomla.submitbutton = function(pressbutton) {
 		</div>
 		<div class="filter-select fltrt">
 			<select name="filter_type" class="inputbox" onchange="this.form.submit()">
+				<option value=""><?php echo JText::_('COM_FINDER_INDEX_TYPE_FILTER');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('finder.typeslist'), 'value', 'text', $this->state->get('filter.type'), true);?>
 			</select>
 			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
@@ -81,7 +82,7 @@ Joomla.submitbutton = function(pressbutton) {
 			</tr>
 		</thead>
 		<tbody>
-			<?php if (count($this->data) == 0): ?>
+			<?php if (count($this->items) == 0): ?>
 			<tr class="row0">
 				<td align="center" colspan="7">
 					<?php
@@ -98,7 +99,7 @@ Joomla.submitbutton = function(pressbutton) {
 
 			<?php $n = 1 + $this->state->get('list.start'); $o = 0; ?>
 			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
-			<?php foreach ($this->data as $row): ?>
+			<?php foreach ($this->items as $row): ?>
 
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center" title="<?php echo (int) $row->link_id;?>">

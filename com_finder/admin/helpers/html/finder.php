@@ -44,7 +44,6 @@ abstract class JHtmlFinder
 
 		// Compile the options.
 		$options	= array();
-		$options[]	= JHtml::_('select.option', '0', JText::_('COM_FINDER_INDEX_TYPE_FILTER'));
 
 		foreach ($rows as $row) {
 			$key		= $lang->hasKey('COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text))) ? 'COM_FINDER_TYPE_P_'.strtoupper(str_replace(' ', '_', $row->text)) : $row->text;

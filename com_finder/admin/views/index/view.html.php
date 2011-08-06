@@ -29,7 +29,7 @@ class FinderViewIndex extends JView
 	function display($tpl = null)
 	{
 		// Initialise variables
-		$this->data			= $this->get('Data');
+		$this->items		= $this->get('Items');
 		$this->total		= $this->get('Total');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
