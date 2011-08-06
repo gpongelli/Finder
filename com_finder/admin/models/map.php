@@ -130,12 +130,12 @@ class FinderModelMap extends JModel
 	 * @return	bool	Returns true on success, false on failure.
 	 * @since	1.0
 	 */
-	function publish($map_ids)
+	function publish($map_ids, $state)
 	{
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 		$query->update($db->quoteName('#__jxfinder_taxonomy'));
-		$query->set($db->quoteName('state').' = 1');
+		$query->set($db->quoteName('state').' = ' . (int) $state);
 		$query->where($db->quoteName('id').' = '.implode(' OR id = ', $map_ids));
 		$db->setQuery($query);
 		$db->query();
