@@ -28,14 +28,6 @@ class FinderModelAdapters extends JModelList
 	protected $_context = 'com_finder.adapters';
 
 	/**
-	 * The total number of extensions.
-	 *
-	 * @access	private
-	 * @var		integer
-	 */
-	var $_filter_extensions		= null;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param	array	An optional associative array of configuration settings.
@@ -143,27 +135,6 @@ class FinderModelAdapters extends JModelList
 		$id.= ':' . $this->getState('filter.state');
 
 		return parent::getStoreId($id);
-	}
-
-	function getTotal()
-	{
-		// Assemble the query.
-		$db		= $this->getDbo();
-		$query	= $db->getQuery(true);
-		$query->select('count(p.extension_id)');
-		$query->from($db->quoteName('#__extensions').' AS p');
-		$db->setQuery($query);
-		$return = $db->loadResult();
-
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			$this->setError($db->getErrorMsg());
-			return false;
-		}
-
-		$this->_filter_total = (int)$return;
-
-		return $this->_filter_total;
 	}
 
 	/**

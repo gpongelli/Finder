@@ -24,9 +24,6 @@ $userId		= $user->get('id');
 			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
 		<div class="filter-select fltrt">
-			<select name="filter_type" class="inputbox" onchange="this.form.submit()">
-				<?php echo JHtml::_('select.options', JHtml::_('finder.typeslist'), 'value', 'text', $this->state->get('filter.type'), true);?>
-			</select>
 			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
 				<option value=""><?php echo JText::_('COM_FINDER_INDEX_FILTER_BY_STATE');?></option>
 				<?php echo JHtml::_('select.options', JHtml::_('finder.statelist'), 'value', 'text', $this->state->get('filter.state'), true);?>
@@ -62,13 +59,7 @@ $userId		= $user->get('id');
 			<?php if (count($this->items) == 0): ?>
 			<tr class="row0">
 				<td class="center" colspan="11">
-					<?php
-					if ($this->total == 0):
-						echo JText::_('COM_FINDER_NO_ADAPTERS');
-					else:
-						echo JText::_('COM_FINDER_NO_RESULTS');
-					endif;
-					?>
+					<?php echo JText::_('COM_FINDER_NO_ADAPTERS'); ?>
 				</td>
 			</tr>
 			<?php endif; ?>
