@@ -8,7 +8,7 @@
 	<state>
 		<name>FINDER_MENU_SEARCH_VIEW_DEFAULT_TITLE</name>
 		<description>FINDER_MENU_SEARCH_VIEW_DEFAULT_TEXT</description>
-		<url addpath="/administrator/components/com_finder/models/elements">
+		<url addpath="/administrator/components/com_finder/models/fields">
 			<param
 				name="q"
 				type="text"

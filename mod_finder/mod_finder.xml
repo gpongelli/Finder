@@ -21,7 +21,7 @@
 		<language tag="en-GB">language/en-GB/en-GB.mod_finder.sys.ini</language>
 	</languages>
 	<config>
-		<fields name="fields" addpath="/administrator/components/com_finder/models/elements">
+		<fields name="fields" addpath="/administrator/components/com_finder/models/fields">
 			<fieldset name="basic">
 				<field
 					name="searchfilter"
