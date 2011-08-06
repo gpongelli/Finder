@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: finder.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -86,7 +85,6 @@ abstract class JHtmlFinder
 	static function statelist()
 	{
 		$options	= array();
-		$options[]	= JHtml::_('select.option', '*', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
 		$options[]	= JHtml::_('select.option', '1', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JPUBLISHED')));
 		$options[]	= JHtml::_('select.option', '0', JText::sprintf('COM_FINDER_ITEM_X_ONLY', JText::_('JUNPUBLISHED')));
 
