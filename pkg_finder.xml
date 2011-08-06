@@ -21,6 +21,7 @@
 		<file type="plugin" id="joomla_articles" group="finder">plg_finder_joomla_articles.zip</file>
 		<file type="plugin" id="joomla_categories" group="finder">plg_finder_joomla_categories.zip</file>
 		<file type="plugin" id="joomla_contacts" group="finder">plg_finder_joomla_contacts.zip</file>
+		<file type="plugin" id="joomla_weblinks" group="finder">plg_finder_joomla_weblinks.zip</file>
 		<file type="plugin" id="finder" group="system">plg_system_finder.zip</file>
 	</files>
 </extension>

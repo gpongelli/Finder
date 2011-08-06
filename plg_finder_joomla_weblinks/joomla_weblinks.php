@@ -13,11 +13,6 @@ defined('JPATH_BASE') or die;
 // Load the base adapter.
 require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter.php';
 
-// Load the language files for the adapter.
-$lang = JFactory::getLanguage();
-$lang->load('plg_finder_joomla_weblinks');
-$lang->load('plg_finder_joomla_weblinks.custom');
-
 /**
  * Finder adapter for Joomla Weblinks.
  *
@@ -40,6 +35,21 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @var		string		The type of content that the adapter indexes.
 	 */
 	protected $_type_title = 'Web Link';
+
+	/**
+	 * Constructor
+	 *
+	 * @param	object	$subject	The object to observe
+	 * @param	array	$config		An array that holds the plugin configuration
+	 *
+	 * @return	void
+	 * @since	1.8
+	 */
+	public function __construct(&$subject, $config)
+	{
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+	}
 
 	/**
 	 * Method to reindex the link information for an item that has been saved.
@@ -72,7 +82,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	public function onChangeJoomlaWeblink($ids, $property, $value)
 	{
 		// Check if we are changing the weblink state.
-		if ($property === 'published')
+		if ($property === 'state')
 		{
 			// The weblink published state is tied to the category published
 			// state so we need to look up all published states before we
@@ -111,7 +121,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	public function onChangeJoomlaCategory($ids, $property, $value)
 	{
 		// Check if we are changing the category state.
-		if ($property === 'published')
+		if ($property === 'state')
 		{
 			// The weblink published state is tied to the category published
 			// state so we need to look up all published states before we
@@ -238,9 +248,9 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	protected function _getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : new JDatabaseQuery();
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
 		$sql->select('a.id, a.catid, a.title, a.alias, a.url AS link, a.description AS summary');
-		$sql->select('a.published AS state, a.ordering, a.approved, a.date AS start_date, a.params');
+		$sql->select('a.state AS state, a.ordering, a.approved, a.date AS start_date, a.params');
 		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
 		$sql->select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as catslug');
@@ -260,7 +270,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	protected function _getUpdateQueryByTime($time)
 	{
 		// Build an SQL query based on the modified time.
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->where('a.date >= '.$this->_db->quote($time));
 
 		return $sql;
@@ -317,9 +327,9 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
-		$sql->select('a.published AS state, c.published AS cat_state');
+		$sql->select('a.state AS state, c.published AS cat_state');
 		$sql->select('0 AS access, c.access AS cat_access');
 		$sql->from('#__weblinks AS a');
 		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
