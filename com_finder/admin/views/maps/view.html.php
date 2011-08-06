@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC.  All rights reserved.
  * @license		GNU General Public License
@@ -34,7 +33,7 @@ class FinderViewMaps extends JView
 		$user		= JFactory::getUser();
 
 		// Load the view data.
-		$this->data			= $this->get('Items');
+		$this->items		= $this->get('Items');
 		$this->total		= $this->get('Total');
 		$this->pagination	= $this->get('Pagination');
 		$this->state		= $this->get('State');
@@ -62,18 +61,20 @@ class FinderViewMaps extends JView
 	 */
 	function addToolbar()
 	{
+		// For whatever reason, the helper isn't being found
+		require_once JPATH_COMPONENT.'/helpers/finder.php';
 		$canDo	= FinderHelper::getActions();
 
 		JToolBarHelper::title(JText::_('COM_FINDER_MAPS_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::publish('map.publish');
-			JToolBarHelper::unpublish('map.unpublish');
+			JToolBarHelper::publish('maps.publish', 'JTOOLBAR_PUBLISH', true);
+			JToolBarHelper::unpublish('maps.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete')) {
-			JToolBarHelper::deleteList('', 'map.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_DELETE');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.admin')) {

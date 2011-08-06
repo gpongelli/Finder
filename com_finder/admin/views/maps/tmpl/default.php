@@ -16,8 +16,11 @@ Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'map.delete') {
 		if (confirm(<?php echo JText::_('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');?>)) {
 			Joomla.submitform(pressbutton);
+		} else {
+			return false;
 		}
 	}
+	Joomla.submitform(pressbutton);
 }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=maps');?>" method="post" name="adminForm" id="adminForm">
@@ -58,7 +61,7 @@ Joomla.submitbutton = function(pressbutton) {
 			</tr>
 		</thead>
 		<tbody>
-			<?php if (count($this->data) == 0): ?>
+			<?php if (count($this->items) == 0): ?>
 			<tr class="row0">
 				<td class="center" colspan="5">
 					<?php echo JText::_('COM_FINDER_MAPS_NO_CONTENT'); ?>
@@ -76,7 +79,7 @@ Joomla.submitbutton = function(pressbutton) {
 
 			<?php $n = 1; $o = 0; ?>
 			<?php $canChange	= JFactory::getUser()->authorise('core.manage',	'com_finder'); ?>
-			<?php foreach ($this->data as $row): ?>
+			<?php foreach ($this->items as $row): ?>
 
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center">
@@ -90,7 +93,8 @@ Joomla.submitbutton = function(pressbutton) {
 						$key = 'COM_FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->title));
 						$title = $lang->hasKey($key) ? JText::_($key) : $row->title;
 					?>
-					<?php if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
+					<?php //TODO: This link isn't working, Firebug returns "$("filter_branch") is null"
+					if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
 						<a href="#" onclick="$('filter_branch').value=<?php echo (int) $row->id;?>;document.adminForm.submit();" title="<?php echo JText::_('COM_FINDER_MAPS_BRANCH_LINK'); ?>">
 							<?php echo $this->escape($title); ?></a>
 					<?php else: ?>

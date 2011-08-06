@@ -24,7 +24,7 @@ class FinderControllerMaps extends JControllerAdmin
 	 *
 	 * @since	1.6
 	 */
-	public function &getModel($name = 'Map', $prefix = 'FinderModel')
+	public function &getModel($name = 'Maps', $prefix = 'FinderModel')
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;

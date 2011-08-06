@@ -39,85 +39,46 @@ class FinderModelMaps extends JModelList
 	}
 
 	/**
-	 * Overridden method to get model state variables.
+	 * Method to delete maps from the taxonomy.
 	 *
 	 * @access	public
-	 * @param	string	$property	Optional parameter name.
-	 * @return	object	The property where specified, the state object where omitted.
+	 * @param	array	$map_ids	An array of map ids.
+	 * @return	bool	Returns true on success, false on failure.
 	 * @since	1.0
 	 */
-	function getState($property = null)
+	function delete($map_ids)
 	{
-		if (!$this->__state_set)
+		$db		= $this->getDbo();
+
+		// Iterate the maps to delete each one.
+		foreach ($map_ids as $map_id)
 		{
-			$app		= &JFactory::getApplication('administrator');
-			$user		= &JFactory::getUser();
-			$config		= &JFactory::getConfig();
-			$params		= JComponentHelper::getParams('com_finder');
-			$context	= 'com_finder.maps.';
+			$query	= $db->getQuery(true);
 
-			// Get the list filters.
-			// Load the filter state.
-			$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-			$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', '*', 'string'));
-			$this->setState('filter.branch', $app->getUserStateFromRequest($context.'filter.branch', 'filter_branch', 1, 'int'));
+			// Remove all relevant rows from the taxonomy map table.
+			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where($db->quoteName('node_id').' > '.(int)$map_id);
+			$db->setQuery($query);
+			$db->query();
 
-			// Load the list state.
-			$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
-			$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
-			$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'a.ordering', 'cmd'));
-			$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
-
-			// Load the user parameters.
-			$this->setState('user',	$user);
-			$this->setState('user.id', (int)$user->id);
-			$this->setState('user.aid', (int)$user->get('aid'));
-
-			// Load the check parameters.
-			if ($this->state->get('filter.state') === '*') {
-				$this->setState('check.state', false);
-			} else {
-				$this->setState('check.state', true);
+			// Check for a database error.
+			if ($this->_db->getErrorNum()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
 			}
 
-			// Load the parameters.
-			$this->setState('params', $params);
+			$query->clear();
+			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('id').' = '.(int)$map_id.' AND '.$db->quoteName('parent_id').' > 1');
+			$db->setQuery($query);
+			$db->query();
 
-			$this->__state_set = true;
+			// Check for a database error.
+			if ($this->_db->getErrorNum()) {
+				$this->setError($this->_db->getErrorMsg());
+				return false;
+			}
 		}
 
-		return parent::getState($property);
-	}
-
-	/**
-	 * Method to get a list of items.
-	 *
-	 * @access	public
-	 * @return	mixed	An array of objects on success, false on failure.
-	 * @since	1.0
-	 */
-	function getItems()
-	{
-		// Get a storage key.
-		$store = $this->getStoreId('getItems');
-
-			// Try to load the data from internal storage.
-		if (!empty($this->cache[$store])) {
-			return $this->cache[$store];
-		}
-
-		// Load the list items.
-		$items = parent::getItems();
-
-		// If emtpy or an error, just return.
-		if (empty($items)) {
-			return array();
-		}
-
-		// Add the items to the internal cache.
-		$this->cache[$store] = $items;
-
-		return $this->cache[$store];
+		return true;
 	}
 
 	/**
@@ -188,15 +149,25 @@ class FinderModelMaps extends JModelList
 	function getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id	.= ':'.$this->getState('list.start');
-		$id	.= ':'.$this->getState('list.limit');
-		$id	.= ':'.$this->getState('list.ordering');
-		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.branch');
 
 		return parent::getStoreId($id);
+	}
+
+	/**
+	 * Returns a JTable object, always creating it.
+	 *
+	 * @param	string	$type	The table type to instantiate
+	 * @param	string	$prefix	A prefix for the table class name. Optional.
+	 * @param	array	$config	Configuration array for model. Optional.
+	 *
+	 * @return	JTable	A database object
+	*/
+	public function getTable($type = 'Map', $prefix = 'FinderTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**
@@ -214,5 +185,96 @@ class FinderModelMaps extends JModelList
 
 		// List state information.
 		parent::populateState('a.id', 'asc');
+	}
+
+	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 * @since   11.1
+	 */
+	function publish(&$pks, $value = 1)
+	{
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$table		= $this->getTable();
+		$pks		= (array) $pks;
+
+		// Include the content plugins for the change of state event.
+		JPluginHelper::importPlugin('content');
+
+		// Access checks.
+		foreach ($pks as $i => $pk) {
+			$table->reset();
+
+			if ($table->load($pk)) {
+				if (!$this->canEditState($table)) {
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					return false;
+				}
+			}
+		}
+
+		// Attempt to change the state of the records.
+		if (!$table->publish($pks, $value, $user->get('id'))) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		$context = $this->option.'.'.$this->name;
+
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
+
+		if (in_array(false, $result, true)) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to purge all maps from the taxonomy.
+	 *
+	 * @access	public
+	 * @return	bool	Returns true on success, false on failure.
+	 * @since	1.0
+	 */
+	function purge()
+	{
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('parent_id').' > 1');
+		$db->setQuery($query);
+		$db->query();
+
+		// Check for a database error.
+		if ($this->_db->getErrorNum()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		$query->clear();
+		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where('1');
+		$db->setQuery($query);
+		$db->query();
+
+		// Check for a database error.
+		if ($this->_db->getErrorNum()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return true;
 	}
 }
