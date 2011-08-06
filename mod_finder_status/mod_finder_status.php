@@ -14,12 +14,7 @@ if (JRequest::getBool('hidemainmenu')) {
 	$text = JText::_('MOD_FINDER_STATUS_PAUSED');
 } else {
 	$text = JText::_('MOD_FINDER_STATUS_WAITING');
-	if (class_exists('plgSystemMTUpgrade')) {
-		JHtml::script('status12.js', 'administrator/modules/mod_finder_status/media/js/');
-	}
-	else {
-		JHtml::script('status.js', 'administrator/modules/mod_finder_status/media/js/');
-	}
+	JHtml::script('administrator/modules/mod_finder_status/media/js/status12.js', false, false);
 }
 
 // We need to add some CSS to fix the status bar display.
