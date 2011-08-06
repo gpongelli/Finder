@@ -21,7 +21,6 @@ class FinderModelAbout extends JModel
 {
 	function getData()
 	{
-		jx('jx.database.databasequery');
 		$db		= &$this->getDbo();
 		$data	= new JObject;
 
