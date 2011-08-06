@@ -9,6 +9,7 @@
 	<authorUrl>http://jxtended.com/</authorUrl>
 	<version>2.0.1</version>
 	<description>MOD_FINDER_STATUS_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
 	<files>
 		<folder>media</folder>
 		<file>index.html</file>
