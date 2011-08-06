@@ -370,30 +370,57 @@ class FinderModelIndex extends JModelList
 	}
 
 	/**
-	 * Method to publish/unpublish links in the index.
+	 * Method to change the published state of one or more records.
 	 *
-	 * @access	public
-	 * @param	array	$link_ids	An array of link ids.
-	 * @param	int		$state	An integer representing the state of the link
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 * @since   11.1
 	 */
-	public function publish($link_ids, $state)
+	function publish(&$pks, $value = 1)
 	{
-		$db		= $this->getDbo();
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$table		= $this->getTable();
+		$pks		= (array) $pks;
 
-		// Set the links states to unpublished.
-		$query	= 'UPDATE #__jxfinder_links SET published = ' . (int) $state
-				. ' WHERE link_id = '.implode(' OR link_id = ', $link_ids);
+		// Include the content plugins for the change of state event.
+		JPluginHelper::importPlugin('content');
 
-		$db->setQuery($query);
-		$db->query();
+		// Access checks.
+		foreach ($pks as $i => $pk) {
+			$table->reset();
 
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			$this->setError($db->getErrorMsg());
+			if ($table->load($pk)) {
+				if (!$this->canEditState($table)) {
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					return false;
+				}
+			}
+		}
+
+		// Attempt to change the state of the records.
+		if (!$table->publish($pks, $value, $user->get('id'))) {
+			$this->setError($table->getError());
 			return false;
 		}
+
+		$context = $this->option.'.'.$this->name;
+
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
+
+		if (in_array(false, $result, true)) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
 
 		return true;
 	}

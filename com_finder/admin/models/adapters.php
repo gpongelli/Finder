@@ -57,43 +57,31 @@ class FinderModelAdapters extends JModelList
 	}
 
 	/**
+	 * Method to test whether a record can be deleted.
 	 *
+	 * @param   object   $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+	 * @since   11.1
 	 */
-	public function setStates($cid, $state = 0)
+	protected function canDelete($record)
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
+		return $user->authorise('core.delete', $this->option);
+	}
 
-		// Get a plugin row instance.
-		$row = JTable::getInstance('Plugin', 'JTable');
-
-		// Update the state for each row
-		for ($i = 0; $i < count($cid); $i++)
-		{
-			// Load the row.
-			$row->load($cid[$i]);
-
-			// Make sure the filter isn't checked out by someone else.
-			if ($row->checked_out != 0 && $row->checked_out != $user->id)
-			{
-				$this->setError(JText::sprintf('FINDER_ADAPTER_CHECKED_OUT', $cid[$i]));
-				return false;
-			}
-
-			// Check the current state.
-			if ($row->published != $state)
-			{
-				// Set the new state.
-				$row->published = $state;
-
-				// Save the row.
-				if (!$row->store()) {
-					$this->setError($this->_db->getErrorMsg());
-					return false;
-				}
-			}
-		}
-
-		return true;
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object   $record	A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 * @since   11.1
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+		return $user->authorise('core.edit.state', $this->option);
 	}
 
 	/**
@@ -205,5 +193,61 @@ class FinderModelAdapters extends JModelList
 
 		// List state information.
 		parent::populateState('p.name', 'asc');
+	}
+
+	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 * @since   11.1
+	 */
+	function publish(&$pks, $value = 1)
+	{
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$table		= JTable::getInstance('Extension', 'JTable');
+		$pks		= (array) $pks;
+
+		// Include the content plugins for the change of state event.
+		JPluginHelper::importPlugin('content');
+
+		// Access checks.
+		foreach ($pks as $i => $pk) {
+			$table->reset();
+
+			if ($table->load($pk)) {
+				if (!$this->canEditState($table)) {
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					return false;
+				}
+			}
+		}
+
+		// Attempt to change the state of the records.
+		if (!$table->publish($pks, $value, $user->get('id'))) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		$context = $this->option.'.'.$this->name;
+
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
+
+		if (in_array(false, $result, true)) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
 	}
 }
