@@ -73,4 +73,25 @@ class FinderModelConfig extends ConfigModelComponent
 
 		return $form;
 	}
+
+	/**
+	 * Method to get the record form.
+	 *
+	 * @param	array	$data		Data for the form.
+	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return	mixed	$form		A JForm object on success, false on failure
+	 * @since	1.6
+	 */
+	public function getImport($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_finder.import', 'import', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form)) {
+			return false;
+		}
+
+		return $form;
+	}
+
 }
