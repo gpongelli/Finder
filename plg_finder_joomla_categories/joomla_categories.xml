@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.7" type="plugin" group="finder" method="upgrade">
+	<name>plg_finder_joomla_categories</name>
+	<author>JXtended</author>
+	<creationDate>May 2009</creationDate>
+	<copyright>Copyright (C) 2007 - 2010 JXtended, LLC.  All rights reserved.</copyright>
+	<license>GNU General Public License</license>
+	<authorEmail>info@jxtended.com</authorEmail>
+	<authorUrl>http://www.jxtended.com</authorUrl>
+	<version>2.0.1</version>
+	<description>PLG_FINDER_JOOMLA_CATEGORIES_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<files>
+		<file plugin="joomla_categories">joomla_categories.php</file>
+    	<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_finder_joomla_categories.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_finder_joomla_categories.sys.ini</language>
+	</languages>
+</extension>

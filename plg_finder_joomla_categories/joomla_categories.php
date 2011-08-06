@@ -42,6 +42,21 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	protected $_type_title = 'Category';
 
 	/**
+	 * Constructor
+	 *
+	 * @param	object	$subject	The object to observe
+	 * @param	array	$config		An array that holds the plugin configuration
+	 *
+	 * @return	void
+	 * @since	1.8
+	 */
+	public function __construct(&$subject, $config)
+	{
+		parent::__construct($subject, $config);
+		$this->loadLanguage();
+	}
+
+	/**
 	 * Method to reindex the link information for an item that has been saved.
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
@@ -74,8 +89,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		// Check if we are changing the category state.
 		if ($property === 'published')
 		{
-			// The article published state is tied to the section and category
-			// published states so we need to look up all published states
+			// The article published state is tied to the category
+			// published state so we need to look up all published states
 			// before we change anything.
 			foreach ($ids as $id)
 			{
@@ -90,7 +105,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 				foreach ($items as $item)
 				{
 					// Translate the state.
-					$temp = $this->_translateState($value, $item->sec_state);
+					$temp = $this->_translateState($value);
 
 					// Update the item.
 					$this->_change($item->id, 'state', $temp);
@@ -100,8 +115,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		// Check if we are changing the category access level.
 		elseif ($property === 'access')
 		{
-			// The article access state is tied to the section and category
-			// access states so we need to look up all access states
+			// The article access state is tied to the category
+			// access state so we need to look up all access states
 			// before we change anything.
 			foreach ($ids as $id)
 			{
@@ -116,77 +131,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 				foreach ($items as $item)
 				{
 					// Translate the state.
-					$temp = max($value, $item->sec_access);
-
-					// Update the item.
-					$this->_change($item->id, 'access', $temp);
-				}
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Method to update the item link information when the item section is
-	 * changed. This is fired when the item section is published, unpublished,
-	 * or an access level is changed.
-	 *
-	 * @param	array		An array of item ids.
-	 * @param	string		The property that is being changed.
-	 * @param	integer		The new value of that property.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
-	 */
-	public function onChangeJoomlaSection($ids, $property, $value)
-	{
-		// Check if we are changing the section state.
-		if ($property === 'published')
-		{
-			// The article published state is tied to the section and category
-			// published states so we need to look up all published states
-			// before we change anything.
-			foreach ($ids as $id)
-			{
-				$sql = new JDatabaseQuery();
-				$sql = clone($this->_getStateQuery());
-				$sql->where('s.id = '.(int)$id);
-
-				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
-
-				// Adjust the state for each item within the section.
-				foreach ($items as $item)
-				{
-					// Translate the state.
-					$temp = $this->_translateState($item->cat_state, $value);
-
-					// Update the item.
-					$this->_change($item->id, 'state', $temp);
-				}
-			}
-		}
-		// Check if we are changing the section access level.
-		elseif ($property === 'access')
-		{
-			// The article access state is tied to the section and category
-			// access states so we need to look up all access states
-			// before we change anything.
-			foreach ($ids as $id)
-			{
-				$sql = clone($this->_getStateQuery());
-				$sql->where('s.id = '.(int)$id);
-
-				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
-
-				// Adjust the state for each item within the category.
-				foreach ($items as $item)
-				{
-					// Translate the state.
-					$temp = max($item->cat_access, $value);
+					$temp = max($value);
 
 					// Update the item.
 					$this->_change($item->id, 'access', $temp);
@@ -226,7 +171,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 
 		// Build the necessary route and path information.
 		$item->url		= $this->_getURL($item->id);
-		$item->route	= ContentHelperRoute::getCategoryRoute($item->slug, $item->sectionid);
+		$item->route	= ContentHelperRoute::getCategoryRoute($item->slug, $item->catid);
 		$item->path		= FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
@@ -238,18 +183,13 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		}
 
 		// Translate the state. Categories should only be published if the section is published.
-		$item->state = $this->_translateState($item->state, $item->sec_state);
+		$item->state = $this->_translateState($item->state);
 
 		// Set the language.
 		$item->language	= $item->params->get('language', FinderIndexerHelper::getDefaultLanguage());
 
 		// Add the type taxonomy data.
 		$item->addTaxonomy('Type', 'Category');
-
-		// Add the section taxonomy data.
-		if (!empty($item->section)) {
-			$item->addTaxonomy('Section', $item->section, $item->sec_state, $item->sec_access);
-		}
 
 		// Get content extras.
 		FinderIndexerHelper::getContentExtras($item);
@@ -280,14 +220,11 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	protected function _getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : new JDatabaseQuery();
-		$sql->select('a.id, a.title, a.alias, a.section, a.description AS summary');
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
+		$sql->select('a.id, a.title, a.alias, a.description AS summary');
 		$sql->select('a.published AS state, a.access, a.params');
-		$sql->select('s.title AS section, s.published AS sec_state, s.access AS sec_access');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
 		$sql->from('#__categories AS a');
-		$sql->join('LEFT', '#__sections AS s ON s.id = a.section');
-		$sql->where('s.scope = "content"');
 
 		return $sql;
 	}
@@ -309,16 +246,10 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 * indexer can use.
 	 *
 	 * @param	integer		The category state.
-	 * @param	integer		The section state.
 	 * @return	integer		The translated indexer state.
 	 */
-	private function _translateState($category, $section)
+	private function _translateState($category)
 	{
-		// The category is unpublished if the section is unpublished.
-		if ($section !== null && $section == 0) {
-			$category = 0;
-		}
-
 		// Translate the state.
 		switch ($category)
 		{
@@ -341,12 +272,11 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = new JDatabaseQuery();
-		$sql->select('c.id');
-		$sql->select('c.published AS cat_state, s.published AS sec_state');
-		$sql->select('c.access AS cat_access, s.access AS sec_access');
-		$sql->from('#__categories AS c');
-		$sql->join('LEFT', '#__sections AS s ON s.id = c.section');
+		$sql = $this->_db->getQuery(true);
+		$sql->select($db->quoteName('c.id'));
+		$sql->select($db->quoteName('c.published').' AS cat_state');
+		$sql->select($db->quoteName('c.access').' AS cat_access');
+		$sql->from($db->quoteName('#__categories').' AS c');
 
 		return $sql;
 	}
