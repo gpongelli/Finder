@@ -15,9 +15,9 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.0
  */
-class JHtmlFinder
+abstract class JHtmlFinder
 {
-	function footer()
+	static function footer()
 	{
 		JHtml::_('behavior.modal', 'a.modal');
 		echo '<div id="jxfooter">';
@@ -27,7 +27,7 @@ class JHtmlFinder
 		echo '</div>';
 	}
 
-	function typeslist()
+	static function typeslist()
 	{
 		$lang = &JFactory::getLanguage();
 
@@ -56,7 +56,7 @@ class JHtmlFinder
 		return $options;
 	}
 
-	function mapslist($active, $branches = true)
+	static function mapslist($branches = true)
 	{
 		$lang = &JFactory::getLanguage();
 
@@ -83,7 +83,7 @@ class JHtmlFinder
 		return $options;
 	}
 
-	function statelist()
+	static function statelist()
 	{
 		$options	= array();
 		$options[]	= JHtml::_('select.option', '*', JText::_('COM_FINDER_INDEX_FILTER_BY_STATE'));
@@ -103,7 +103,7 @@ class JHtmlFinder
 	 * @param	string	$file	The XML file to render.
 	 * @return	string	A HTML rendered parameters form.
 	 */
-	function params($name, $ini, $file)
+	static function params($name, $ini, $file)
 	{
 		jimport('joomla.html.parameter');
 
