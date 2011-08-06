@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: config.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -8,7 +7,8 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.model');
+// Require com_config component model
+require_once JPATH_ADMINISTRATOR.'/components/com_config/models/component.php';
 
 /**
  * Configuration model class for Finder.
@@ -17,111 +17,60 @@ jimport('joomla.application.component.model');
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderModelConfig extends JModel
+class FinderModelConfig extends ConfigModelComponent
 {
 	/**
-	 * Flag to indicate model state initialization.
+	 * Get the component information.
 	 *
-	 * @access	protected
-	 * @var		boolean
+	 * @return	object
+	 * @since	1.6
 	 */
-	var $__state_set		= null;
-
-	/**
-	 * Container for adapter information.
-	 *
-	 * @access	private
-	 * @var		array
-	 */
-	var $_adapters			= null;
-
-	/**
-	 * Overridden method to get model state variables.
-	 *
-	 * @access	public
-	 * @param	string	$property	Optional parameter name.
-	 * @return	object	The property where specified, the state object where omitted.
-	 * @since	1.0
-	 */
-	function getState($property = null)
+	function getComponent()
 	{
-		// If the model state is uninitialized lets set some values we will need from the request.
-		if (!$this->__state_set)
-		{
-			$application	= &JFactory::getApplication('administrator');
-			$context		= 'com_finder.config.';
+		// Initialise variables.
+		$option = 'com_finder';
 
-			// Load the list state.
-			$this->setState('list.ordering', $application->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'a.title', 'cmd'));
-			$this->setState('list.direction', $application->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
+		// Load common and local language files.
+		$lang = JFactory::getLanguage();
+			$lang->load($option, JPATH_BASE, null, false, false)
+		||	$lang->load($option, JPATH_BASE . "/components/$option", null, false, false)
+		||	$lang->load($option, JPATH_BASE, $lang->getDefault(), false, false)
+		||	$lang->load($option, JPATH_BASE . "/components/$option", $lang->getDefault(), false, false);
 
-			// Load the parameters.
-			$this->setState('params', JComponentHelper::getParams('com_finder'));
+		$result = JComponentHelper::getComponent($option);
 
-			$this->__state_set = true;
-		}
-
-		return parent::getState($property);
+		return $result;
 	}
 
-	function save()
+	/**
+	 * Method to get a form object.
+	 *
+	 * @param	array	$data		Data for the form.
+	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return	mixed	A JForm object on success, false on failure
+	 * @since	1.6
+	 */
+	public function getForm($data = array(), $loadData = true)
 	{
-		// Initialize variables.
-		$table			= &JTable::getInstance('component');
-		$params 		= JRequest::getVar('params', array(), 'post', 'array');
-		$row			= array();
-		$row['option']	= 'com_finder';
-		$row['params']	= $params;
+		jimport('joomla.form.form');
 
-		// Load the component data for com_finder.
-		if (!$table->loadByOption('com_finder')) {
-			$this->setError($table->getError());
+		// Add the search path for the admin component config.xml file.
+		JForm::addFormPath(JPATH_COMPONENT_ADMINISTRATOR);
+
+		// Get the form.
+		$form = $this->loadForm(
+				'com_config.component',
+				'config',
+				array('control' => 'jform', 'load_data' => $loadData),
+				false,
+				'/config'
+			);
+
+		if (empty($form)) {
 			return false;
 		}
 
-		// Bind the new values
-		$table->bind($row);
-
-		// Check the row.
-		if (!$table->check()) {
-			$this->setError($table->getError());
-			return false;
-		}
-
-		// Store the row.
-		if (!$table->store()) {
-			$this->setError($table->getError());
-			return false;
-		}
-
-		// Get the adapters that had configuration parameters.
-		$adapters = JRequest::getVar('adapters', array(), 'post', 'array');
-
-		// Save the parameters for each adapter.
-		foreach($adapters as $adapter)
-		{
-			// Get the params array from the post.
-			$aparams	= JRequest::getVar($adapter.'_params', array(), 'post', 'array');
-			$ini		= '';
-
-			// Convert the params array to an INI string.
-			foreach ($aparams as $k => $v) {
-				$ini .= $k.'='.$v."\n";
-			}
-
-			$query	= 'UPDATE #__jxfinder_adapters'
-					. ' SET params = '.$this->_db->Quote($ini)
-					. ' WHERE alias = '.$this->_db->Quote($adapter);
-
-			$this->_db->setQuery($query);
-
-			// Save the adapter parameters.
-			if (!$this->_db->query()) {
-				$this->setError($table->getError());
-				return false;
-			}
-		}
-
-		return true;
+		return $form;
 	}
 }

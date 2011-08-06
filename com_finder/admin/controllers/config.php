@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: config.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,6 +8,9 @@
 
 defined('_JEXEC') or die;
 
+// Require com_config component controller
+require_once JPATH_ADMINISTRATOR.'/components/com_config/controllers/component.php';
+
 /**
  * Configuration controller class for Finder.
  *
@@ -16,8 +18,34 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.0
  */
-class FinderControllerConfig extends FinderController
+class FinderControllerConfig extends ConfigControllerComponent
 {
+	/**
+	 * Class Constructor
+	 *
+	 * @param	array	$config		An optional associative array of configuration settings.
+	 * @return	void
+	 * @since	1.5
+	 */
+	function __construct($config = array())
+	{
+		parent::__construct($config);
+
+		// Map the apply task to the save method.
+		$this->registerTask('apply', 'save');
+	}
+
+	/**
+	 * Proxy for getModel.
+	 *
+	 * @since	1.6
+	 */
+	public function &getModel($name = 'Config', $prefix = 'FinderModel')
+	{
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+		return $model;
+	}
+
 	/**
 	 * Method to import the configuration via string or upload.
 	 *
@@ -27,7 +55,7 @@ class FinderControllerConfig extends FinderController
 	 */
 	function import()
 	{
-		JRequest::checkToken() or jexit(JText::_('JX_INVALID_TOKEN'));
+		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$string = JRequest::getVar('configString', '', 'post', 'string', JREQUEST_ALLOWHTML);
 		$file	= JRequest::getVar('configFile', array(), 'files', 'array');
@@ -38,13 +66,13 @@ class FinderControllerConfig extends FinderController
 		{
 			// Handle import via uploaded file.
 			$string = implode("\n", file($file['tmp_name']));
-			$model	= &$this->getModel('Config');
+			$model	= &$this->getModel();
 			$return	= $model->import($string);
 		}
 		elseif (strlen($string) > 1)
 		{
 			// Handle import via pasted string.
-			$model	= &$this->getModel('Config');
+			$model	= &$this->getModel();
 			$return	= $model->import($string);
 		}
 
@@ -71,7 +99,7 @@ class FinderControllerConfig extends FinderController
 	 */
 	function export()
 	{
-		JRequest::checkToken() or jexit(JText::_('JX_INVALID_TOKEN'));
+		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$app	= &JFactory::getApplication();
 		$config = &JComponentHelper::getParams('com_finder');
@@ -91,30 +119,91 @@ class FinderControllerConfig extends FinderController
 	}
 
 	/**
-	 * Method to save the configuration.
-	 *
-	 * @access	public
-	 * @return	bool	True on success, false on failure.
-	 * @since	1.0
+	 * Save the configuration
 	 */
 	function save()
 	{
-		JRequest::checkToken() or jexit(JText::_('JX_INVALID_TOKEN'));
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Save the configuration.
-		$model	= &$this->getModel('Config');
-		$return	= $model->save();
+		// Set FTP credentials, if given.
+		jimport('joomla.client.helper');
+		JClientHelper::setCredentialsFromRequest('ftp');
 
-		if ($return === false)
+		// Initialise variables.
+		$app	= JFactory::getApplication();
+		$model	= $this->getModel;
+		$form	= $model->getForm();
+		$data	= JRequest::getVar('jform', array(), 'post', 'array');
+		$id		= JRequest::getInt('id');
+		$option	= JRequest::getCmd('component');
+
+		// Check if the user is authorized to do this.
+		if (!JFactory::getUser()->authorise('core.admin', $option))
 		{
-			$message = JText::sprintf('FINDER_CONFIG_SAVE_FAILED', $model->getError());
-			$this->setRedirect('index.php?option=com_finder&view=config&tmpl=component', $message, 'notice');
+			JFactory::getApplication()->redirect('index.php', JText::_('JERROR_ALERTNOAUTHOR'));
+			return;
+		}
+
+		// Validate the posted data.
+		$return = $model->validate($form, $data);
+
+		// Check for validation errors.
+		if ($return === false) {
+			// Get the validation messages.
+			$errors	= $model->getErrors();
+
+			// Push up to three validation messages out to the user.
+			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+				if (JError::isError($errors[$i])) {
+					$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
+				} else {
+					$app->enqueueMessage($errors[$i], 'warning');
+				}
+			}
+
+			// Save the data in the session.
+			$app->setUserState('com_config.config.global.data', $data);
+
+			// Redirect back to the edit screen.
+			$this->setRedirect(JRoute::_('index.php?option=com_finder&view=config&tmpl=component', false));
 			return false;
 		}
-		else
+
+		// Attempt to save the configuration.
+		$data	= array(
+					'params'	=> $return,
+					'id'		=> $id,
+					'option'	=> $option
+					);
+		$return = $model->save($data);
+
+		// Check the return value.
+		if ($return === false)
 		{
-			$this->setRedirect('index.php?option=com_finder&view=config&layout=close&tmpl=component');
-			return true;
+			// Save the data in the session.
+			$app->setUserState('com_config.config.global.data', $data);
+
+			// Save failed, go back to the screen and display a notice.
+			$message = JText::sprintf('JERROR_SAVE_FAILED', $model->getError());
+			$this->setRedirect('index.php?option=com_finder&view=config&tmpl=component', $message, 'error');
+			return false;
 		}
+
+		// Set the redirect based on the task.
+		switch ($this->getTask())
+		{
+			case 'apply':
+				$message = JText::_('COM_CONFIG_SAVE_SUCCESS');
+				$this->setRedirect('index.php?option=com_finder&view=config&tmpl=component&refresh=1', $message);
+				break;
+
+			case 'save':
+			default:
+				$this->setRedirect('index.php?option=com_finder&view=config&layout=close&tmpl=component');
+				break;
+		}
+
+		return true;
 	}
 }

@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -20,22 +19,13 @@ jimport('joomla.application.component.view');
 class FinderViewConfig extends JView
 {
 	/**
-	 * Method to display the view.
-	 *
-	 * @access	public
-	 * @param	string	$tpl	A template file to load.
-	 * @return	mixed	JError object on failure, void on success.
-	 * @throws	object	JError
-	 * @since	1.0
+	 * Display the view
 	 */
 	function display($tpl = null)
 	{
-		// Initialize variables.
-		$user		= &JFactory::getUser();
-
-		// Load the view data.
-		$state		= &$this->get('State');
-		$params		= &$state->get('params');
+		$form			= $this->get('Form');
+		$component		= $this->get('Component');
+		$this->import	= $this->get('Import');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -43,23 +33,22 @@ class FinderViewConfig extends JView
 			return false;
 		}
 
+		// Bind the form to the data.
+		if ($form && $component->params) {
+			$form->bind($component->params);
+		}
+
 		// Prepare the view.
 		$this->document->addStyleSheet('components/com_finder/media/css/finder.css');
 
-		JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
+		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
-		// Push out the view data.
-		$this->assignRef('state',		$state);
-		$this->assignRef('params',		$params);
+		$this->assignRef('form',		$form);
+		$this->assignRef('component',	$component);
 
-		// Load the view template.
-		$result = $this->loadTemplate($tpl);
+		$this->document->setTitle(JText::_('JGLOBAL_EDIT_PREFERENCES'));
 
-		// Check for an error.
-		if (JError::isError($result)) {
-			return $result;
-		}
-
-		echo $result;
+		parent::display($tpl);
+		JRequest::setVar('hidemainmenu', true);
 	}
 }

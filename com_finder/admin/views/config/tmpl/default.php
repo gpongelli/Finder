@@ -9,69 +9,72 @@
 
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.switcher');
-JHTML::_('behavior.tooltip');
-JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHTML::stylesheet('system.css', 'templates/system/css/');
-JHTML::stylesheet('finder.css', 'components/com_finder/media/css/');
+$template = JFactory::getApplication()->getTemplate();
+
+// Load the tooltip behavior.
+JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
 ?>
-
-<div id="finder-config">
-	<form action="index.php?option=com_finder" method="post" name="adminForm" autocomplete="off">
-		<fieldset>
-			<div style="float: right">
-				<button type="button" onclick="submitbutton('config.save');">
-					<?php echo JText::_('SAVE');?>
-				</button>
-				<button type="button" onclick="window.parent.document.getElementById('sbox-window').close();">
-					<?php echo JText::_('CANCEL');?>
-				</button>
-				<button type="button" onclick="window.location = '<?php echo JRoute::_('index.php?option=com_finder&amp;view=config&amp;layout=import&amp;tmpl=component'); ?>';">
-					<?php echo JText::_('FINDER_CONFIG_IMPORT_EXPORT');?>
-				</button>
-			</div>
-			<div class="configuration" >
-				<?php echo JText::_('FINDER_CONFIG_TOOLBAR_TITLE'); ?>
-			</div>
-		</fieldset>
-
-		<div id="submenu-box">
-			<div class="t">
-				<div class="t">
-					<div class="t"></div>
-		 		</div>
-			</div>
-			<div class="m">
-				<ul id="submenu">
-					<li><a id="search" class="active"><?php echo JText::_('FINDER_CONFIG_CONFIGURE_SEARCH'); ?></a></li>
-					<li><a id="index"><?php echo JText::_('FINDER_CONFIG_CONFIGURE_INDEX'); ?></a></li>
-				</ul>
-				<div class="clr"></div>
-			</div>
-			<div class="b">
-				<div class="b">
-		 			<div class="b"></div>
-				</div>
-			</div>
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (document.formvalidator.isValid(document.id('component-form'))) {
+			Joomla.submitform(task, document.getElementById('component-form'));
+		}
+	}
+</script>
+<form action="<?php echo JRoute::_('index.php?option=com_finder');?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate">
+	<fieldset>
+		<div class="fltrt">
+			<button type="button" onclick="Joomla.submitform('component.apply', this.form);">
+				<?php echo JText::_('JAPPLY');?></button>
+			<button type="button" onclick="Joomla.submitform('component.save', this.form);">
+				<?php echo JText::_('JSAVE');?></button>
+			<button type="button" onclick="<?php echo JRequest::getBool('refresh', 0) ? 'window.parent.location.href=window.parent.location.href;' : '';?>  window.parent.SqueezeBox.close();">
+				<?php echo JText::_('JCANCEL');?></button>
+			<button type="button" onclick="window.location = '<?php echo JRoute::_('index.php?option=com_finder&view=config&layout=import&tmpl=component'); ?>';">
+				<?php echo JText::_('COM_FINDER_CONFIG_IMPORT_EXPORT');?></button>
 		</div>
-
-		<div id="config-document">
-			<div id="page-search">
-				<fieldset>
-					<legend><?php echo JText::_('FINDER_CONFIG_CONFIGURE_SEARCH'); ?></legend>
-					<?php echo JHTML::_('finder.params', 'params', $this->params->toString(), 'models/forms/config/search.xml'); ?>
-				</fieldset>
-			</div>
-
-			<div id="page-index">
-				<fieldset>
-					<legend><?php echo JText::_('FINDER_CONFIG_CONFIGURE_INDEX'); ?></legend>
-					<?php echo JHTML::_('finder.params', 'params', $this->params->toString(), 'models/forms/config/index.xml'); ?>
-				</fieldset>
-			</div>
+		<div class="configuration" >
+			<?php echo JText::_('com_finder_configuration') ?>
 		</div>
+	</fieldset>
+
+	<?php
+	echo JHtml::_('tabs.start','config-tabs-com_finder_configuration', array('useCookie'=>1));
+		$fieldSets = $this->form->getFieldsets();
+		foreach ($fieldSets as $name => $fieldSet) :
+			$label = empty($fieldSet->label) ? 'COM_CONFIG_'.$name.'_FIELDSET_LABEL' : $fieldSet->label;
+			echo JHtml::_('tabs.panel',JText::_($label), 'publishing-details');
+			if (isset($fieldSet->description) && !empty($fieldSet->description)) :
+				echo '<p class="tab-description">'.JText::_($fieldSet->description).'</p>';
+			endif;
+	?>
+			<ul class="config-option-list">
+			<?php
+			foreach ($this->form->getFieldset($name) as $field):
+			?>
+				<li>
+				<?php if (!$field->hidden) : ?>
+				<?php echo $field->label; ?>
+				<?php endif; ?>
+				<?php echo $field->input; ?>
+				</li>
+			<?php
+			endforeach;
+			?>
+			</ul>
+
+
+	<div class="clr"></div>
+	<?php
+		endforeach;
+	echo JHtml::_('tabs.end');
+	?>
+	<div>
+		<input type="hidden" name="id" value="<?php echo $this->component->id;?>" />
+		<input type="hidden" name="component" value="<?php echo $this->component->option;?>" />
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="option" value="com_finder" />
-		<?php echo JHTML::_('form.token'); ?>
-	</form>
-</div>
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
+</form>

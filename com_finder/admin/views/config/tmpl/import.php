@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: import.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,47 +8,43 @@
 
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.switcher');
-JHTML::_('behavior.tooltip');
-$this->document->addStyleSheet('templates/system/css/system.css');
+JHtml::_('behavior.switcher');
+JHtml::_('behavior.tooltip');
 ?>
 
-<div id="finder-config">
-	<form action="index.php?option=com_finder" method="post" name="adminForm" autocomplete="off" enctype="multipart/form-data">
-		<fieldset>
-			<div style="float: right">
-				<button type="button" onclick="submitbutton('config.import');">
-					<?php echo JText::_('FINDER_IMPORT');?>
-				</button>
-				<button type="button" onclick="submitbutton('config.export');">
-					<?php echo JText::_('FINDER_EXPORT');?>
-				</button>
-				<button type="button" onclick="window.location = '<?php echo JRoute::_('index.php?option=com_finder&view=config&tmpl=component'); ?>';">
-					<?php echo JText::_('CANCEL');?>
-				</button>
-			</div>
-			<div class="configuration" >
-				<?php echo JText::_('FINDER_CONFIG_IMPORT_TOOLBAR_TITLE'); ?>
-			</div>
-		</fieldset>
+<form action="<?php echo JRoute::_('index.php?option=com_finder');?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate">
+	<fieldset>
+		<div class="fltrt">
+			<button type="button" onclick="submitbutton('config.import');">
+				<?php echo JText::_('COM_FINDER_IMPORT');?></button>
+			<button type="button" onclick="submitbutton('config.export');">
+				<?php echo JText::_('COM_FINDER_EXPORT');?></button>
+			<button type="button" onclick="window.location = '<?php echo JRoute::_('index.php?option=com_finder&view=config&layout=default&tmpl=component'); ?>';">
+				<?php echo JText::_('JCANCEL');?></button>
+		</div>
+		<div class="configuration" >
+			<?php echo JText::_('COM_FINDER_CONFIG_IMPORT_TOOLBAR_TITLE') ?>
+		</div>
+	</fieldset>
 
-		<fieldset>
-			<legend><?php echo JText::_('FINDER_CONFIG_IMPORT_EXPORT_HELP'); ?></legend>
-			<p><?php echo JText::_('FINDER_CONFIG_IMPORT_EXPORT_INSTRUCTIONS'); ?></p>
-		</fieldset>
+	<fieldset>
+		<legend><?php echo JText::_('COM_FINDER_CONFIG_IMPORT_EXPORT_HELP'); ?></legend>
+		<p><?php echo JText::_('COM_FINDER_CONFIG_IMPORT_EXPORT_INSTRUCTIONS'); ?></p>
+	</fieldset>
 
-		<fieldset>
-			<legend><?php echo JText::_('FINDER_CONFIG_IMPORT'); ?></legend>
-
-			<label for="import_file"><?php echo JText::_('FINDER_CONFIG_IMPORT_FROM_FILE'); ?></label><br />
-			<input type="file" name="configFile" id="import_file" size="40" />
-
-			<br /><br />
-
-			<label for="import_string"><?php echo JText::_('FINDER_CONFIG_IMPORT_FROM_STRING'); ?></label><br />
-			<textarea name="configString" rows="10" cols="50"></textarea>
-		</fieldset>
-		<input type="hidden" name="task" value="" />
-		<?php echo JHTML::_('form.token'); ?>
-	</form>
-</div>
+	<fieldset>
+		<legend><?php echo JText::_('COM_FINDER_IMPORT'); ?></legend>
+		<ul class="config-option-list">
+			<?php foreach($this->import->getGroup('import') as $field): ?>
+			<li>
+				<?php if (!$field->hidden): ?>
+				<?php echo $field->label; ?>
+				<?php endif; ?>
+				<?php echo $field->input; ?>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+	</fieldset>
+	<input type="hidden" name="task" value="" />
+	<?php echo JHtml::_('form.token'); ?>
+</form>
