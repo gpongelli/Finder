@@ -13,5 +13,6 @@ JHTML::_('behavior.mootools');
 ?>
 
 <script type="text/javascript">
-	window.addEvent('domready', function(){ window.parent.document.getElementById('sbox-window').close(); });
+	window.parent.location.href=window.parent.location.href;
+	window.parent.SqueezeBox.close();
 </script>

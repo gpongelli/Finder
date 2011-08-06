@@ -26,9 +26,9 @@ JHtml::_('behavior.formvalidation');
 <form action="<?php echo JRoute::_('index.php?option=com_finder');?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate">
 	<fieldset>
 		<div class="fltrt">
-			<button type="button" onclick="Joomla.submitform('component.apply', this.form);">
+			<button type="button" onclick="Joomla.submitform('config.apply', this.form);">
 				<?php echo JText::_('JAPPLY');?></button>
-			<button type="button" onclick="Joomla.submitform('component.save', this.form);">
+			<button type="button" onclick="Joomla.submitform('config.save', this.form);">
 				<?php echo JText::_('JSAVE');?></button>
 			<button type="button" onclick="<?php echo JRequest::getBool('refresh', 0) ? 'window.parent.location.href=window.parent.location.href;' : '';?>  window.parent.SqueezeBox.close();">
 				<?php echo JText::_('JCANCEL');?></button>
