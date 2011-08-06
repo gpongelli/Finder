@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-jx('jx.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
 /**
  * Adapters model class for Finder.
@@ -76,14 +76,15 @@ class FinderModelAdapters extends JModelList
 	protected function _getListQuery()
 	{
 		// Get the plugins in the finder folder.
-		$sql = new JDatabaseQuery();
+		$sql = $this->_db->getQuery(true);
 		$sql->select('p.*');
-		$sql->from('#__plugins AS p');
-		$sql->where('p.folder = "finder"');
+		$sql->from('#__extensions AS p');
+		$sql->where('p.type = "plugin"');
+		$sql->where('p.element = "finder"');
 
 		// Handle a published state filter.
 		if ($this->getState('check.state')) {
-			$sql->where('p.published = '.(int)$this->getState('filter.state'));
+			$sql->where('p.enabled = '.(int)$this->getState('filter.state'));
 		}
 
 		// Handle a search filter.
@@ -96,7 +97,9 @@ class FinderModelAdapters extends JModelList
 		// Handle the list ordering.
 		$ordering	= $this->getState('list.ordering');
 		$direction	= $this->getState('list.direction');
-		$sql->order($this->_db->getEscaped($ordering).' '.$this->_db->getEscaped($direction));
+		if (!empty($ordering)) {
+			$sql->order($this->_db->getEscaped($ordering).' '.$this->_db->getEscaped($direction));
+		}
 
 		return $sql;
 	}
@@ -130,7 +133,7 @@ class FinderModelAdapters extends JModelList
 	 *
 	 * @return	void
 	 */
-	protected function _populateState()
+	protected function populateState()
 	{
 		$app		= JFactory::getApplication();
 		$params		= JComponentHelper::getParams('com_finder');
@@ -147,12 +150,12 @@ class FinderModelAdapters extends JModelList
 		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
 
 		// Handle 0 limit with > 0 start offset.
-		if ($this->_state->get('list.limit') === 0) {
-			$this->_state->set('list.start', 0);
+		if ($this->state->get('list.limit') === 0) {
+			$this->state->set('list.start', 0);
 		}
 
 		// Load the check parameters.
-		if ($this->_state->get('filter.state') === '*') {
+		if ($this->state->get('filter.state') === '*') {
 			$this->setState('check.state', false);
 		} else {
 			$this->setState('check.state', true);
