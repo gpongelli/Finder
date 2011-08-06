@@ -42,9 +42,7 @@ class FinderController extends JController
 		$view		= JRequest::getWord('view', 'index');
 		$layout 	= JRequest::getWord('layout', 'index');
 		$id			= JRequest::getInt('id');
-		if (isset(JRequest::getInt('filter_id'))) {
-			$f_id	= JRequest::getInt('filter_id');
-		}
+		$f_id		= JRequest::getInt('filter_id');
 
 			// Check for edit form.
 		if ($view == 'filter' && $layout == 'edit' && !$this->checkEditId('com_finder.edit.filter', $f_id)) {
