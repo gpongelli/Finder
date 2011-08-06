@@ -162,8 +162,12 @@ class FinderModelMaps extends JModelList
 			$query->where($db->quoteName('a.title').' LIKE '.$db->quote('%'.$search.'%'));
 		}
 
-		// Add the list ordering clause.
-		$query->order($db->getEscaped($this->getState('list.ordering').' '.$db->getEscaped($this->getState('list.direction'))));
+		// Handle the list ordering.
+		$ordering	= $this->getState('list.ordering');
+		$direction	= $this->getState('list.direction');
+		if (!empty($ordering)) {
+			$query->order($db->getEscaped($ordering).' '.$db->getEscaped($direction));
+		}
 
 		//echo nl2br(str_replace('#__','jos_',$query->toString())).'<hr/>';
 		return $query;

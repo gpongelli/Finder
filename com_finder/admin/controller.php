@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: controller.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -40,42 +39,25 @@ class FinderController extends JController
 		// Load the submenu.
 		FinderHelper::addSubmenu(JRequest::getWord('view', 'index'));
 
-		// Alert the user about any upgrades.
-		FinderVersion::showUpgrades();
-
-		// Get the document object.
-		$document = JFactory::getDocument();
-
-		// Set the default view name and format from the Request.
-		$vName		= JRequest::getWord('view', 'index');
-		$vFormat	= $document->getType();
-		$lName		= JRequest::getWord('layout', 'default');
-		$vParams	= array('base_path' => $this->basePath);
-
-		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat)) {
-			switch ($vName) {
-				default:
-					$model = $this->getModel($vName);
-					break;
-			}
-
-			// Push the model into the view (as default).
-			if ($model) {
-				$view->setModel($model, true);
-			}
-
-			// Push document object into the view.
-			$view->assignRef('document', $document);
-
-			// Set the layout for the view.
-			$view->setLayout($lName);
-
-			// Set the search query state for the view.
-			$view->set('search', (bool)JRequest::getVar('q'));
-
-			$view->display();
-		} else {
+		$view		= JRequest::getWord('view', 'index');
+		$layout 	= JRequest::getWord('layout', 'index');
+		$id			= JRequest::getInt('id');
+		if (isset(JRequest::getInt('filter_id'))) {
+			$f_id	= JRequest::getInt('filter_id');
 		}
+
+			// Check for edit form.
+		if ($view == 'filter' && $layout == 'edit' && !$this->checkEditId('com_finder.edit.filter', $f_id)) {
+			// Somehow the person just went to the form - we don't allow that.
+			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $f_id));
+			$this->setMessage($this->getError(), 'error');
+			$this->setRedirect(JRoute::_('index.php?option=com_finder&view=filters', false));
+
+			return false;
+		}
+
+		parent::display();
+
+		return $this;
 	}
 }

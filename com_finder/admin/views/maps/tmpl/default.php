@@ -8,8 +8,6 @@
 
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::stylesheet('finder.css', 'administrator/components/com_finder/media/css/');
 $lang = &JFactory::getLanguage();
 ?>
 
@@ -82,7 +80,7 @@ Joomla.submitbutton = function(pressbutton) {
 
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center">
-					<?php echo JHtml::_('grid.id', $n, $row->link_id); ?>
+					<?php echo JHtml::_('grid.id', $n, $row->id); ?>
 				</td>
 				<td>
 					<?php echo $n; ?>

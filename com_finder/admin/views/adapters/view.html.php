@@ -60,16 +60,16 @@ class FinderViewAdapters extends JView
 		$toolbar = &JToolBar::getInstance('toolbar');
 
 		if ($canDo->get('core.edit.state')) {
-			$toolbar->appendButton('Standard', 'publish', 'Publish', 'adapters.publish', true, false);
-			$toolbar->appendButton('Standard', 'unpublish', 'Unpublish', 'adapters.unpublish', true, false);
+			JToolBarHelper::publish('adapters.publish', 'JTOOLBAR_PUBLISH', true);
+			JToolBarHelper::unpublish('adapters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::divider();
 		}
 
 		if ($canDo->get('core.admin')) {
 			JToolBarHelper::preferences('com_finder');
 		}
-		JToolBarHelper::divider();
 
+		JToolBarHelper::divider();
 		$toolbar->appendButton('Popup', 'help', 'COM_FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }

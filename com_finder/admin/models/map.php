@@ -20,28 +20,29 @@ jimport('joomla.application.component.model');
 class FinderModelMap extends JModel
 {
 	/**
-	 * Overridden method to get model state variables.
-	 *
-	 * @access	public
-	 * @param	string	$property	Optional parameter name.
-	 * @return	object	The property where specified, the state object where omitted.
-	 * @since	1.0
+	 * @var		string	The prefix to use with controller messages.
 	 */
-	function getState($property = null)
+	protected $text_prefix = 'COM_FINDER';
+
+	/**
+	 * Model context string.
+	 *
+	 * @var		string	The context of the model
+	 */
+	protected $_context		= 'com_finder.map';
+
+	/**
+	 * Returns a JTable object, always creating it.
+	 *
+	 * @param	string	$type	The table type to instantiate
+	 * @param	string	$prefix	A prefix for the table class name. Optional.
+	 * @param	array	$config	Configuration array for model. Optional.
+	 *
+	 * @return	JTable	A database object
+	*/
+	public function getTable($type = 'Map', $prefix = 'FinderTable', $config = array())
 	{
-		// If the model state is uninitialized lets set some values we will need from the request.
-		if (!$this->__state_set)
-		{
-			$application	= &JFactory::getApplication('administrator');
-			$context		= 'com_finder.map.';
-
-			// Load the parameters.
-			$this->setState('params', JComponentHelper::getParams('com_finder'));
-
-			$this->__state_set = true;
-		}
-
-		return parent::getState($property);
+		return JTable::getInstance($type, $prefix, $config);
 	}
 
 	/**
@@ -123,55 +124,57 @@ class FinderModelMap extends JModel
 	}
 
 	/**
-	 * Method to publish maps in the taxonomy.
+	 * Method to change the published state of one or more records.
 	 *
-	 * @access	public
-	 * @param	array	$map_ids	An array of map ids.
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 * @since   11.1
 	 */
-	function publish($map_ids, $state)
+	function publish(&$pks, $value = 1)
 	{
-		$db		= $this->getDbo();
-		$query	= $db->getQuery(true);
-		$query->update($db->quoteName('#__jxfinder_taxonomy'));
-		$query->set($db->quoteName('state').' = ' . (int) $state);
-		$query->where($db->quoteName('id').' = '.implode(' OR id = ', $map_ids));
-		$db->setQuery($query);
-		$db->query();
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$table		= $this->getTable();
+		$pks		= (array) $pks;
 
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
+		// Include the content plugins for the change of state event.
+		JPluginHelper::importPlugin('content');
+
+		// Access checks.
+		foreach ($pks as $i => $pk) {
+			$table->reset();
+
+			if ($table->load($pk)) {
+				if (!$this->canEditState($table)) {
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+					return false;
+				}
+			}
+		}
+
+		// Attempt to change the state of the records.
+		if (!$table->publish($pks, $value, $user->get('id'))) {
+			$this->setError($table->getError());
 			return false;
 		}
 
-		return true;
-	}
+		$context = $this->option.'.'.$this->name;
 
-	/**
-	 * Method to unpublish maps in the taxonomy.
-	 *
-	 * @access	public
-	 * @param	array	$map_ids	An array of map ids.
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
-	 */
-	function unpublish($map_ids)
-	{
-		$db		= $this->getDbo();
-		$query	= $db->getQuery(true);
-		$query->update($db->quoteName('#__jxfinder_taxonomy'));
-		$query->set($db->quoteName('state').' = 0');
-		$query->where($db->quoteName('id').' = '.implode(' OR id = ', $map_ids));
-		$db->setQuery($query);
-		$db->query();
+		// Trigger the onContentChangeState event.
+		$result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
 
-		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			$this->setError($this->_db->getErrorMsg());
+		if (in_array(false, $result, true)) {
+			$this->setError($table->getError());
 			return false;
 		}
+
+		// Clear the component's cache
+		$this->cleanCache();
 
 		return true;
 	}
