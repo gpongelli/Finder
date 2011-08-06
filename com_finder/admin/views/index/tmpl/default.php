@@ -130,7 +130,7 @@ Joomla.submitbutton = function(pressbutton) {
 					?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHtml::date($row->indexdate, 'Y-m-d H:i:s'); ?>
+					<?php echo JHtml::_('date', $row->indexdate, JText::_('DATE_FORMAT_LC4')); ?>
 				</td>
 			</tr>
 
