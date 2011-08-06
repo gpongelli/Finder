@@ -30,7 +30,7 @@ class FinderModelMaps extends JModelList
 	{
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'id', 'a.id',
+				'state', 'a.state',
 				'title', 'a.title',
 			);
 		}
@@ -39,44 +39,97 @@ class FinderModelMaps extends JModelList
 	}
 
 	/**
-	 * Method to delete maps from the taxonomy.
+	 * Method to test whether a record can be deleted.
 	 *
-	 * @access	public
-	 * @param	array	$map_ids	An array of map ids.
-	 * @return	bool	Returns true on success, false on failure.
-	 * @since	1.0
+	 * @param   object   $record  A record object.
+	 *
+	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
+	 * @since   11.1
 	 */
-	function delete($map_ids)
+	protected function canDelete($record)
 	{
-		$db		= $this->getDbo();
+		$user = JFactory::getUser();
+		return $user->authorise('core.delete', $this->option);
+	}
 
-		// Iterate the maps to delete each one.
-		foreach ($map_ids as $map_id)
-		{
-			$query	= $db->getQuery(true);
+	/**
+	 * Method to test whether a record can be deleted.
+	 *
+	 * @param   object   $record	A record object.
+	 *
+	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
+	 * @since   11.1
+	 */
+	protected function canEditState($record)
+	{
+		$user = JFactory::getUser();
+		return $user->authorise('core.edit.state', $this->option);
+	}
 
-			// Remove all relevant rows from the taxonomy map table.
-			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where($db->quoteName('node_id').' > '.(int)$map_id);
-			$db->setQuery($query);
-			$db->query();
+	/**
+	 * Method to delete one or more records.
+	 *
+	 * @param   array    $pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 * @since   11.1
+	 */
+	public function delete(&$pks)
+	{
+		// Initialise variables.
+		$dispatcher	= JDispatcher::getInstance();
+		$user		= JFactory::getUser();
+		$pks		= (array) $pks;
+		$table		= $this->getTable();
 
-			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
-				$this->setError($this->_db->getErrorMsg());
-				return false;
-			}
+		// Include the content plugins for the on delete events.
+		JPluginHelper::importPlugin('content');
 
-			$query->clear();
-			$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('id').' = '.(int)$map_id.' AND '.$db->quoteName('parent_id').' > 1');
-			$db->setQuery($query);
-			$db->query();
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk) {
 
-			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
-				$this->setError($this->_db->getErrorMsg());
+			if ($table->load($pk)) {
+
+				if ($this->canDelete($table)) {
+
+					$context = $this->option.'.'.$this->name;
+
+					// Trigger the onContentBeforeDelete event.
+					$result = $dispatcher->trigger($this->event_before_delete, array($context, $table));
+					if (in_array(false, $result, true)) {
+						$this->setError($table->getError());
+						return false;
+					}
+
+					if (!$table->delete($pk)) {
+						$this->setError($table->getError());
+						return false;
+					}
+
+					// Trigger the onContentAfterDelete event.
+					$dispatcher->trigger($this->event_after_delete, array($context, $table));
+
+				} else {
+
+					// Prune items that you can't change.
+					unset($pks[$i]);
+					$error = $this->getError();
+					if ($error) {
+						JError::raiseWarning(500, $error);
+					}
+					else {
+						JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
+					}
+				}
+
+			} else {
+				$this->setError($table->getError());
 				return false;
 			}
 		}
+
+		// Clear the component's cache
+		$this->cleanCache();
 
 		return true;
 	}
@@ -183,8 +236,22 @@ class FinderModelMaps extends JModelList
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+		$this->setState('filter.search', $search);
+
+		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
+		$this->setState('filter.state', $state);
+
+		$branch = $this->getUserStateFromRequest($this->context.'.filter.branch', 'filter_branch', '', 'string');
+		$this->setState('filter.branch', $branch);
+
+		// Load the parameters.
+		$params = JComponentHelper::getParams('com_finder');
+		$this->setState('params', $params);
+
 		// List state information.
-		parent::populateState('a.id', 'asc');
+		parent::populateState('a.title', 'asc');
 	}
 
 	/**

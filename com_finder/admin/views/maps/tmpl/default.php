@@ -32,7 +32,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 		</div>
 		<div class="filter-select fltrt">
-			<select name="filter_branch" class="inputbox" onchange="this.form.submit()">
+			<select name="filter_branch" class="inputbox" onchange="this.form.submit()" id="filter_branch">
 				<?php echo JHtml::_('select.options', JHtml::_('finder.mapslist'), 'value', 'text', $this->state->get('filter.branch'), true);?>
 			</select>
 			<select name="filter_state" class="inputbox" onchange="this.form.submit()">
@@ -71,7 +71,7 @@ Joomla.submitbutton = function(pressbutton) {
 			<?php if ($this->state->get('filter.branch') != 1) : ?>
 			<tr class="row0">
 				<td colspan="5" class="center">
-					<a href="#" onclick="$('filter_branch').value=1;document.adminForm.submit();">
+					<a href="#" onclick="document.id('filter_branch').value='1';document.adminForm.submit();">
 						<?php echo JText::_('COM_FINDER_MAPS_RETURN_TO_BRANCHES'); ?></a>
 				</td>
 			</tr>
@@ -93,9 +93,8 @@ Joomla.submitbutton = function(pressbutton) {
 						$key = 'COM_FINDER_TYPE_S_'.strtoupper(str_replace(' ', '_', $row->title));
 						$title = $lang->hasKey($key) ? JText::_($key) : $row->title;
 					?>
-					<?php //TODO: This link isn't working, Firebug returns "$("filter_branch") is null"
-					if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
-						<a href="#" onclick="$('filter_branch').value=<?php echo (int) $row->id;?>;document.adminForm.submit();" title="<?php echo JText::_('COM_FINDER_MAPS_BRANCH_LINK'); ?>">
+					<?php if ($this->state->get('filter.branch') == 1 && $row->num_children) : ?>
+						<a href="#" onclick="document.id('filter_branch').value='<?php echo (int) $row->id;?>';document.adminForm.submit();" title="<?php echo JText::_('COM_FINDER_MAPS_BRANCH_LINK'); ?>">
 							<?php echo $this->escape($title); ?></a>
 					<?php else: ?>
 						<?php echo $this->escape($title); ?>
@@ -107,7 +106,7 @@ Joomla.submitbutton = function(pressbutton) {
 					<?php endif; ?>
 				</td>
 				<td class="center nowrap">
-					<?php echo JHtml::_('jgrid.published', $row->state, $n, 'map.', $canChange, 'cb'); ?>
+					<?php echo JHtml::_('jgrid.published', $row->state, $n, 'maps.', $canChange, 'cb'); ?>
 				</td>
 			</tr>
 
