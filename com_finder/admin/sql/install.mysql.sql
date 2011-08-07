@@ -1,22 +1,6 @@
 -- TODO: Restructure to remove jxtended references
 
 --
--- Table structure for table `#__jxtended`
---
-
-CREATE TABLE IF NOT EXISTS `#__jxtended` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `extension` varchar(100) NOT NULL COMMENT 'The extension',
-  `version` varchar(16) NOT NULL COMMENT 'Version number',
-  `installed_date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'Date-time modified or installed',
-  `log` mediumtext,
-  PRIMARY KEY  USING BTREE (`id`),
-  KEY `idx_extension` (`extension`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='JXtended product version history';
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `#__jxfinder_filters`
 --
 

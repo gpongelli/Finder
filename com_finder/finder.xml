@@ -10,7 +10,6 @@
 	<version>2.0.1</version>
 	<description>COM_FINDER_XML_DESCRIPTION</description>
 	<menu link="option=com_finder">COM_FINDER</menu>
-	<scriptfile>script.php</scriptfile>
 	<files folder="site">
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
