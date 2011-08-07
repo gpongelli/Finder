@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -10,8 +9,8 @@
 defined('_JEXEC') or die;
 
 // Register dependent classes.
-JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'indexer'.DS.'indexer.php');
-JLoader::register('FinderIndexerQueue', JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'indexer'.DS.'queue.php');
+JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/indexer/indexer.php');
+JLoader::register('FinderIndexerQueue', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/indexer/queue.php');
 
 /**
  * Updater controller class for Finder.
@@ -19,7 +18,7 @@ JLoader::register('FinderIndexerQueue', JPATH_COMPONENT_ADMINISTRATOR.DS.'helper
  * @package		JXtended.Finder
  * @subpackage	com_finder
  */
-class FinderControllerUpdater extends FinderController
+class FinderControllerUpdater extends JController
 {
 	public function update()
 	{
