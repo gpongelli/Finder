@@ -66,7 +66,7 @@ class FinderViewAdapters extends JView
 		}
 
 		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_finder');
+			$toolbar->appendButton('Popup', 'options', 'JTOOLBAR_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 875, 550);
 		}
 
 		JToolBarHelper::divider();
