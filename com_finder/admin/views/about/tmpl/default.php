@@ -1,15 +1,11 @@
 <?php
 /**
- * @version		$Id: default.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC.  All rights reserved.
  * @license		GNU General Public License
  */
 
 defined('_JEXEC') or die;
-
-JHTML::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHTML::stylesheet('finder.css', 'components/com_finder/media/css/');
 
 jimport('joomla.html.pane');
 $pane = JPane::getInstance('tabs');
@@ -27,7 +23,7 @@ $pane = JPane::getInstance('tabs');
 				JXtended Finder
 			</h2>
 			<h3>
-				<?php echo JText::sprintf('FINDER_ABOUT_VERSION_STRING', FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.' '.FinderVersion::STATUS); ?>
+				<?php echo JText::sprintf('COM_FINDER_ABOUT_VERSION_STRING', FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.' '.FinderVersion::STATUS); ?>
 			</h3>
 
 			<h4><a href="http://jxtended.com/support/finder.html" target="_new"><?php echo JText::_('COM_FINDER_ABOUT_GET_HELP'); ?></a></h4>
@@ -76,7 +72,7 @@ $pane = JPane::getInstance('tabs');
 
 		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
 		<p>
-			<?php echo JText::sprintf('FINDER_ABOUT_STATS_DESCRIPTION',
+			<?php echo JText::sprintf('COM_FINDER_ABOUT_STATS_DESCRIPTION',
 			number_format($this->data->term_count),
 			number_format($this->data->link_count),
 			number_format($this->data->taxonomy_node_count),
