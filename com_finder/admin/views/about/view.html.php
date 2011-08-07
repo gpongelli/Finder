@@ -31,7 +31,7 @@ class FinderViewAbout extends JView
 	{
 		// Load the view data.
 		$version		= new FinderVersion;
-		$versions		= $version->getVersions();
+		$this->versions	= $version->getVersions();
 		$this->data		= $this->get('Data');
 		$this->state	= $this->get('State');
 		$this->upgrades	= $this->get('Upgrades');

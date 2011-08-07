@@ -6,31 +6,31 @@
  */
 
 defined('_JEXEC') or die;
-
-jimport('joomla.html.pane');
-$pane = JPane::getInstance('tabs');
 ?>
-<div id="jx-about">
-	<div class="configuration" >
-		<?php echo JText::_('COM_FINDER_ABOUT_TITLE'); ?>
-	</div>
+<form action="<?php echo JRoute::_('index.php?option=com_finder');?>" id="component-form" method="post" name="adminForm" autocomplete="off" class="form-validate">
+	<fieldset>
+		<div class="fltrt">
+			<button type="button" onclick="<?php echo JRequest::getBool('refresh', 0) ? 'window.parent.location.href=window.parent.location.href;' : '';?>  window.parent.SqueezeBox.close();">
+				<?php echo JText::_('JTOOLBAR_CLOSE');?></button>
+		</div>
+		<div class="configuration" >
+			<?php echo JText::_('COM_FINDER_ABOUT_TITLE') ?>
+		</div>
+	</fieldset>
 
-	<?php echo $pane->startPane('jx-finder-about'); ?>
-		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_VERSION'), 'pane-version'); ?>
-		<div style="text-align:center;">
+	<?php
+	echo JHtml::_('tabs.start', 'config-tabs-com_finder_about', array('useCookie'=>1));
+		echo JHtml::_('tabs.panel', JText::_('COM_FINDER_ABOUT_TAB_VERSION'), 'pane-version'); ?>
+		<div class="center">
 			<img src="<?php echo $this->baseurl; ?>/components/com_finder/media/images/icon-48-jx.png" alt="Logo" />
-			<h2>
-				JXtended Finder
-			</h2>
-			<h3>
-				<?php echo JText::sprintf('COM_FINDER_ABOUT_VERSION_STRING', FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.' '.FinderVersion::STATUS); ?>
-			</h3>
-
+			<h2>JXtended Finder</h2>
+			<h3><?php echo JText::sprintf('COM_FINDER_ABOUT_VERSION_STRING', FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.' '.FinderVersion::STATUS); ?></h3>
 			<h4><a href="http://jxtended.com/support/finder.html" target="_new"><?php echo JText::_('COM_FINDER_ABOUT_GET_HELP'); ?></a></h4>
 		</div>
-		<?php echo $pane->endPanel(); ?>
+		<div class="clr"></div>
 
-		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_HISTORY'), 'pane-history'); ?>
+		<?php echo JHtml::_('tabs.panel', JText::_('COM_FINDER_ABOUT_TAB_HISTORY'), 'pane-history'); ?>
+		<p class="tab-description"><?php echo JText::_('COM_FINDER_ABOUT_VERSION_NOTE'); ?></p>
 		<table class="adminlist">
 			<thead>
 				<tr>
@@ -45,13 +45,6 @@ $pane = JPane::getInstance('tabs');
 					</th>
 				</tr>
 			</thead>
-			<tfoot>
-				<tr>
-					<td colspan="3">
-						<?php echo JText::_('COM_FINDER_ABOUT_VERSION_NOTE'); ?>
-					</td>
-				</tr>
-			</tfoot>
 			<tbody>
 				<?php foreach ($this->versions as $version) : ?>
 				<tr>
@@ -68,17 +61,10 @@ $pane = JPane::getInstance('tabs');
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-		<?php echo $pane->endPanel(); ?>
+		<div class="clr"></div>
 
-		<?php echo $pane->startPanel(JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
-		<p>
-			<?php echo JText::sprintf('COM_FINDER_ABOUT_STATS_DESCRIPTION',
-			number_format($this->data->term_count),
-			number_format($this->data->link_count),
-			number_format($this->data->taxonomy_node_count),
-			number_format($this->data->taxonomy_branch_count));
-			?>
-		</p>
+		<?php echo JHtml::_('tabs.panel',JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
+		<p class="tab-description"><?php echo JText::sprintf('COM_FINDER_ABOUT_STATS_DESCRIPTION', number_format($this->data->term_count), number_format($this->data->link_count), number_format($this->data->taxonomy_node_count), number_format($this->data->taxonomy_branch_count)); ?></p>
 		<table class="adminlist">
 			<thead>
 				<tr>
@@ -111,7 +97,10 @@ $pane = JPane::getInstance('tabs');
 				</tr>
 			</tbody>
 		</table>
-		<?php echo $pane->endPanel(); ?>
-
-	<?php echo $pane->endPane(); ?>
-</div>
+		<div class="clr"></div>
+	<?php echo JHtml::_('tabs.end'); ?>
+	<div>
+		<input type="hidden" name="task" value="" />
+		<?php echo JHtml::_('form.token'); ?>
+	</div>
+</form>
