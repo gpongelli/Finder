@@ -16,16 +16,6 @@ defined('_JEXEC') or die;
  */
 abstract class JHtmlFinder
 {
-	static function footer()
-	{
-		JHtml::_('behavior.modal', 'a.modal');
-		echo '<div id="jxfooter">';
-		echo  '<a href="'.JRoute::_('index.php?option=com_finder&view=about&tmpl=component').'" class="modal" rel="{handler: \'iframe\'}">';
-		echo 'JXtended Finder '.FinderVersion::VERSION.'.'.FinderVersion::SUBVERSION.':'.FinderVersion::getBuild().' '.FinderVersion::STATUS.'</a>';
-		echo ' &copy; 2010 <a href="http://jxtended.com" target="_blank">JXtended LLC</a>. All rights reserved.';
-		echo '</div>';
-	}
-
 	static function typeslist()
 	{
 		$lang = &JFactory::getLanguage();
