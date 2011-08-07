@@ -11,6 +11,7 @@
 		<zip destfile="pkg_finder_master.zip">
 			<fileset dir=".">
 				<include name="packages/**" />
+				<include name="language/**" />
 				<include name="pkg_finder.xml" />
 			</fileset>
 		</zip>
@@ -20,6 +21,7 @@
 		<zip destfile="releases/pkg_finder_201testing.zip">
 			<fileset dir=".">
 				<include name="packages/**" />
+				<include name="language/**" />
 				<include name="pkg_finder.xml" />
 			</fileset>
 		</zip>
