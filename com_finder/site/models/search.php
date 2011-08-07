@@ -95,7 +95,7 @@ class FinderModelSearch extends JModelList
 		// Create the query to get the search results.
 		$sql = new JDatabaseQuery();
 		$sql->select('link_id, object');
-		$sql->from('#__jxfinder_links');
+		$sql->from('#__finder_links');
 		$sql->where('link_id IN ('.implode(',', array_keys($items)).')');
 
 		// Load the results from the database.
@@ -200,7 +200,7 @@ class FinderModelSearch extends JModelList
 		// Create the base query.
 		$sql = new JDatabaseQuery();
 		$sql->select('l.link_id');
-		$sql->from('#__jxfinder_links AS l');
+		$sql->from('#__finder_links AS l');
 		$sql->where('l.access <= '.(int)$this->getState('user.aid'));
 		$sql->where('l.state = 1');
 		$sql->where('l.published = 1');
@@ -228,7 +228,7 @@ class FinderModelSearch extends JModelList
 			for ($i = 0, $c = count($groups); $i < $c; $i++)
 			{
 				// We use the offset because each join needs a unique alias.
-				$sql->join('INNER', '#__jxfinder_taxonomy_map AS t'.$i.' ON t'.$i.'.link_id = l.link_id');
+				$sql->join('INNER', '#__finder_taxonomy_map AS t'.$i.' ON t'.$i.'.link_id = l.link_id');
 				$sql->where('t'.$i.'.node_id IN ('.implode(',', $groups[$i]).')');
 			}
 		}
@@ -383,7 +383,7 @@ class FinderModelSearch extends JModelList
 				{
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
-					$sql->join('INNER', '#__jxfinder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+					$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
 					$sql->where('m.term_id IN ('.implode(',', $ids).')');
 
 					// Load the results from the database.
@@ -491,7 +491,7 @@ class FinderModelSearch extends JModelList
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
-						$sql->join('INNER', '#__jxfinder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+						$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
 						$sql->where('m.term_id IN ('.implode(',', $required).')');
 
 						// Load the results from the database.
@@ -663,7 +663,7 @@ class FinderModelSearch extends JModelList
 				{
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
-					$sql->join('INNER', '#__jxfinder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+					$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
 					$sql->where('m.term_id IN ('.implode(',', $ids).')');
 
 					// Load the results from the database.
@@ -813,7 +813,7 @@ class FinderModelSearch extends JModelList
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
-						$sql->join('INNER', '#__jxfinder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+						$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
 						$sql->where('m.term_id IN ('.implode(',', $required).')');
 
 						// Load the results from the database.
@@ -927,7 +927,7 @@ class FinderModelSearch extends JModelList
 			// Create the query to get the links ids.
 			$sql = new JDatabaseQuery();
 			$sql->select('link_id');
-			$sql->from('#__jxfinder_links_terms'.$suffix);
+			$sql->from('#__finder_links_terms'.$suffix);
 			$sql->where('term_id IN ('.implode(',', $ids).')');
 			$sql->group('link_id');
 
@@ -966,7 +966,7 @@ class FinderModelSearch extends JModelList
 		// Create the SQL query to get the matching link ids.
 		$sql = new JDatabaseQuery();
 		$sql->select('SQL_NO_CACHE link_id');
-		$sql->from('#__jxfinder_links_terms');
+		$sql->from('#__finder_links_terms');
 		$sql->where('term_id IN ('.implode(',', $terms).')');
 
 		return $sql;

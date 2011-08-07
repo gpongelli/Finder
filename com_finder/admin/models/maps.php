@@ -147,15 +147,15 @@ class FinderModelMaps extends JModelList
 
 		// Select all fields from the table.
 		$query->select('a.*');
-		$query->from($db->quoteName('#__jxfinder_taxonomy').' AS a');
+		$query->from($db->quoteName('#__finder_taxonomy').' AS a');
 
 		// Self-join to get children.
 		$query->select('COUNT(b.id) AS num_children');
-		$query->join('LEFT', $db->quoteName('#__jxfinder_taxonomy').' AS b ON b.parent_id=a.id');
+		$query->join('LEFT', $db->quoteName('#__finder_taxonomy').' AS b ON b.parent_id=a.id');
 
 		// Join to get the map links
 		$query->select('COUNT(c.node_id) AS num_nodes');
-		$query->join('LEFT', $db->quoteName('#__jxfinder_taxonomy_map').' AS c ON c.node_id=a.id');
+		$query->join('LEFT', $db->quoteName('#__finder_taxonomy_map').' AS c ON c.node_id=a.id');
 
 		$query->group('a.id');
 
@@ -321,7 +321,7 @@ class FinderModelMaps extends JModelList
 	{
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy'))->where($db->quoteName('parent_id').' > 1');
+		$query->delete()->from($db->quoteName('#__finder_taxonomy'))->where($db->quoteName('parent_id').' > 1');
 		$db->setQuery($query);
 		$db->query();
 
@@ -332,7 +332,7 @@ class FinderModelMaps extends JModelList
 		}
 
 		$query->clear();
-		$query->delete()->from($db->quoteName('#__jxfinder_taxonomy_map'))->where('1');
+		$query->delete()->from($db->quoteName('#__finder_taxonomy_map'))->where('1');
 		$db->setQuery($query);
 		$db->query();
 

@@ -58,6 +58,6 @@ class FinderTableLink extends JTable
 
 	function __construct(&$db)
 	{
-		parent::__construct('#__jxfinder_links', 'link_id', $db);
+		parent::__construct('#__finder_links', 'link_id', $db);
 	}
 }

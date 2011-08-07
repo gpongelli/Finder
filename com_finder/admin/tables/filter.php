@@ -21,7 +21,7 @@ class FinderTableFilter extends JTable
 {
 	function __construct(&$db)
 	{
-		parent::__construct('#__jxfinder_filters', 'filter_id', $db);
+		parent::__construct('#__finder_filters', 'filter_id', $db);
 	}
 
 	function check()

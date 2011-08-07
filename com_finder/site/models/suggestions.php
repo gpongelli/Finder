@@ -55,7 +55,7 @@ class FinderModelSuggestions extends JModelList
 	{
 		$sql = new JDatabaseQuery();
 		$sql->select('t.term');
-		$sql->from('#__jxfinder_terms AS t');
+		$sql->from('#__finder_terms AS t');
 		$sql->where('t.term LIKE "'.$this->_db->getEscaped($this->getState('input'), true).'%"');
 		$sql->where('t.common = 0');
 		$sql->order('t.links DESC');

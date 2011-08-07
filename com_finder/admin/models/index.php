@@ -149,8 +149,8 @@ class FinderModelIndex extends JModelList
 
 		$query->select('l.*');
 		$query->select('t.title AS t_title');
-		$query->from($db->quoteName('#__jxfinder_links').' AS l');
-		$query->join('INNER', $db->quoteName('#__jxfinder_types').' AS t ON t.id = l.type_id');
+		$query->from($db->quoteName('#__finder_links').' AS l');
+		$query->join('INNER', $db->quoteName('#__finder_types').' AS t ON t.id = l.type_id');
 
 		// Check the type filter.
 		if ($this->getState('filter.type')) {
@@ -227,7 +227,7 @@ class FinderModelIndex extends JModelList
 		$db		= $this->getDbo();
 
 		// Truncate the links table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_links');
+		$db->setQuery('TRUNCATE TABLE #__finder_links');
 		$db->query();
 
 		// Check for a database error.
@@ -242,7 +242,7 @@ class FinderModelIndex extends JModelList
 			// Get the mapping table suffix.
 			$suffix = dechex($i);
 
-			$db->setQuery('TRUNCATE TABLE #__jxfinder_links_terms'.$suffix);
+			$db->setQuery('TRUNCATE TABLE #__finder_links_terms'.$suffix);
 			$db->query();
 
 			// Check for a database error.
@@ -253,7 +253,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the terms table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_terms');
+		$db->setQuery('TRUNCATE TABLE #__finder_terms');
 		$db->query();
 
 		// Check for a database error.
@@ -263,7 +263,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the taxonomy map table.
-		$db->setQuery('TRUNCATE TABLE #__jxfinder_taxonomy_map');
+		$db->setQuery('TRUNCATE TABLE #__finder_taxonomy_map');
 		$db->query();
 
 		// Check for a database error.
@@ -273,7 +273,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Delete all the taxonomy nodes except the root.
-		$db->setQuery('DELETE FROM #__jxfinder_taxonomy WHERE id > 1');
+		$db->setQuery('DELETE FROM #__finder_taxonomy WHERE id > 1');
 		$db->query();
 
 		// Check for a database error.
@@ -283,7 +283,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
 		$db->query();
 
 		// Check for a database error.
@@ -293,7 +293,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
 		$db->query();
 
 		// Check for a database error.

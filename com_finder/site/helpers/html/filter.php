@@ -47,7 +47,7 @@ class JHTMLFilter
 		// Load the predefined filter if specified.
 		if (!empty($filterId)) {
 			$query->select('f.data, f.params');
-			$query->from('#__jxfinder_filters AS f');
+			$query->from('#__finder_filters AS f');
 			$query->where('f.filter_id = '.(int)$filterId);
 
 			// Load the filter data.
@@ -68,8 +68,8 @@ class JHTMLFilter
 		// Build the query to get the branch data and the number of child nodes.
 		$query->clear();
 		$query->select('t.*, count(c.id) AS children');
-		$query->from('#__jxfinder_taxonomy AS t');
-		$query->join('INNER', '#__jxfinder_taxonomy AS c ON c.parent_id = t.id');
+		$query->from('#__finder_taxonomy AS t');
+		$query->join('INNER', '#__finder_taxonomy AS c ON c.parent_id = t.id');
 		$query->where('t.parent_id = 1');
 		$query->where('t.state = 1');
 		$query->where('t.access <= '.(int)$aid);
@@ -132,7 +132,7 @@ class JHTMLFilter
 		{
 			// Build the query to get the child nodes for this branch.
 			$sql	= 'SELECT t.*'
-					. ' FROM #__jxfinder_taxonomy AS t'
+					. ' FROM #__finder_taxonomy AS t'
 					. ' WHERE t.parent_id = '.(int)$bk
 					. ' AND t.state = 1'
 					. ' AND t.access <= '.(int)$aid
@@ -225,7 +225,7 @@ class JHTMLFilter
 		{
 			$sql = new JDatabaseQuery();
 			$sql->select('f.data, f.params');
-			$sql->from('#__jxfinder_filters AS f');
+			$sql->from('#__finder_filters AS f');
 			$sql->where('f.filter_id = '.(int)$query->filter);
 
 			// Load the filter data.
@@ -246,8 +246,8 @@ class JHTMLFilter
 		// Build the query to get the branch data and the number of child nodes.
 		$sql = new JDatabaseQuery();
 		$sql->select('t.*, count(c.id) AS children');
-		$sql->from('#__jxfinder_taxonomy AS t');
-		$sql->join('INNER', '#__jxfinder_taxonomy AS c ON c.parent_id = t.id');
+		$sql->from('#__finder_taxonomy AS t');
+		$sql->join('INNER', '#__finder_taxonomy AS c ON c.parent_id = t.id');
 		$sql->where('t.parent_id = 1');
 		$sql->where('t.state = 1');
 		$sql->where('t.access <= '.(int)$aid);
@@ -293,7 +293,7 @@ class JHTMLFilter
 			// Build the query to get the child nodes for this branch.
 			$sql = new JDatabaseQuery();
 			$sql->select('t.*');
-			$sql->from('#__jxfinder_taxonomy AS t');
+			$sql->from('#__finder_taxonomy AS t');
 			$sql->where('t.parent_id = '.(int)$bk);
 			$sql->where('t.state = 1');
 			$sql->where('t.access <= '.(int)$aid);

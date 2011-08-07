@@ -47,7 +47,7 @@ class FinderIndexerTaxonomy
 		// Check to see if the branch is in the table.
 		$db = JFactory::getDBO();
 		$db->setQuery(
-			'SELECT * FROM `#__jxfinder_taxonomy`' .
+			'SELECT * FROM `#__finder_taxonomy`' .
 			' WHERE `parent_id` = 1' .
 			' AND `title` = '.$db->quote($title)
 		);
@@ -127,7 +127,7 @@ class FinderIndexerTaxonomy
 		$db = JFactory::getDBO();
 		$db->setQuery(
 			'SELECT *' .
-			' FROM `#__jxfinder_taxonomy`' .
+			' FROM `#__finder_taxonomy`' .
 			' WHERE `title` = '.$db->quote($title) .
 			' AND `parent_id` = '.(int)$branchId
 		);
@@ -196,7 +196,7 @@ class FinderIndexerTaxonomy
 		// Insert the map.
 		$db	= JFactory::getDBO();
 		$db->setQuery(
-			'REPLACE INTO `#__jxfinder_taxonomy_map` SET' .
+			'REPLACE INTO `#__finder_taxonomy_map` SET' .
 			' `link_id` = '.(int)$linkId.',' .
 			' `node_id` = '.(int)$nodeId
 		);
@@ -224,7 +224,7 @@ class FinderIndexerTaxonomy
 		// Create a query to get the taxonomy branch titles.
 		$query	= $db->getQuery(true);
 		$query->select('title');
-		$query->from('#__jxfinder_taxonomy');
+		$query->from('#__finder_taxonomy');
 		$query->where('parent_id = 1');
 		$query->where('state = 1');
 		$query->where('access <= '.(int)JFactory::getUser()->get('aid'));
@@ -257,8 +257,8 @@ class FinderIndexerTaxonomy
 		// Create a query to get the node.
 		$query	= $db->getQuery(true);
 		$query->select('t1.*');
-		$query->from('#__jxfinder_taxonomy AS t1');
-		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
+		$query->from('#__finder_taxonomy AS t1');
+		$query->join('INNER', '#__finder_taxonomy AS t2 ON t2.id = t1.parent_id');
 		$query->where('t1.access <= '.(int)JFactory::getUser()->get('aid'));
 		$query->where('t1.state = 1');
 		$query->where('t1.title LIKE "'.$db->getEscaped($title).'%"');
@@ -291,7 +291,7 @@ class FinderIndexerTaxonomy
 		// Delete the maps.
 		$db	= JFactory::getDBO();
 		$db->setQuery(
-			'DELETE FROM `#__jxfinder_taxonomy_map`' .
+			'DELETE FROM `#__finder_taxonomy_map`' .
 			' WHERE `link_id` = '.(int)$linkId
 		);
 		$db->query();
@@ -317,8 +317,8 @@ class FinderIndexerTaxonomy
 		$db	= JFactory::getDBO();
 		$db->setQuery(
 			'DELETE t.*' .
-			' FROM `#__jxfinder_taxonomy` AS t' .
-			' LEFT JOIN `#__jxfinder_taxonomy_map` AS m ON m.node_id = t.id' .
+			' FROM `#__finder_taxonomy` AS t' .
+			' LEFT JOIN `#__finder_taxonomy_map` AS m ON m.node_id = t.id' .
 			' WHERE t.parent_id > 1' .
 			' AND m.link_id IS NULL'
 		);
@@ -349,11 +349,11 @@ class FinderIndexerTaxonomy
 		// Check if we are updating or inserting the item.
 		if (empty($item->id)) {
 			// Insert the item.
-			$db->insertObject('#__jxfinder_taxonomy', $item, 'id');
+			$db->insertObject('#__finder_taxonomy', $item, 'id');
 		}
 		else {
 			// Update the item.
-			$db->updateObject('#__jxfinder_taxonomy', $item, 'id');
+			$db->updateObject('#__finder_taxonomy', $item, 'id');
 		}
 
 		// Check for a database error.

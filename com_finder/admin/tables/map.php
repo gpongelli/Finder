@@ -21,7 +21,7 @@ class FinderTableMap extends JTable
 {
 	function __construct(&$db)
 	{
-		parent::__construct('#__jxfinder_taxonomy', 'id', $db);
+		parent::__construct('#__finder_taxonomy', 'id', $db);
 	}
 
 	/**

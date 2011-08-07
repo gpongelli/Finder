@@ -33,7 +33,7 @@ class JElementSearchFilter extends JElement
 		// Build the query.
 		$query = new JDatabaseQuery();
 		$query->select('f.title AS text, f.filter_id AS value');
-		$query->from('#__jxfinder_filters AS f');
+		$query->from('#__finder_filters AS f');
 		$query->where('f.state = 1');
 		$query->order('f.title ASC');
 

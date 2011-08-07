@@ -321,7 +321,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 
 		// Update the content items.
 		$this->_db->setQuery(
-			'UPDATE `#__jxfinder_links`' .
+			'UPDATE `#__finder_links`' .
 			' SET '.$this->_db->nameQuote($property).' = '.(int)$value .
 			' WHERE `url` IN ('.implode(',', $items).')'
 		);
@@ -366,7 +366,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 
 		// Get the link ids for the content items.
 		$this->_db->setQuery(
-			'SELECT `link_id` FROM `#__jxfinder_links`' .
+			'SELECT `link_id` FROM `#__finder_links`' .
 			' WHERE `url` IN ('.implode(',', $items).')'
 		);
 		$items = $this->_db->loadResultArray();
@@ -570,7 +570,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	{
 		// Get the type id from the database.
 		$this->_db->setQuery(
-			'SELECT `id` FROM `#__jxfinder_types`' .
+			'SELECT `id` FROM `#__finder_types`' .
 			' WHERE `title` = '.$this->_db->quote($this->_type_title)
 		);
 		$result = (int)$this->_db->loadResult();

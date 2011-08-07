@@ -384,7 +384,7 @@ class FinderIndexerQuery
 		// Load the predefined filter.
 		$query	= $db->getQuery(true);
 		$query->select('f.data, f.params');
-		$query->from('#__jxfinder_filters AS f');
+		$query->from('#__finder_filters AS f');
 		$query->where('f.filter_id = '.(int)$filterId);
 
 		$db->setQuery($query);
@@ -435,8 +435,8 @@ class FinderIndexerQuery
 		 */
 		$query->clear();
 		$query->select('t1.id, t1.title, t2.title AS branch');
-		$query->from('#__jxfinder_taxonomy AS t1');
-		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
+		$query->from('#__finder_taxonomy AS t1');
+		$query->join('INNER', '#__finder_taxonomy AS t2 ON t2.id = t1.parent_id');
 		$query->where('t1.state = 1');
 		$query->where('t1.access <= '.(int)JFactory::getUser()->get('aid'));
 		$query->where('t1.id IN ('.implode(',', $filters).')');
@@ -498,8 +498,8 @@ class FinderIndexerQuery
 		 */
 		$query->clear();
 		$query->select('t1.id, t1.title, t2.title AS branch');
-		$query->from('#__jxfinder_taxonomy AS t1');
-		$query->join('INNER', '#__jxfinder_taxonomy AS t2 ON t2.id = t1.parent_id');
+		$query->from('#__finder_taxonomy AS t1');
+		$query->join('INNER', '#__finder_taxonomy AS t2 ON t2.id = t1.parent_id');
 		$query->where('t1.state = 1');
 		$query->where('t1.access <= '.(int)JFactory::getUser()->get('aid'));
 		$query->where('t1.id IN ('.implode(',', $filters).')');
@@ -1100,7 +1100,7 @@ class FinderIndexerQuery
 		// Create a database query to build match the token.
 		$query	= $db->getQuery(true);
 		$query->select('t.term, t.term_id');
-		$query->from('#__jxfinder_terms AS t');
+		$query->from('#__finder_terms AS t');
 
 		/*
 		 * If the token is a phrase, the lookup process is fairly simple. If
@@ -1158,7 +1158,7 @@ class FinderIndexerQuery
 			// Create a database query to get the similar terms.
 			$query->clear();
 			$query->select('DISTINCT t.term_id AS id, t.term AS term');
-			$query->from('#__jxfinder_terms AS t');
+			$query->from('#__finder_terms AS t');
 			$query->where('t.soundex = SOUNDEX('.$db->quote($token->term).')');
 			$query->where('t.phrase = '.(int)$token->phrase);
 

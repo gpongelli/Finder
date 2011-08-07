@@ -98,7 +98,7 @@ class FinderModelFilters extends JModelList
 
 		// Select all fields from the table.
 		$query->select('a.*');
-		$query->from($db->quoteName('#__jxfinder_filters').' AS a');
+		$query->from($db->quoteName('#__finder_filters').' AS a');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
@@ -150,7 +150,7 @@ class FinderModelFilters extends JModelList
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 		$query->select('count(a.filter_id)');
-		$query->from($db->quoteName('#__jxfinder_filters').' AS a');
+		$query->from($db->quoteName('#__finder_filters').' AS a');
 		$db->setQuery($query);
 		$return = $db->loadResult();
 

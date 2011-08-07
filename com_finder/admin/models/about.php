@@ -25,29 +25,29 @@ class FinderModelAbout extends JModel
 		$data	= new JObject;
 
 		$db->setQuery(
-			'SELECT COUNT(term_id) FROM #__jxfinder_terms'
+			'SELECT COUNT(term_id) FROM #__finder_terms'
 		);
 		$data->term_count = $db->loadResult();
 
 		$db->setQuery(
-			'SELECT COUNT(link_id) FROM #__jxfinder_links'
+			'SELECT COUNT(link_id) FROM #__finder_links'
 		);
 		$data->link_count = $db->loadResult();
 
 		$db->setQuery(
-			'SELECT COUNT(id) FROM #__jxfinder_taxonomy WHERE parent_id = 1'
+			'SELECT COUNT(id) FROM #__finder_taxonomy WHERE parent_id = 1'
 		);
 		$data->taxonomy_branch_count = $db->loadResult();
 
 		$db->setQuery(
-			'SELECT COUNT(id) FROM #__jxfinder_taxonomy WHERE parent_id > 1'
+			'SELECT COUNT(id) FROM #__finder_taxonomy WHERE parent_id > 1'
 		);
 		$data->taxonomy_node_count = $db->loadResult();
 
 		$db->setQuery(
 			'SELECT t.title AS type_title, COUNT(a.link_id) AS link_count' .
-			' FROM #__jxfinder_links AS a' .
-			' INNER JOIN #__jxfinder_types AS t ON t.id = a.type_id' .
+			' FROM #__finder_links AS a' .
+			' INNER JOIN #__finder_types AS t ON t.id = a.type_id' .
 			' GROUP BY a.type_id'
 		);
 		$data->type_list = $db->loadObjectList();

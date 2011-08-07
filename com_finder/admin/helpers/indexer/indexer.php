@@ -193,7 +193,7 @@ class FinderIndexer
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);
 		$query->select('`link_id`, `md5sum`');
-		$query->from('`#__jxfinder_links`');
+		$query->from('`#__finder_links`');
 		$query->where('`url` = '.$db->quote($item->url));
 
 		// Load the item  from the database.
@@ -233,7 +233,7 @@ class FinderIndexer
 			{
 				// Flush the maps for the link.
 				$db->setQuery(
-					'DELETE FROM `#__jxfinder_links_terms'.dechex($i).'`' .
+					'DELETE FROM `#__finder_links_terms'.dechex($i).'`' .
 					' WHERE `link_id` = '.(int)$linkId
 				);
 				$db->query();
@@ -270,7 +270,7 @@ class FinderIndexer
 		{
 			// Insert the link.
 			$db->setQuery(
-				'INSERT INTO `#__jxfinder_links`'
+				'INSERT INTO `#__finder_links`'
 				. ' SET url = '.$db->quote($item->url)
 				. ', route = '.$db->quote($item->route)
 				. ', title = '.$db->quote($item->title)
@@ -305,7 +305,7 @@ class FinderIndexer
 		{
 			// Update the link.
 			$db->setQuery(
-				'UPDATE `#__jxfinder_links`'
+				'UPDATE `#__finder_links`'
 				. ' SET route = '.$db->quote($item->route)
 				. ', title = '.$db->quote($item->title)
 				. ', description = '.$db->quote($item->description)
@@ -341,7 +341,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterLinking') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
 		$db->query();
 
 		// Check for a database error.
@@ -351,7 +351,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
 		$db->query();
 
 		// Check for a database error.
@@ -446,23 +446,23 @@ class FinderIndexer
 
 		/*
 		 * At this point, all of the item's content has been parsed, tokenized
-		 * and inserted into the #__jxfinder_tokens table. Now, we need to
+		 * and inserted into the #__finder_tokens table. Now, we need to
 		 * aggregate all the data into that table into a more usable form. The
-		 * aggregated data will be inserted into #__jxfinder_tokens_aggregate
+		 * aggregated data will be inserted into #__finder_tokens_aggregate
 		 * table.
 		 */
-		$query	= 'INSERT INTO `#__jxfinder_tokens_aggregate`' .
+		$query	= 'INSERT INTO `#__finder_tokens_aggregate`' .
 				' (`term_id`, `term`, `stem`, `common`, `phrase`, `term_weight`, `context`, `context_weight`)' .
 				' SELECT' .
 				' t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context,' .
 				' ROUND( t1.weight * COUNT( t2.term ) * %F, 8 ) AS context_weight' .
 				' FROM (' .
 				'   SELECT DISTINCT t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context' .
-				'   FROM `#__jxfinder_tokens` AS t1' .
+				'   FROM `#__finder_tokens` AS t1' .
 				'   WHERE t1.context = %d' .
 				' ) AS t1' .
-				' JOIN `#__jxfinder_tokens` AS t2 ON t2.term = t1.term' .
-				' LEFT JOIN `#__jxfinder_terms` AS t ON t.term = t1.term' .
+				' JOIN `#__finder_tokens` AS t2 ON t2.term = t1.term' .
+				' LEFT JOIN `#__finder_terms` AS t ON t.term = t1.term' .
 				' WHERE t2.context = %d' .
 				' GROUP BY t1.term' .
 				' ORDER BY t1.term DESC';
@@ -492,10 +492,10 @@ class FinderIndexer
 		 * term so we need to add it to the terms table.
 		 */
 		$db->setQuery(
-			'INSERT IGNORE INTO `#__jxfinder_terms`' .
+			'INSERT IGNORE INTO `#__finder_terms`' .
 			' (`term`, `stem`, `common`, `phrase`, `weight`, `soundex`)' .
 			' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-			' FROM `#__jxfinder_tokens_aggregate` AS ta' .
+			' FROM `#__finder_tokens_aggregate` AS ta' .
 			' WHERE ta.term_id = 0' .
 			' GROUP BY ta.term'
 		);
@@ -505,10 +505,10 @@ class FinderIndexer
 		if ($db->getErrorNum())
 		{
 			$db->setQuery(
-				'REPLACE INTO `#__jxfinder_terms`' .
+				'REPLACE INTO `#__finder_terms`' .
 				' (`term`, `stem`, `common`, `phrase`, `weight`, `soundex`)' .
 				' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-				' FROM `#__jxfinder_tokens_aggregate` AS ta' .
+				' FROM `#__finder_tokens_aggregate` AS ta' .
 				' WHERE ta.term_id = 0' .
 				' GROUP BY ta.term'
 			);
@@ -526,8 +526,8 @@ class FinderIndexer
 		 * new term ids.
 		 */
 		$db->setQuery(
-			'UPDATE `#__jxfinder_tokens_aggregate` AS ta' .
-			' JOIN `#__jxfinder_terms` AS t ON t.term = ta.term' .
+			'UPDATE `#__finder_tokens_aggregate` AS ta' .
+			' JOIN `#__finder_terms` AS t ON t.term = ta.term' .
 			' SET ta.term_id = t.term_id' .
 			' WHERE ta.term_id = 0'
 		);
@@ -548,8 +548,8 @@ class FinderIndexer
 		 * the links counter for each term by one.
 		 */
 		$db->setQuery(
-			'UPDATE `#__jxfinder_terms` AS t' .
-			' INNER JOIN `#__jxfinder_tokens_aggregate` AS ta ON ta.term_id = t.term_id' .
+			'UPDATE `#__finder_terms` AS t' .
+			' INNER JOIN `#__finder_tokens_aggregate` AS ta ON ta.term_id = t.term_id' .
 			' SET t.links = t.links + 1'
 		);
 		$db->query();
@@ -571,7 +571,7 @@ class FinderIndexer
 		 * substr(md5(substr($token, 0, 1)), 0, 1)
 		 */
 		$db->setQuery(
-			'UPDATE `#__jxfinder_tokens_aggregate`' .
+			'UPDATE `#__finder_tokens_aggregate`' .
 			' SET `map_suffix` = SUBSTR(MD5(SUBSTR(`term`, 1, 1)), 1, 1)'
 		);
 		$db->query();
@@ -600,11 +600,11 @@ class FinderIndexer
 			 * mapping table.
 			 */
 			$db->setQuery(
-				'INSERT INTO `#__jxfinder_links_terms'.$suffix.'`' .
+				'INSERT INTO `#__finder_links_terms'.$suffix.'`' .
 				' (`link_id`, `term_id`, `weight`)' .
 				' SELECT '.(int)$linkId.', `term_id`,' .
 				' ROUND(SUM(`context_weight`), 8)' .
-				' FROM `#__jxfinder_tokens_aggregate`' .
+				' FROM `#__finder_tokens_aggregate`' .
 				' WHERE `map_suffix` = '.$db->quote($suffix) .
 				' GROUP BY `term`' .
 				' ORDER BY `term` DESC'
@@ -623,7 +623,7 @@ class FinderIndexer
 
 		// Update the signature.
 		$db->setQuery(
-			'UPDATE `#__jxfinder_links`'
+			'UPDATE `#__finder_links`'
 			. ' SET md5sum = '.$db->quote($curSig)
 			. ' WHERE link_id = '.(int)$linkId
 		);
@@ -639,7 +639,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterSigning') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
 		$db->query();
 
 		// Check for a database error.
@@ -649,7 +649,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__jxfinder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
 		$db->query();
 
 		// Check for a database error.
@@ -686,8 +686,8 @@ class FinderIndexer
 		{
 			// Update the link counts for the terms.
 			$db->setQuery(
-				'UPDATE `#__jxfinder_terms` AS t' .
-				' INNER JOIN `#__jxfinder_links_terms'.dechex($i).'` AS m ON m.term_id = t.term_id' .
+				'UPDATE `#__finder_terms` AS t' .
+				' INNER JOIN `#__finder_links_terms'.dechex($i).'` AS m ON m.term_id = t.term_id' .
 				' SET t.links = t.links - 1' .
 				' WHERE m.link_id = '.(int)$linkId
 			);
@@ -701,7 +701,7 @@ class FinderIndexer
 
 			// Remove all records from the mapping tables.
 			$db->setQuery(
-				'DELETE FROM `#__jxfinder_links_terms'.dechex($i).'`' .
+				'DELETE FROM `#__finder_links_terms'.dechex($i).'`' .
 				' WHERE `link_id` = '.(int)$linkId
 			);
 			$db->query();
@@ -715,7 +715,7 @@ class FinderIndexer
 
 		// Delete all orphaned terms.
 		$db->setQuery(
-			'DELETE FROM `#__jxfinder_terms` WHERE `links` <= 0'
+			'DELETE FROM `#__finder_terms` WHERE `links` <= 0'
 		);
 		$db->query();
 
@@ -727,7 +727,7 @@ class FinderIndexer
 
 		// Delete the link from the index.
 		$db->setQuery(
-			'DELETE FROM `#__jxfinder_links`' .
+			'DELETE FROM `#__finder_links`' .
 			' WHERE `link_id` = '.(int)$linkId
 		);
 		$db->query();
@@ -764,7 +764,7 @@ class FinderIndexer
 
 		// Delete all orphaned terms.
 		$db->setQuery(
-			'DELETE FROM `#__jxfinder_terms` WHERE `links` <= 0'
+			'DELETE FROM `#__finder_terms` WHERE `links` <= 0'
 		);
 		$db->query();
 
@@ -775,7 +775,7 @@ class FinderIndexer
 		}
 
 		// Optimize the links table.
-		$db->setQuery('OPTIMIZE TABLE `#__jxfinder_links`');
+		$db->setQuery('OPTIMIZE TABLE `#__finder_links`');
 		$db->query();
 
 		// Check for a database error.
@@ -787,7 +787,7 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Optimize the terms mapping table.
-			$db->setQuery('OPTIMIZE TABLE `#__jxfinder_links_terms'.dechex($i).'`');
+			$db->setQuery('OPTIMIZE TABLE `#__finder_links_terms'.dechex($i).'`');
 			$db->query();
 
 			// Check for a database error.
@@ -798,7 +798,7 @@ class FinderIndexer
 		}
 
 		// Optimize the terms mapping table.
-		$db->setQuery('OPTIMIZE TABLE `#__jxfinder_links_terms`');
+		$db->setQuery('OPTIMIZE TABLE `#__finder_links_terms`');
 		$db->query();
 
 		// Check for a database error.
@@ -811,7 +811,7 @@ class FinderIndexer
 		FinderIndexerTaxonomy::removeOrphanNodes();
 
 		// Optimize the taxonomy mapping table.
-		$db->setQuery('OPTIMIZE TABLE `#__jxfinder_taxonomy_map`');
+		$db->setQuery('OPTIMIZE TABLE `#__finder_taxonomy_map`');
 		$db->query();
 
 		// Check for a database error.
@@ -1013,7 +1013,7 @@ class FinderIndexer
 
 		// Insert the tokens into the database.
 		$db->setQuery(
-			'INSERT INTO `#__jxfinder_tokens`' .
+			'INSERT INTO `#__finder_tokens`' .
 			' (`term`, `stem`, `common`, `phrase`, `weight`, `context` )' .
 			' VALUES '.implode(', ', $values)
 		);
@@ -1047,7 +1047,7 @@ class FinderIndexer
 		if ($memory === true && $state !== true)
 		{
 			// Set the tokens table to Memory.
-			$db->setQuery('ALTER TABLE #__jxfinder_tokens ENGINE = MEMORY');
+			$db->setQuery('ALTER TABLE #__finder_tokens ENGINE = MEMORY');
 			$db->query();
 
 			// Check for a database error.
@@ -1057,7 +1057,7 @@ class FinderIndexer
 			}
 
 			// Set the tokens aggregate table to Memory.
-			$db->setQuery('ALTER TABLE #__jxfinder_tokens_aggregate ENGINE = MEMORY');
+			$db->setQuery('ALTER TABLE #__finder_tokens_aggregate ENGINE = MEMORY');
 			$db->query();
 
 			// Check for a database error.
@@ -1073,7 +1073,7 @@ class FinderIndexer
 		elseif ($memory === false && $state !== false)
 		{
 			// Set the tokens table to MyISAM.
-			$db->setQuery('ALTER TABLE #__jxfinder_tokens ENGINE = MYISAM');
+			$db->setQuery('ALTER TABLE #__finder_tokens ENGINE = MYISAM');
 			$db->query();
 
 			// Check for a database error.
@@ -1083,7 +1083,7 @@ class FinderIndexer
 			}
 
 			// Set the tokens aggregate table to MyISAM.
-			$db->setQuery('ALTER TABLE #__jxfinder_tokens_aggregate ENGINE = MYISAM');
+			$db->setQuery('ALTER TABLE #__finder_tokens_aggregate ENGINE = MYISAM');
 			$db->query();
 
 			// Check for a database error.

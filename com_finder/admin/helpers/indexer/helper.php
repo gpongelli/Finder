@@ -274,7 +274,7 @@ class FinderIndexerHelper
 			// Build the query to get the types.
 			$query	= $db->getQuery(true);
 			$query->select('*');
-			$query->from('`#__jxfinder_types`');
+			$query->from('`#__finder_types`');
 
 			// Get the types.
 			$db->setQuery($query);
@@ -294,7 +294,7 @@ class FinderIndexerHelper
 
 		// Add the type.
 		$db->setQuery(
-			'INSERT INTO `#__jxfinder_types` (`title`, `mime`)' .
+			'INSERT INTO `#__finder_types` (`title`, `mime`)' .
 			' VALUES ('.$db->quote($title).', '.$db->quote($mime).')'
 		);
 		$db->query();
@@ -347,7 +347,7 @@ class FinderIndexerHelper
 		// Create the query to load all the common terms for the language.
 		$query	= $db->getQuery(true);
 		$query->select('term');
-		$query->from('#__jxfinder_terms_common');
+		$query->from('#__finder_terms_common');
 		$query->where('`language` = '.$db->quote($lang));
 
 		// Load all of the common terms for the language.
