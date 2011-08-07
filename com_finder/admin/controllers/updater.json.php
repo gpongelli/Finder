@@ -168,7 +168,7 @@ class FinderUpdaterResponse
 		elseif ($state === null)
 		{
 			$this->finished	= true;
-			$this->message	= JText::_('FINDER_UPDATER_MESSAGE_COMPLETE');
+			$this->message	= JText::_('COM_FINDER_UPDATER_MESSAGE_COMPLETE');
 		}
 		else
 		{
@@ -188,10 +188,10 @@ class FinderUpdaterResponse
 
 			// Set the appropriate messages.
 			if ($this->finished) {
-				$this->message	= JText::_('FINDER_UPDATER_MESSAGE_COMPLETE');
+				$this->message	= JText::_('COM_FINDER_UPDATER_MESSAGE_COMPLETE');
 			}
 			else {
-				$this->message	= JText::sprintf('FINDER_UPDATER_MESSAGE_PROCESS', $this->totalItems);
+				$this->message	= JText::sprintf('COM_FINDER_UPDATER_MESSAGE_PROCESS', $this->totalItems);
 			}
 		}
 	}
