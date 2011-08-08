@@ -132,7 +132,7 @@ class FinderControllerConfig extends ConfigControllerComponent
 
 		// Initialise variables.
 		$app	= JFactory::getApplication();
-		$model	= $this->getModel;
+		$model	= $this->getModel();
 		$form	= $model->getForm();
 		$data	= JRequest::getVar('jform', array(), 'post', 'array');
 		$id		= JRequest::getInt('id');
