@@ -18,13 +18,6 @@ define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
 // Import the component version class.
 require_once(dirname(__FILE__).'/version.php');
 
-// Check for the JXtended Libraries.
-if (!function_exists('jx'))
-{
-	// Import the setup helper class.
-	require_once(dirname(__FILE__).'/helpers/setup.php');
-}
-
 // Execute the task.
 $controller	= JController::getInstance('Finder');
 $controller->execute(JRequest::getCmd('task'));
