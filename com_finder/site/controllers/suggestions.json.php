@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: finder.php 689 2009-10-09 02:00:39Z robs $
  * @package		JXtended.Finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
  * @license		GNU General Public License
@@ -26,7 +25,7 @@ class FinderControllerSuggestions extends JController
 	public function display()
 	{
 		// Get the suggestions.
-		$model	= &$this->getModel('Suggestions');
+		$model	= &$this->getModel('Suggestions', 'FinderModel');
 		$return	= $model->getItems();
 
 		// Check the data.

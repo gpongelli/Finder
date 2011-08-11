@@ -47,21 +47,25 @@ class FinderModelSuggestions extends JModelList
 	}
 
 	/**
-	 * Method to get a JDatabaseQuery object for retrieving the data set from a database.
+	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	object		A JDatabaseQuery object.
+	 * @return	string	$query	An SQL query
 	 */
-	protected function _getListQuery()
+	protected function getListQuery()
 	{
-		$sql = new JDatabaseQuery();
-		$sql->select('t.term');
-		$sql->from('#__finder_terms AS t');
-		$sql->where('t.term LIKE "'.$this->_db->getEscaped($this->getState('input'), true).'%"');
-		$sql->where('t.common = 0');
-		$sql->order('t.links DESC');
-		$sql->order('t.weight DESC');
+		// Create a new query object.
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
 
-		return $sql;
+		// Select required fields
+		$query->select('t.term');
+		$query->from($db->quoteName('#__finder_terms').' AS t');
+		$query->where('t.term LIKE '.$db->quote($db->getEscaped($this->getState('input'), true).'%'));
+		$query->where('t.common = 0');
+		$query->order('t.links DESC');
+		$query->order('t.weight DESC');
+
+		return $query;
 	}
 
 	/**
@@ -74,7 +78,7 @@ class FinderModelSuggestions extends JModelList
 	 * @param	string	An identifier string to generate the store id.
 	 * @return	string	A store id.
 	 */
-	protected function _getStoreId($id = '')
+	protected function getStoreId($id = '')
 	{
 		// Add the search query state.
 		$id .= ':'.$this->getState('input');
@@ -84,26 +88,22 @@ class FinderModelSuggestions extends JModelList
 		$id	.= ':'.$this->getState('list.start');
 		$id	.= ':'.$this->getState('list.limit');
 
-		// Add the user access state.
-		$id .= ':'.$this->getState('user.aid');
-
 		return parent::_getStoreId($id);
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
+	 * @param   string	$ordering	An optional ordering field.
+	 * @param   string	$direction	An optional direction.
 	 *
 	 * @return	void
 	 */
-	protected function _populateState()
+	protected function populateState()
 	{
 		// Get the configuration options.
 		$app		= JFactory::getApplication();
-		$params		= $app->getParams('com_finder');
+		$params		= JComponentHelper::getParams('com_finder');
 		$user		= JFactory::getUser();
 
 		// Get the query input.
@@ -119,6 +119,5 @@ class FinderModelSuggestions extends JModelList
 
 		// Load the user state.
 		$this->setState('user.id', (int)$user->get('id'));
-		$this->setState('user.aid',	(int)$user->get('aid'));
 	}
 }
