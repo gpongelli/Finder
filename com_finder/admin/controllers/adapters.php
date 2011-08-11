@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,15 +14,21 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * Adapters controller class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerAdapters extends JControllerAdmin
 {
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @since	1.6
+	 * @param   string  $name    The model name.
+	 * @param   string  $prefix  The class prefix.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   2.5
 	 */
 	public function &getModel($name = 'Adapters', $prefix = 'FinderModel')
 	{

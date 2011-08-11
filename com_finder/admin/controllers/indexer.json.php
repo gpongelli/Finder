@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -16,15 +17,18 @@ JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/index
 /**
  * Indexer controller class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerIndexer extends JController
 {
 	/**
 	 * Method to start the indexer.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function start()
 	{
@@ -46,7 +50,8 @@ class FinderControllerIndexer extends JController
 		JPluginHelper::importPlugin('finder');
 
 		// Start the indexer.
-		try {
+		try
+		{
 			// Trigger the onStartIndex event.
 			JDispatcher::getInstance()->trigger('onStartIndex');
 
@@ -58,7 +63,8 @@ class FinderControllerIndexer extends JController
 			$this->sendResponse($state);
 		}
 		// Catch an exception and return the response.
-		catch (Exception $e) {
+		catch (Exception $e)
+		{
 			$this->sendResponse($e);
 		}
 	}
@@ -66,7 +72,9 @@ class FinderControllerIndexer extends JController
 	/**
 	 * Method to run the next batch of content through the indexer.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function batch()
 	{
@@ -76,7 +84,7 @@ class FinderControllerIndexer extends JController
 		header('Expires: -1');
 
 		// Check for a valid token. If invalid, send a 403 with the error message.
-		JRequest::checkToken('request') or $this->sendResponse(new JException(JText::_('JX_INVALID_TOKEN'), 403));
+		JRequest::checkToken('request') or $this->sendResponse(new JException(JText::_('JINVALID_TOKEN'), 403));
 
 		// Put in a buffer to silence noise.
 		ob_start();
@@ -124,7 +132,7 @@ class FinderControllerIndexer extends JController
 		$admin = clone(JFactory::getApplication());
 
 		// Get the site app.
-		require_once JPATH_SITE.'/includes/application.php';
+		include_once JPATH_SITE.'/includes/application.php';
 		$site = JApplication::getInstance('site');
 
 		// Swap the app.
@@ -132,7 +140,8 @@ class FinderControllerIndexer extends JController
 		$app = $site;
 
 		// Start the indexer.
-		try {
+		try
+		{
 			// Trigger the onBeforeIndex event.
 			JDispatcher::getInstance()->trigger('onBeforeIndex');
 
@@ -154,7 +163,8 @@ class FinderControllerIndexer extends JController
 			$this->sendResponse($state);
 		}
 		// Catch an exception and return the response.
-		catch (Exception $e) {
+		catch (Exception $e)
+		{
 			// Swap the documents back.
 			$doc = $raw;
 
@@ -166,7 +176,9 @@ class FinderControllerIndexer extends JController
 	/**
 	 * Method to optimize the index and perform any necessary cleanup.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function optimize()
 	{
@@ -176,7 +188,7 @@ class FinderControllerIndexer extends JController
 		header('Expires: -1');
 
 		// Check for a valid token. If invalid, send a 403 with the error message.
-		JRequest::checkToken('request') or $this->sendResponse(new JException(JText::_('JX_INVALID_TOKEN'), 403));
+		JRequest::checkToken('request') or $this->sendResponse(new JException(JText::_('JINVALID_TOKEN'), 403));
 
 		// Put in a buffer to silence noise.
 		ob_start();
@@ -184,7 +196,8 @@ class FinderControllerIndexer extends JController
 		// Import the finder plugins.
 		JPluginHelper::importPlugin('finder');
 
-		try {
+		try
+		{
 			// Optimize the index.
 			FinderIndexer::optimize();
 
@@ -197,7 +210,8 @@ class FinderControllerIndexer extends JController
 			$this->sendResponse($state);
 		}
 		// Catch an exception and return the response.
-		catch (Exception $e) {
+		catch (Exception $e)
+		{
 			$this->sendResponse($e);
 		}
 	}
@@ -207,15 +221,19 @@ class FinderControllerIndexer extends JController
 	 * can be a Exception object for when an error has occurred or
 	 * a JObject for a good response.
 	 *
-	 * @param	object		JObject on success, JException/Exception on error.
-	 * @return	void
+	 * @param   object  $data  JObject on success, JException/Exception on error.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function sendResponse($data = null)
 	{
 		$backtrace = null;
 
 		// Send the assigned error code if we are catching an exception.
-		if (JError::isError($data) || $data instanceof Exception) {
+		if (JError::isError($data) || $data instanceof Exception)
+		{
 			JResponse::setHeader('status', $data->getCode());
 			JResponse::sendHeaders();
 		}
@@ -237,11 +255,21 @@ class FinderControllerIndexer extends JController
 /**
  * Finder Indexer JSON Response Class
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerResponse
 {
+	/**
+	 * Class Constructor
+	 *
+	 * @param   int  $state  The processing state for the indexer
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
 	public function __construct($state)
 	{
 		// The old token is invalid so send a new one.
@@ -269,15 +297,18 @@ class FinderIndexerResponse
 			$this->complete		= !empty($state->complete) ? (int)$state->complete : 0;
 
 			// Set the appropriate messages.
-			if ($this->totalItems <= 0 && $this->complete) {
+			if ($this->totalItems <= 0 && $this->complete)
+			{
 				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_COMPLETE');
 				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_COMPLETE');
 			}
-			elseif ($this->totalItems <= 0) {
+			else if ($this->totalItems <= 0)
+			{
 				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_OPTIMIZE');
 				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_OPTIMIZE');
 			}
-			else {
+			else
+			{
 				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_RUNNING');
 				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_RUNNING');
 			}

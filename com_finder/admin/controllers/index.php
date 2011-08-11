@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -12,16 +14,21 @@ jimport('joomla.application.component.controlleradmin');
 /**
  * Index controller class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerIndex extends JControllerAdmin
 {
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @since	1.6
+	 * @param   string  $name    The model name.
+	 * @param   string  $prefix  The class prefix.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   2.5
 	 */
 	public function &getModel($name = 'Index', $prefix = 'FinderModel')
 	{
@@ -32,11 +39,11 @@ class FinderControllerIndex extends JControllerAdmin
 	/**
 	 * Method to purge all indexed links from the database.
 	 *
-	 * @access	public
-	 * @return	bool	True on success, false on failure.
-	 * @since	1.0
+	 * @return  boolean  True on success, false on failure.
+	 *
+	 * @since   2.5
 	 */
-	function purge()
+	public function purge()
 	{
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -49,11 +56,14 @@ class FinderControllerIndex extends JControllerAdmin
 		// Attempt to purge the index.
 		$return = $model->purge();
 
-		if (!$return) {
+		if (!$return)
+		{
 			$message = JText::_('COM_FINDER_INDEX_PURGE_FAILED', $model->getError());
 			$this->setRedirect('index.php?option=com_finder&view=index', $message);
 			return false;
-		} else {
+		}
+		else
+		{
 			$message = JText::_('COM_FINDER_INDEX_PURGE_SUCCESS');
 			$this->setRedirect('index.php?option=com_finder&view=index', $message);
 			return true;

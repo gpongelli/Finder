@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,18 +15,20 @@ require_once JPATH_ADMINISTRATOR.'/components/com_config/controllers/component.p
 /**
  * Configuration controller class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerConfig extends ConfigControllerComponent
 {
 	/**
 	 * Class Constructor
 	 *
-	 * @param	array	$config		An optional associative array of configuration settings.
-	 * @return	void
-	 * @since	1.5
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	function __construct($config = array())
 	{
@@ -38,7 +41,12 @@ class FinderControllerConfig extends ConfigControllerComponent
 	/**
 	 * Proxy for getModel.
 	 *
-	 * @since	1.6
+	 * @param   string  $name    The model name.
+	 * @param   string  $prefix  The class prefix.
+	 *
+	 * @return  object  The model.
+	 *
+	 * @since   2.5
 	 */
 	public function &getModel($name = 'Config', $prefix = 'FinderModel')
 	{
@@ -49,11 +57,11 @@ class FinderControllerConfig extends ConfigControllerComponent
 	/**
 	 * Method to import the configuration via string or upload.
 	 *
-	 * @access	public
-	 * @return	bool	True on success, false on failure.
-	 * @since	1.0
+	 * @return  bool  True on success, false on failure.
+	 *
+	 * @since   2.5
 	 */
-	function import()
+	public function import()
 	{
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -69,7 +77,7 @@ class FinderControllerConfig extends ConfigControllerComponent
 			$model	= &$this->getModel();
 			$return	= $model->import($string);
 		}
-		elseif (strlen($string) > 1)
+		else if (strlen($string) > 1)
 		{
 			// Handle import via pasted string.
 			$model	= &$this->getModel();
@@ -93,11 +101,11 @@ class FinderControllerConfig extends ConfigControllerComponent
 	/**
 	 * Method to export the configuration via download.
 	 *
-	 * @access	public
-	 * @return	void
-	 * @since	1.0
+	 * @return  void
+	 *
+	 * @since   1.0
 	 */
-	function export()
+	public function export()
 	{
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
@@ -106,20 +114,24 @@ class FinderControllerConfig extends ConfigControllerComponent
 		$string	= $config->toString();
 
 		header('Content-type: application/force-download');
-	    header('Content-Transfer-Encoding: Binary');
-	    header('Content-length: '.strlen($string));
-	    header('Content-disposition: attachment; filename="jxfinder.config.ini"');
+		header('Content-Transfer-Encoding: Binary');
+		header('Content-length: '.strlen($string));
+		header('Content-disposition: attachment; filename="jxfinder.config.ini"');
 		header('Pragma: no-cache');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Expires: 0');
 
-	    echo $string;
+		echo $string;
 
 		$app->close();
 	}
 
 	/**
-	 * Save the configuration
+	 * Save the configuration.
+	 *
+	 * @return  boolean  True if successful, false otherwise.
+	 *
+	 * @since   2.5
 	 */
 	function save()
 	{
@@ -149,15 +161,20 @@ class FinderControllerConfig extends ConfigControllerComponent
 		$return = $model->validate($form, $data);
 
 		// Check for validation errors.
-		if ($return === false) {
+		if ($return === false)
+		{
 			// Get the validation messages.
 			$errors	= $model->getErrors();
 
 			// Push up to three validation messages out to the user.
-			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
-				if (JError::isError($errors[$i])) {
+			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
+			{
+				if (JError::isError($errors[$i]))
+				{
 					$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
-				} else {
+				}
+				else
+				{
 					$app->enqueueMessage($errors[$i], 'warning');
 				}
 			}

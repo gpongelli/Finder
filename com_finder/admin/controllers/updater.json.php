@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -15,11 +16,19 @@ JLoader::register('FinderIndexerQueue', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/
 /**
  * Updater controller class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerUpdater extends JController
 {
+	/**
+	 * Method to process updates to Finder data
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
 	public function update()
 	{
 		// We don't want this form to be cached.
@@ -37,11 +46,13 @@ class FinderControllerUpdater extends JController
 		$queue = FinderIndexerQueue::get();
 
 		// If the queue is empty, return.
-		if (count($queue) === 0) {
+		if (count($queue) === 0)
+		{
 			$this->sendResponse(null);
 		}
 
-		try {
+		try
+		{
 			// Get the indexer state.
 			$state = FinderIndexer::getState();
 
@@ -67,7 +78,8 @@ class FinderControllerUpdater extends JController
 				$state->setup		= true;
 
 				// Check if the indexer is finished.
-				if ($state->totalItems <= 0) {
+				if ($state->totalItems <= 0)
+				{
 					$state->finished = true;
 				}
 
@@ -75,7 +87,7 @@ class FinderControllerUpdater extends JController
 				FinderIndexer::setState($state);
 			}
 			// Check if the indexer needs to be run again.
-			elseif (!empty($state->initialized) && empty($state->processed) && empty($state->finished))
+			else if (!empty($state->initialized) && empty($state->processed) && empty($state->finished))
 			{
 				// Reset the batch offset.
 				$state->batchOffset = 0;
@@ -93,14 +105,15 @@ class FinderControllerUpdater extends JController
 				$state = FinderIndexer::getState();
 
 				// Check if the indexer is finished.
-				if ($state->totalItems <= 0) {
+				if ($state->totalItems <= 0)
+				{
 					$state->processed = true;
 				}
 
 				// Update the indexer state.
 				FinderIndexer::setState($state);
 			}
-			elseif (!empty($state->processed) && empty($state->finished))
+			else if (!empty($state->processed) && empty($state->finished))
 			{
 				// Set the finished flag.
 				$state->finished = true;
@@ -116,7 +129,8 @@ class FinderControllerUpdater extends JController
 			$this->sendResponse($state);
 		}
 		// Catch an exception and return the response.
-		catch (Exception $e) {
+		catch (Exception $e)
+		{
 			$this->sendResponse($e);
 		}
 	}
@@ -126,13 +140,17 @@ class FinderControllerUpdater extends JController
 	 * can be a Exception object for when an error has occurred or
 	 * a JObject for a good response.
 	 *
-	 * @param	object		JObject on success, JException/Exception on error.
-	 * @return	void
+	 * @param   object  $data  JObject on success, JException/Exception on error.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function sendResponse($data = null)
 	{
 		// Send the assigned error code if we are catching an exception.
-		if (JError::isError($data) || $data instanceof Exception) {
+		if (JError::isError($data) || $data instanceof Exception)
+		{
 			JResponse::setHeader('status', $data->getCode());
 			JResponse::sendHeaders();
 		}
@@ -151,11 +169,21 @@ class FinderControllerUpdater extends JController
 /**
  * Finder Indexer JSON Response Class
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderUpdaterResponse
 {
+	/**
+	 * Class Constructor
+	 *
+	 * @param   int  $state  The processing state for the updater
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
 	public function __construct($state)
 	{
 		// Check if we are dealing with an error.
@@ -165,7 +193,7 @@ class FinderUpdaterResponse
 			$this->error		= true;
 			$this->message		= $state->getMessage();
 		}
-		elseif ($state === null)
+		else if ($state === null)
 		{
 			$this->finished	= true;
 			$this->message	= JText::_('COM_FINDER_UPDATER_MESSAGE_COMPLETE');
@@ -187,10 +215,12 @@ class FinderUpdaterResponse
 			$this->finished		= !empty($state->finished) ? (int)$state->finished : 0;
 
 			// Set the appropriate messages.
-			if ($this->finished) {
+			if ($this->finished)
+			{
 				$this->message	= JText::_('COM_FINDER_UPDATER_MESSAGE_COMPLETE');
 			}
-			else {
+			else
+			{
 				$this->message	= JText::sprintf('COM_FINDER_UPDATER_MESSAGE_PROCESS', $this->totalItems);
 			}
 		}
