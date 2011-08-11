@@ -17,11 +17,10 @@ $lang->load('com_finder.custom');
 // Detect if we have full UTF-8 and unicode support.
 define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
 
-// Register dependent classes.
-JLoader::register('FinderHelperRoute', JPATH_SITE.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'route.php');
+require_once JPATH_COMPONENT.'/helpers/route.php';
 
 // Instantiate and execute the requested task.
-jx('jx.application.component.helper.controller');
+jimport('joomla.application.component.controller');
 $controller = JControllerHelper::getInstance('Finder');
 $controller->execute(JRequest::getVar('task'));
 $controller->redirect();

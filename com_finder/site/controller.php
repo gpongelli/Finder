@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id$
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -22,31 +21,37 @@ jimport('joomla.application.component.controller');
 class FinderController extends JController
 {
 	/**
-	 * Method to display a the requested view.
+	 * Method to display a view.
 	 *
-	 * @access	public
-	 * @return	void
-	 * @since	1.0
+	 * @param	boolean	$cachable	If true, the view output will be cached
+	 * @param	array	$urlparams	An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 *
+	 * @return	JController			This object is to support chaining.
+	 * @since	1.6
 	 */
-	function display()
+	public function display($cachable = false, $urlparams = false)
 	{
-		$params		= JFactory::getApplication()->getParams();
-		$document	= JFactory::getDocument();
-		$viewType	= $document->getType();
+		// Initialise variables.
+		$cachable	= true;
+		$user		= JFactory::getUser();
+
+		// Set the default view name and format from the Request.
 		$viewName	= JRequest::getWord('view', 'search');
-		$viewLayout	= JRequest::getWord('layout', 'default');
-		$viewParams	= array('base_path' => $this->_basePath);
+		JRequest::setVar('view', $viewName);
 
-		// Instantiate the view and model.
-		$view	= &$this->getView($viewName, $viewType, '', $viewParams);
-		$model	= &$this->getModel($viewName);
+		if ($user->get('id') ||($_SERVER['REQUEST_METHOD'] == 'POST' && $vName = 'feed')) {
+			$cachable = false;
+		}
 
-		// Configure the view.
-		$view->setModel($model, true);
-		$view->setLayout($viewLayout);
-		$view->assignRef('document', $document);
+		$safeurlparams = array(
+			'id'				=> 'INT',
+			'limit'				=> 'INT',
+			'limitstart'		=> 'INT',
+			'filter_order'		=> 'CMD',
+			'filter_order_Dir'	=> 'CMD',
+			'lang'				=> 'CMD'
+		);
 
-		// Display the view.
-		$view->display();
+		return parent::display($cachable, $safeurlparams);
 	}
 }
