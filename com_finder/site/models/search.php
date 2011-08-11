@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: search.php 1068 2010-10-05 15:55:57Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -11,12 +10,12 @@
 defined('_JEXEC') or die;
 
 // Register dependent classes.
-define('FINDER_PATH_INDEXER', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'indexer');
-JLoader::register('FinderIndexerHelper', FINDER_PATH_INDEXER.DS.'helper.php');
-JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER.DS.'query.php');
-JLoader::register('FinderIndexerResult', FINDER_PATH_INDEXER.DS.'result.php');
+define('FINDER_PATH_INDEXER', JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer');
+JLoader::register('FinderIndexerHelper', FINDER_PATH_INDEXER.'/helper.php');
+JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER.'/query.php');
+JLoader::register('FinderIndexerResult', FINDER_PATH_INDEXER.'/result.php');
 
-jx('jx.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
 /**
  * Search model class for the Finder package.
@@ -77,7 +76,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the store id.
-		$store = $this->_getStoreId('getResults');
+		$store = $this->getStoreId('getResults');
 
 		// Use the cached data if possible.
 		if ($this->_retrieve($store)) {
@@ -85,7 +84,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the row data.
-		$items = $this->_getResultsData();
+		$items = $this->getResultsData();
 
 		// Check the data.
 		if (empty($items)) {
@@ -93,13 +92,15 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Create the query to get the search results.
-		$sql = new JDatabaseQuery();
-		$sql->select('link_id, object');
-		$sql->from('#__finder_links');
-		$sql->where('link_id IN ('.implode(',', array_keys($items)).')');
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+
+		$query->select('link_id, object');
+		$query->from('#__finder_links');
+		$query->where('link_id IN ('.implode(',', array_keys($items)).')');
 
 		// Load the results from the database.
-		$this->_db->setQuery($sql);
+		$this->_db->setQuery($query);
 		$rows = $this->_db->loadObjectList('link_id');
 
 		// Check for a database error.
@@ -159,7 +160,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the results total.
-		$total = $this->_getResultsTotal();
+		$total = $this->getResultsTotal();
 
 		// Push the total into cache.
 		$this->_store($store, $total);
@@ -183,11 +184,11 @@ class FinderModelSearch extends JModelList
 	}
 
 	/**
-	 * Method to get the base database query for the search query.
+	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	object		A JDatabaseQuery object.
+	 * @return	string	$query	An SQL query
 	 */
-	protected function _getListQuery()
+	protected function getListQuery()
 	{
 		// Get the store id.
 		$store = $this->_getStoreId('_getListQuery');
@@ -197,21 +198,23 @@ class FinderModelSearch extends JModelList
 			return clone($this->_retrieve($store, false));
 		}
 
-		// Create the base query.
-		$sql = new JDatabaseQuery();
-		$sql->select('l.link_id');
-		$sql->from('#__finder_links AS l');
-		$sql->where('l.access <= '.(int)$this->getState('user.aid'));
-		$sql->where('l.state = 1');
-		$sql->where('l.published = 1');
+		// Create a new query object.
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+
+		$query->select('l.link_id');
+		$query->from($db->quoteName('#__finder_links').' AS l');
+		//$query->where('l.access <= '.(int)$this->getState('user.aid'));
+		$query->where($db->quoteName('l.state').' = 1');
+		$query->where($db->quoteName('l.state').' = 1');
 
 		// Get the null date and the current date, minus seconds.
-		$nullDate	= $this->_db->quote($this->_db->getNullDate());
-		$nowDate	= $this->_db->quote(substr_replace(JFactory::getDate()->toMySQL(), '00', -2));
+		$nullDate	= $db->quote($db->getNullDate());
+		$nowDate	= $db->quote(substr_replace(JFactory::getDate()->toMySQL(), '00', -2));
 
 		// Add the publish up and publish down filters.
-		$sql->where('(l.publish_start_date = '.$nullDate.' OR l.publish_start_date <= '.$nowDate.')');
-		$sql->where('(l.publish_end_date = '.$nullDate.' OR l.publish_end_date >= '.$nowDate.')');
+		$query->where('('.$db->quoteName('l.publish_start_date').' = '.$nullDate.' OR '.$db->quoteName('l.publish_start_date').' <= '.$nowDate.')');
+		$query->where('('.$db->quoteName('l.publish_end_date').' = '.$nullDate.' OR '.$db->quoteName('l.publish_end_date').' >= '.$nowDate.')');
 
 		/*
 		 * Add the taxonomy filters to the query. We have to join the taxonomy
@@ -228,49 +231,45 @@ class FinderModelSearch extends JModelList
 			for ($i = 0, $c = count($groups); $i < $c; $i++)
 			{
 				// We use the offset because each join needs a unique alias.
-				$sql->join('INNER', '#__finder_taxonomy_map AS t'.$i.' ON t'.$i.'.link_id = l.link_id');
-				$sql->where('t'.$i.'.node_id IN ('.implode(',', $groups[$i]).')');
+				$query->join('INNER', $db->quoteName('#__finder_taxonomy_map').' AS t'.$i.' ON t'.$i.'.link_id = l.link_id');
+				$query->where('t'.$i.'.node_id IN ('.implode(',', $groups[$i]).')');
 			}
 		}
 
-		/*
-		 * Add the start date filter to the query.
-		 */
+		// Add the start date filter to the query.
 		if (!empty($this->_query->date1))
 		{
 			// Escape the date.
-			$date1 = $this->_db->quote($this->_query->date1);
+			$date1 = $db->quote($this->_query->date1);
 
 			// Add the appropriate WHERE condition.
 			if ($this->_query->when1 == 'before') {
-				$sql->where('l.start_date <= '.$date1);
+				$query->where($db->quoteName('l.start_date').' <= '.$date1);
 			} else if ($this->_query->when1 == 'after') {
-				$sql->where('l.start_date >= '.$date1);
+				$query->where($db->quoteName('l.start_date').' >= '.$date1);
 			} else {
-				$sql->where('l.start_date = '.$date1);
+				$query->where($db->quoteName('l.start_date').' = '.$date1);
 			}
 		}
 
-		/*
-		 * Add the end date filter to the query.
-		 */
+		// Add the end date filter to the query.
 		if (!empty($this->_query->date2))
 		{
 			// Escape the date.
-			$date2 = $this->_db->quote($this->_query->date2);
+			$date2 = $db->quote($this->_query->date2);
 
 			// Add the appropriate WHERE condition.
 			if ($this->_query->when2 == 'before') {
-				$sql->where('l.start_date <= '.$date2);
+				$query->where($db->quoteName('l.start_date').' <= '.$date2);
 			} else if ($this->_query->when2 == 'after') {
-				$sql->where('l.start_date >= '.$date2);
+				$query->where($db->quoteName('l.start_date').' >= '.$date2);
 			} else {
-				$sql->where('l.start_date = '.$date2);
+				$query->where($db->quoteName('l.start_date').' = '.$date2);
 			}
 		}
 
 		// Push the data into cache.
-		$this->_store($store, $sql, false);
+		$this->_store($store, $query, false);
 
 		// Return a copy of the query object.
 		return clone($this->_retrieve($store, false));
@@ -282,10 +281,10 @@ class FinderModelSearch extends JModelList
 	 * @return	integer		The results total.
 	 * @throws	Exception on database error.
 	 */
-	protected function _getResultsTotal()
+	protected function getResultsTotal()
 	{
 		// Get the store id.
-		$store = $this->_getStoreId('_getResultsTotal', false);
+		$store = $this->getStoreId('getResultsTotal', false);
 
 		// Use the cached data if possible.
 		if ($this->_retrieve($store)) {
@@ -293,7 +292,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the base query and add the ordering information.
-		$base = $this->_getListQuery();
+		$base = $this->getListQuery();
 		$base->select('0 AS ordering');
 
 		// Get the maximum number of results.
@@ -335,7 +334,7 @@ class FinderModelSearch extends JModelList
 		$items		= array();
 		$sorted		= array();
 		$maps		= array();
-		$excluded	= $this->_getExcludedLinkIds();
+		$excluded	= $this->getExcludedLinkIds();
 
 		/*
 		 * Iterate through the included search terms and group them by mapping
@@ -372,7 +371,7 @@ class FinderModelSearch extends JModelList
 			foreach ($maps as $suffix => $ids)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('_getResultsTotal:'.serialize(array_values($ids)).':'.$start.':'.$limit);
+				$setId = $this->_getStoreId('getResultsTotal:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
 				if ($this->_retrieve($setId)) {
@@ -467,7 +466,7 @@ class FinderModelSearch extends JModelList
 			foreach ($this->_requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('_getResultsTotal:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
+				$setId = $this->_getStoreId('getResultsTotal:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
 				if ($this->_retrieve($setId)) {
@@ -561,10 +560,10 @@ class FinderModelSearch extends JModelList
 	 * @return	array		An array of result data objects.
 	 * @throws	Exception on database error.
 	 */
-	protected function _getResultsData()
+	protected function getResultsData()
 	{
 		// Get the store id.
-		$store = $this->_getStoreId('_getResultsData', false);
+		$store = $this->getStoreId('getResultsData', false);
 
 		// Use the cached data if possible.
 		if ($this->_retrieve($store)) {
@@ -576,7 +575,7 @@ class FinderModelSearch extends JModelList
 		$direction	= $this->getState('list.direction', 'DESC');
 
 		// Get the base query and add the ordering information.
-		$base = $this->_getListQuery();
+		$base = $this->getListQuery();
 		$base->select($this->_db->getEscaped($ordering).' AS ordering');
 		$base->order($this->_db->getEscaped($ordering).' '.$this->_db->getEscaped($direction));
 
@@ -596,7 +595,7 @@ class FinderModelSearch extends JModelList
 			}
 
 			// Get a new store id because this data is page specific.
-			$store = $this->_getStoreId('_getResultsData', true);
+			$store = $this->getStoreId('getResultsData', true);
 
 			// Push the results into cache.
 			$this->_store($store, $return);
@@ -615,7 +614,7 @@ class FinderModelSearch extends JModelList
 		$items		= array();
 		$sorted		= array();
 		$maps		= array();
-		$excluded	= $this->_getExcludedLinkIds();
+		$excluded	= $this->getExcludedLinkIds();
 
 		/*
 		 * Iterate through the included search terms and group them by mapping
@@ -652,7 +651,7 @@ class FinderModelSearch extends JModelList
 			foreach ($maps as $suffix => $ids)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('_getResultsData:'.serialize(array_values($ids)).':'.$start.':'.$limit);
+				$setId = $this->_getStoreId('getResultsData:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
 				if ($this->_retrieve($setId)) {
@@ -663,7 +662,7 @@ class FinderModelSearch extends JModelList
 				{
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
-					$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+					$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms').$suffix.' AS m ON m.link_id = l.link_id');
 					$sql->where('m.term_id IN ('.implode(',', $ids).')');
 
 					// Load the results from the database.
@@ -747,9 +746,7 @@ class FinderModelSearch extends JModelList
 				}
 			}
 
-			/*
-			 * Sort the results.
-			 */
+			// Sort the results.
 			if ($direction === 'ASC') {
 				natcasesort($items);
 			} else {
@@ -789,7 +786,7 @@ class FinderModelSearch extends JModelList
 			foreach ($this->_requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('_getResultsData:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
+				$setId = $this->_getStoreId('getResultsData:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
 				if ($this->_retrieve($setId)) {
@@ -813,7 +810,7 @@ class FinderModelSearch extends JModelList
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
-						$sql->join('INNER', '#__finder_links_terms'.$suffix.' AS m ON m.link_id = l.link_id');
+						$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms').$suffix.' AS m ON m.link_id = l.link_id');
 						$sql->where('m.term_id IN ('.implode(',', $required).')');
 
 						// Load the results from the database.
@@ -879,7 +876,7 @@ class FinderModelSearch extends JModelList
 	 * @return	array		An array of links ids.
 	 * @throws	Exception on database error.
 	 */
-	protected function _getExcludedLinkIds()
+	protected function getExcludedLinkIds()
 	{
 		// Check if the search query has excluded terms.
 		if (empty($this->_excludedTerms)) {
@@ -887,7 +884,7 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the store id.
-		$store = $this->_getStoreId('_getExcludedLinkIds', false);
+		$store = $this->getStoreId('getExcludedLinkIds', false);
 
 		// Use the cached data if possible.
 		if ($this->_retrieve($store)) {
@@ -924,20 +921,23 @@ class FinderModelSearch extends JModelList
 		 */
 		foreach ($maps as $suffix => $ids)
 		{
+			// Create a new query object.
+			$db		= $this->getDbo();
+			$query	= $db->getQuery(true);
+
 			// Create the query to get the links ids.
-			$sql = new JDatabaseQuery();
-			$sql->select('link_id');
-			$sql->from('#__finder_links_terms'.$suffix);
-			$sql->where('term_id IN ('.implode(',', $ids).')');
-			$sql->group('link_id');
+			$query->select('link_id');
+			$query->from($db->quoteName('#__finder_links_terms').$suffix);
+			$query->where('term_id IN ('.implode(',', $ids).')');
+			$query->group('link_id');
 
 			// Load the link ids from the database.
-			$this->_db->setQuery($sql);
-			$temp = $this->_db->loadResultArray();
+			$db->setQuery($query);
+			$temp = $db->loadResultArray();
 
 			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
-				throw new Exception($this->_db->getErrorMsg(), 500);
+			if ($db->getErrorNum()) {
+				throw new Exception($db->getErrorMsg(), 500);
 			}
 
 			// Merge the link ids.
@@ -961,15 +961,16 @@ class FinderModelSearch extends JModelList
 	 * @param	array		An array of search term ids.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getTermsQuery($terms)
+	protected function getTermsQuery($terms)
 	{
 		// Create the SQL query to get the matching link ids.
-		$sql = new JDatabaseQuery();
-		$sql->select('SQL_NO_CACHE link_id');
-		$sql->from('#__finder_links_terms');
-		$sql->where('term_id IN ('.implode(',', $terms).')');
+		$db		= $this->getDbo();
+		$query	= $db->getQuery(true);
+		$query->select('SQL_NO_CACHE link_id');
+		$query->from('#__finder_links_terms');
+		$query->where('term_id IN ('.implode(',', $terms).')');
 
-		return $sql;
+		return $query;
 	}
 
 	/**
@@ -982,7 +983,7 @@ class FinderModelSearch extends JModelList
 	 * @param	string	An identifier string to generate the store id.
 	 * @return	string	A store id.
 	 */
-	protected function _getStoreId($id = '', $page = true)
+	protected function getStoreId($id = '', $page = true)
 	{
 		// Get the query object.
 		$query = $this->getQuery();
@@ -1006,26 +1007,22 @@ class FinderModelSearch extends JModelList
 			$id	.= ':'.$this->getState('list.direction');
 		}
 
-		// Add the user access state.
-		$id .= ':'.$this->getState('user.aid');
-
-		return parent::_getStoreId($id);
+		return parent::getStoreId($id);
 	}
 
 	/**
-	 * Method to auto-populate the model state.
+	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * This method should only be called once per instantiation and is designed
-	 * to be called on the first call to the getState() method unless the model
-	 * configuration flag to ignore the request is set.
+	 * @param   string	$ordering	An optional ordering field.
+	 * @param   string	$direction	An optional direction.
 	 *
 	 * @return	void
 	 */
-	protected function _populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Get the configuration options.
 		$app	= JFactory::getApplication();
-		$params	= $app->getParams('com_finder');
+		$params	= JComponentHelper::getParams('com_podcastmanager');
 		$user	= JFactory::getUser();
 
 		// Setup the stemmer.
@@ -1125,6 +1122,6 @@ class FinderModelSearch extends JModelList
 
 		// Load the user state.
 		$this->setState('user.id', (int)$user->get('id'));
-		$this->setState('user.aid',	(int)$user->get('aid'));
+		//$this->setState('user.aid',	(int)$user->get('aid'));
 	}
 }

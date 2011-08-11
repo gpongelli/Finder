@@ -37,7 +37,7 @@ class FinderViewSearch extends JView
 		$results	= $this->get('Results');
 
 		// Push out the query data.
-		JHtml::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
+		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 		$suggested = JHtml::_('query.suggested', $query);
 		$explained = JHtml::_('query.explained', $query);
 

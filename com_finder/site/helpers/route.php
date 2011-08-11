@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: route.php 1059 2010-09-23 20:28:58Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
