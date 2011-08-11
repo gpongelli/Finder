@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: query.php 981 2010-06-15 18:38:02Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -9,8 +8,6 @@
  */
 
 defined('_JEXEC') or die;
-
-jx('jx.database.databasequery');
 
 /**
  * Query HTML behavior class for Finder.
@@ -33,34 +30,34 @@ class JHTMLQuery
 		// Process the required tokens.
 		foreach ($query->included as $token) {
 			if ($token->required && (!isset($token->derived) || $token->derived == false)) {
-				$parts[] = '<span class="query-required">'.JText::sprintf('QUERY_TOKEN_REQUIRED', $token->term).'</span>';
+				$parts[] = '<span class="query-required">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_REQUIRED', $token->term).'</span>';
 			}
 		}
 
 		// Process the optional tokens.
 		foreach ($query->included as $token) {
 			if (!$token->required && (!isset($token->derived) || $token->derived == false)) {
-				$parts[] = '<span class="query-optional">'.JText::sprintf('QUERY_TOKEN_OPTIONAL', $token->term).'</span>';
+				$parts[] = '<span class="query-optional">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_OPTIONAL', $token->term).'</span>';
 			}
 		}
 
 		// Process the excluded tokens.
 		foreach ($query->excluded as $token) {
 			if (!isset($token->derived) || $token->derived == false) {
-				$parts[] = '<span class="query-excluded">'.JText::sprintf('QUERY_TOKEN_EXCLUDED', $token->term).'</span>';
+				$parts[] = '<span class="query-excluded">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_EXCLUDED', $token->term).'</span>';
 			}
 		}
 
 		// Process the start date.
 		if ($query->date1) {
 			$date = JFactory::getDate($query->date1)->toFormat('%B %e, %Y');
-			$parts[] = '<span class="query-start-date">'.JText::sprintf('QUERY_START_DATE', $query->when1, $date).'</span>';
+			$parts[] = '<span class="query-start-date">'.JText::sprintf('COM_FINDER_QUERY_START_DATE', $query->when1, $date).'</span>';
 		}
 
 		// Process the end date.
 		if ($query->date2) {
 			$date = JFactory::getDate($query->date2)->toFormat('%B %e, %Y');
-			$parts[] = '<span class="query-end-date">'.JText::sprintf('QUERY_END_DATE', $query->when2, $date).'</span>';
+			$parts[] = '<span class="query-end-date">'.JText::sprintf('COM_FINDER_QUERY_END_DATE', $query->when2, $date).'</span>';
 		}
 
 		// Process the taxonomy filters.
@@ -81,13 +78,13 @@ class JHTMLQuery
 					// Add the node to the explanation.
 					$bv = JString::strtolower($branch);
 					$nv = JString::strtolower($title);
-					$parts[] = '<span class="query-taxonomy">'.JText::sprintf('QUERY_TAXONOMY_NODE', $title, $branch).'</span>';
+					$parts[] = '<span class="query-taxonomy">'.JText::sprintf('COM_FINDER_QUERY_TAXONOMY_NODE', $title, $branch).'</span>';
 				}
 			}
 		}
 
 		// Build the interpreted query.
-		return count($parts) ? JText::sprintf('QUERY_TOKEN_INTERPRETED', implode(JText::_('QUERY_TOKEN_GLUE'), $parts)) : null;
+		return count($parts) ? JText::sprintf('COM_FINDER_QUERY_TOKEN_INTERPRETED', implode(JText::_('COM_FINDER_QUERY_TOKEN_GLUE'), $parts)) : null;
 	}
 
 	/**
