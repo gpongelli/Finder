@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
  * @subpackage	com_finder
  * @version		1.1
  */
-class JHTMLFilter
+class JHtmlFilter
 {
 	/**
 	 * Method to generate filters using the slider widget
@@ -28,10 +28,11 @@ class JHTMLFilter
 	 */
 	function slider($options = array())
 	{
+		//TODO: Replace all aid references
 		$db		= &JFactory::getDBO();
 		$query	= $db->getQuery(true);
 		$user	= &JFactory::getUser();
-		$aid	= (int)$user->get('aid');
+		//$aid	= (int)$user->get('aid');
 		$html	= '';
 		$in		= '';
 		$filter	= null;
@@ -47,11 +48,11 @@ class JHTMLFilter
 		// Load the predefined filter if specified.
 		if (!empty($filterId)) {
 			$query->select('f.data, f.params');
-			$query->from('#__finder_filters AS f');
+			$query->from($db->quoteName('#__finder_filters').' AS f');
 			$query->where('f.filter_id = '.(int)$filterId);
 
 			// Load the filter data.
-			$db->setQuery($query->__toString());
+			$db->setQuery($query);
 			$filter = $db->loadObject();
 
 			// Check for an error.
@@ -61,21 +62,23 @@ class JHTMLFilter
 
 			// Initialize the filter parameters.
 			if ($filter) {
-				$filter->params = new JParameter($filter->params);
+                $registry = new JRegistry;
+				$registry->loadString($filter->params);
+                $filter->params = $registry;
 			}
 		}
 
 		// Build the query to get the branch data and the number of child nodes.
 		$query->clear();
 		$query->select('t.*, count(c.id) AS children');
-		$query->from('#__finder_taxonomy AS t');
-		$query->join('INNER', '#__finder_taxonomy AS c ON c.parent_id = t.id');
-		$query->where('t.parent_id = 1');
-		$query->where('t.state = 1');
-		$query->where('t.access <= '.(int)$aid);
-		$query->where('c.state = 1');
-		$query->where('c.access <= '.(int)$aid);
-		$query->group('t.id');
+		$query->from($db->quoteName('#__finder_taxonomy').' AS t');
+		$query->join('INNER', $db->quoteName('#__finder_taxonomy').' AS c ON c.parent_id = t.id');
+		$query->where($db->quoteName('t.parent_id').' = 1');
+		$query->where($db->quoteName('t.state').' = 1');
+		//$query->where('t.access <= '.(int)$aid);
+		$query->where($db->quoteName('c.state').' = 1');
+		//$query->where('c.access <= '.(int)$aid);
+		$query->group($db->quoteName('t.id'));
 		$query->order('t.ordering, t.title');
 
 		// Limit the branch children to a predefined filter.
@@ -84,7 +87,7 @@ class JHTMLFilter
 		}
 
 		// Load the branches.
-		$db->setQuery($query->__toString());
+		$db->setQuery($query);
 		$branches = $db->loadObjectList('id');
 
 		// Check for an error.
@@ -99,8 +102,8 @@ class JHTMLFilter
 
 		// Load the CSS/JS resources.
 		if ($loadMedia) {
-			JHTML::stylesheet('sliderfilter.css', 'components/com_finder/media/css/');
-			JHTML::script('sliderfilter.js', 'components/com_finder/media/js/');
+			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
+			JHtml::script('components/com_finder/media/js/sliderfilter.js', false, false);
 		}
 
 		// Start the widget.
@@ -109,7 +112,7 @@ class JHTMLFilter
 		$html .= '<dt>';
 		$html .= '<label for="tax-select-all">';
 		$html .= '<input type="checkbox" id="tax-select-all" />';
-		$html .= JText::_('FINDER_FILTER_SELECT_ALL_LABEL');
+		$html .= JText::_('COM_FINDER_FILTER_SELECT_ALL_LABEL');
 		$html .= '</label>';
 		$html .= '</dt>';
 
@@ -119,7 +122,7 @@ class JHTMLFilter
 			$html .= '<dd>';
 			$html .= '<label for="tax-'.$bk.'">';
 			$html .= '<input type="checkbox" class="toggler" id="tax-'.$bk.'"/>';
-			$html .= JText::sprintf('FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
+			$html .= JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
 			$html .= '</label>';
 			$html .= '</dd>';
 		}
@@ -131,15 +134,16 @@ class JHTMLFilter
 		foreach ($branches as $bk => $bv)
 		{
 			// Build the query to get the child nodes for this branch.
-			$sql	= 'SELECT t.*'
-					. ' FROM #__finder_taxonomy AS t'
-					. ' WHERE t.parent_id = '.(int)$bk
-					. ' AND t.state = 1'
-					. ' AND t.access <= '.(int)$aid
-					. ' ORDER BY t.ordering, t.title';
+			$query->clear();
+			$query->select('t.*');
+			$query->from($db->quoteName('#__finder_taxonomy').' AS t');
+			$query->where($db->quoteName('t.parent_id').' = '.(int)$bk);
+			$query->where($db->quoteName('t.state').' = 1');
+			//$query->where('t.access <= '.(int)$aid);
+			$query->order('t.ordering, t.title');
 
 			// Load the branches.
-			$db->setQuery($sql);
+			$db->setQuery($query);
 			$nodes = $db->loadObjectList('id');
 
 			// Check for an error.
@@ -152,7 +156,7 @@ class JHTMLFilter
 			$html .= '<dt>';
 			$html .= '<label for="tax-'.JFilterOutput::stringUrlSafe($bv->title).'">';
 			$html .= '<input type="checkbox" class="branch-selector filter-branch'.$classSuffix.'" id="tax-'.JFilterOutput::stringUrlSafe($bv->title).'" />';
-			$html .= JText::sprintf('FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
+			$html .= JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
 			$html .= '</label>';
 			$html .= '</dt>';
 
@@ -193,8 +197,9 @@ class JHTMLFilter
 	function select($query, $options)
 	{
 		$db		= &JFactory::getDBO();
+		$sql	= $db->getQuery(true);
 		$user	= &JFactory::getUser();
-		$aid	= (int)$user->get('aid');
+		//$aid	= (int)$user->get('aid');
 		$html	= '';
 		$in		= '';
 		$filter	= null;
@@ -214,7 +219,7 @@ class JHTMLFilter
 		{
 			// Load the CSS/JS resources.
 			if ($loadMedia) {
-				JHTML::stylesheet('selectfilter.css', 'components/com_finder/media/css/');
+				JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
 			}
 
 			return $data;
@@ -223,13 +228,12 @@ class JHTMLFilter
 		// Load the predefined filter if specified.
 		if (!empty($query->filter))
 		{
-			$sql = new JDatabaseQuery();
 			$sql->select('f.data, f.params');
-			$sql->from('#__finder_filters AS f');
+			$sql->from($db->quoteName('#__finder_filters').' AS f');
 			$sql->where('f.filter_id = '.(int)$query->filter);
 
 			// Load the filter data.
-			$db->setQuery($sql->toString());
+			$db->setQuery($sql);
 			$filter = $db->loadObject();
 
 			// Check for an error.
@@ -239,21 +243,23 @@ class JHTMLFilter
 
 			// Initialize the filter parameters.
 			if ($filter) {
-				$filter->params = new JParameter($filter->params);
+                $registry = new JRegistry;
+				$registry->loadString($filter->params);
+                $filter->params = $registry;
 			}
 		}
 
 		// Build the query to get the branch data and the number of child nodes.
-		$sql = new JDatabaseQuery();
+		$sql->clear();
 		$sql->select('t.*, count(c.id) AS children');
-		$sql->from('#__finder_taxonomy AS t');
-		$sql->join('INNER', '#__finder_taxonomy AS c ON c.parent_id = t.id');
-		$sql->where('t.parent_id = 1');
-		$sql->where('t.state = 1');
-		$sql->where('t.access <= '.(int)$aid);
-		$sql->where('c.state = 1');
-		$sql->where('c.access <= '.(int)$aid);
-		$sql->group('t.id');
+		$sql->from($db->quoteName('#__finder_taxonomy').' AS t');
+		$sql->join('INNER', $db->quoteName('#__finder_taxonomy').' AS c ON c.parent_id = t.id');
+		$sql->where($db->quoteName('t.parent_id').' = 1');
+		$sql->where($db->quoteName('t.state').' = 1');
+		//$sql->where('t.access <= '.(int)$aid);
+		$sql->where($db->quoteName('c.state').' = 1');
+		//$sql->where('c.access <= '.(int)$aid);
+		$sql->group($db->quoteName('t.id'));
 		$sql->order('t.ordering, t.title');
 
 		// Limit the branch children to a predefined filter.
@@ -262,7 +268,7 @@ class JHTMLFilter
 		}
 
 		// Load the branches.
-		$db->setQuery($sql->toString());
+		$db->setQuery($sql);
 		$branches = $db->loadObjectList('id');
 
 		// Check for an error.
@@ -277,7 +283,7 @@ class JHTMLFilter
 
 		// Load the CSS/JS resources.
 		if ($loadMedia) {
-			JHTML::stylesheet('selectfilter.css', 'components/com_finder/media/css/');
+			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
 		}
 
 		// Add the dates if enabled.
@@ -291,12 +297,12 @@ class JHTMLFilter
 		foreach ($branches as $bk => $bv)
 		{
 			// Build the query to get the child nodes for this branch.
-			$sql = new JDatabaseQuery();
+			$sql->clear();
 			$sql->select('t.*');
-			$sql->from('#__finder_taxonomy AS t');
-			$sql->where('t.parent_id = '.(int)$bk);
-			$sql->where('t.state = 1');
-			$sql->where('t.access <= '.(int)$aid);
+			$sql->from($db->quoteName('#__finder_taxonomy').' AS t');
+			$sql->where($db->quoteName('t.parent_id').' = '.(int)$bk);
+			$sql->where($db->quoteName('t.state').' = 1');
+			//$sql->where('t.access <= '.(int)$aid);
 			$sql->order('t.ordering, t.title');
 
 			// Limit the nodes to a predefined filter.
@@ -305,7 +311,7 @@ class JHTMLFilter
 			}
 
 			// Load the branches.
-			$db->setQuery($sql->toString());
+			$db->setQuery($sql);
 			$nodes = $db->loadObjectList('id');
 
 			// Check for an error.
@@ -319,7 +325,7 @@ class JHTMLFilter
 			}
 
 			// Add the Search All option to the branch.
-			array_unshift($nodes, array('id' => null, 'title' => JText::_('FINDER_FILTER_SELECT_ALL_LABEL')));
+			array_unshift($nodes, array('id' => null, 'title' => JText::_('COM_FINDER_FILTER_SELECT_ALL_LABEL')));
 
 			$active = null;
 
@@ -336,7 +342,7 @@ class JHTMLFilter
 
 			$html .= '<li class="filter-branch'.$classSuffix.'">';
 			$html .= '<label for="tax-'.JFilterOutput::stringUrlSafe($bv->title).'">';
-			$html .= JText::sprintf('FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
+			$html .= JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
 			$html .= '</label>';
 			$html .= JHTML::_('select.genericlist', $nodes, 't[]', 'class="inputbox"', 'id', 'title', $active, 'tax-'.JFilterOutput::stringUrlSafe($bv->title), true);
 			$html .= '</li>';
@@ -364,13 +370,13 @@ class JHTMLFilter
 		{
 			// Build the date operators options.
 			$operators		= array();
-			$operators[]	= JHtml::_('select.option', 'before', JText::_('FINDER_FILTER_DATE_BEFORE'));
-			$operators[]	= JHtml::_('select.option', 'exact', JText::_('FINDER_FILTER_DATE_EXACTLY'));
-			$operators[]	= JHtml::_('select.option', 'after', JText::_('FINDER_FILTER_DATE_AFTER'));
+			$operators[]	= JHtml::_('select.option', 'before', JText::_('COM_FINDER_FILTER_DATE_BEFORE'));
+			$operators[]	= JHtml::_('select.option', 'exact', JText::_('COM_FINDER_FILTER_DATE_EXACTLY'));
+			$operators[]	= JHtml::_('select.option', 'after', JText::_('COM_FINDER_FILTER_DATE_AFTER'));
 
 			// Load the CSS/JS resources.
 			if ($loadMedia) {
-				JHTML::stylesheet('dates.css', 'components/com_finder/media/css/');
+				JHtml::stylesheet('components/com_finder/media/css/dates.css', false, false, false);
 			}
 
 			// Open the widget.
@@ -379,21 +385,21 @@ class JHTMLFilter
 			// Start date filter.
 			$html .= '<li class="filter-date'.$classSuffix.'">';
 			$html .= '<label for="filter_date1">';
-			$html .= JText::_('FINDER_FILTER_DATE1');
+			$html .= JText::_('COM_FINDER_FILTER_DATE1');
 			$html .= '</label>';
 			$html .= '<br />';
 			$html .= JHtml::_('select.genericlist', $operators, 'w1', 'class="inputbox filter-date-operator"', 'value', 'text', $query->when1, 'finder-filter-w1');
-			$html .= JHtml::calendar($query->date1, 'd1', 'filter_date1', '%Y-%m-%d', 'title="'.JText::_('FINDER_FILTER_DATE1_DESC').'"');
+			$html .= JHtml::calendar($query->date1, 'd1', 'filter_date1', '%Y-%m-%d', 'title="'.JText::_('COM_FINDER_FILTER_DATE1_DESC').'"');
 			$html .= '</li>';
 
 			// End date filter.
 			$html .= '<li class="filter-date'.$classSuffix.'">';
 			$html .= '<label for="filter_date2">';
-			$html .= JText::_('FINDER_FILTER_DATE2');
+			$html .= JText::_('COM_FINDER_FILTER_DATE2');
 			$html .= '</label>';
 			$html .= '<br />';
 			$html .= JHtml::_('select.genericlist', $operators, 'w2', 'class="inputbox filter-date-operator"', 'value', 'text', $query->when2, 'finder-filter-w2');
-			$html .= JHtml::calendar($query->date2, 'd2', 'filter_date2', '%Y-%m-%d', 'title="'.JText::_('FINDER_FILTER_DATE2_DESC').'"');
+			$html .= JHtml::calendar($query->date2, 'd2', 'filter_date2', '%Y-%m-%d', 'title="'.JText::_('COM_FINDER_FILTER_DATE2_DESC').'"');
 			$html .= '</li>';
 
 			// Close the widget.
