@@ -103,7 +103,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 					$temp = $this->_translateState($value);
 
 					// Update the item.
-					$this->_change($item->id, 'state', $temp);
+					$this->change($item->id, 'state', $temp);
 				}
 			}
 		}
@@ -129,7 +129,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 					$temp = max($value);
 
 					// Update the item.
-					$this->_change($item->id, 'access', $temp);
+					$this->change($item->id, 'access', $temp);
 				}
 			}
 		}
@@ -147,7 +147,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	public function onDeleteJoomlaCategory($ids)
 	{
 		// Remove the items.
-		return $this->_remove($ids);
+		return $this->remove($ids);
 	}
 
 	/**
@@ -156,7 +156,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 * @param	object		The item to index as an FinderIndexerResult object.
 	 * @throws	Exception on database error.
 	 */
-	protected function _index(FinderIndexerResult $item)
+	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
 		$item->params	= new JParameter($item->params);
@@ -165,12 +165,12 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		$item->summary	= FinderIndexerHelper::prepareContent($item->summary, $item->params);
 
 		// Build the necessary route and path information.
-		$item->url		= $this->_getURL($item->id);
+		$item->url		= $this->getURL($item->id);
 		$item->route	= ContentHelperRoute::getCategoryRoute($item->slug, $item->catid);
 		$item->path		= FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
-		$title = $this->_getItemMenuTitle($item->url);
+		$title = $this->getItemMenuTitle($item->url);
 
 		// Adjust the title if necessary.
 		if (!empty($title) && $this->params->get('use_menu_title', true)) {
@@ -198,7 +198,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 *
 	 * @return	boolean		True on success.
 	 */
-	protected function _setup()
+	protected function setup()
 	{
 		// Load dependent classes.
 		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
@@ -212,7 +212,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 * @param	mixed		A JDatabaseQuery object or null.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getListQuery($sql = null)
+	protected function getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
@@ -231,7 +231,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 * @param	mixed		The id of the item.
 	 * @return	string		The URL of the item.
 	 */
-	protected function _getURL($id)
+	protected function getURL($id)
 	{
 		return 'index.php?option=com_content&view=category&id='.$id;
 	}

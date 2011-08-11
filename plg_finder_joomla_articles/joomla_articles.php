@@ -82,7 +82,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 				$temp = $this->_translateState($value, $item->cat_state);
 
 				// Update the item.
-				$this->_change($id, $property, $temp);
+				$this->change($id, $property, $temp);
 			}
 		}
 		// Check if we are changing the article access level.
@@ -104,7 +104,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 				$temp = max($value, $item->cat_access);
 
 				// Update the item.
-				$this->_change($id, 'access', $temp);
+				$this->change($id, 'access', $temp);
 			}
 		}
 
@@ -146,7 +146,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 					$temp = $this->_translateState($item->state, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'state', $temp);
+					$this->change($item->id, 'state', $temp);
 				}
 			}
 		}
@@ -172,7 +172,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 					$temp = max($item->access, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'access', $temp);
+					$this->change($item->id, 'access', $temp);
 				}
 			}
 		}
@@ -190,7 +190,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	public function onDeleteJoomlaArticle($ids)
 	{
 		// Remove the items.
-		return $this->_remove($ids);
+		return $this->remove($ids);
 	}
 
 	/**
@@ -203,13 +203,13 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	public function onSaveJoomlaArticle($id)
 	{
 		// Run the setup method.
-		$this->_setup();
+		$this->setup();
 
 		// Get the item.
-		$item = $this->_getItem($id);
+		$item = $this->getItem($id);
 
 		// Index the item.
-		$this->_index($item);
+		$this->index($item);
 
 		return true;
 	}
@@ -226,7 +226,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	public function onTrashJoomlaArticle($ids)
 	{
 		// Update the items.
-		return $this->_change($ids, 'state', -2);
+		return $this->change($ids, 'state', -2);
 	}
 
 	/**
@@ -235,7 +235,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * @param	object		The item to index as an FinderIndexerResult object.
 	 * @throws	Exception on database error.
 	 */
-	protected function _index(FinderIndexerResult $item)
+	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
 		$item->params	= new JParameter($item->params);
@@ -246,12 +246,12 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 		$item->body		= FinderIndexerHelper::prepareContent($item->body, $item->params);
 
 		// Build the necessary route and path information.
-		$item->url		= $this->_getURL($item->id);
+		$item->url		= $this->getURL($item->id);
 		$item->route	= ContentHelperRoute::getArticleRoute($item->slug, $item->catslug);
 		$item->path		= FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
-		$title = $this->_getItemMenuTitle($item->url);
+		$title = $this->getItemMenuTitle($item->url);
 
 		// Adjust the title if necessary.
 		if (!empty($title) && $this->params->get('use_menu_title', true)) {
@@ -301,7 +301,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 *
 	 * @return	boolean		True on success.
 	 */
-	protected function _setup()
+	protected function setup()
 	{
 		// Load dependent classes.
 		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
@@ -315,7 +315,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * @param	mixed		A JDatabaseQuery object or null.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getListQuery($sql = null)
+	protected function getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
@@ -342,7 +342,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * @param	mixed		The id of the item.
 	 * @return	string		The URL of the item.
 	 */
-	protected function _getURL($id)
+	protected function getURL($id)
 	{
 		return 'index.php?option=com_content&view=article&id='.$id;
 	}

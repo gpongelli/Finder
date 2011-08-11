@@ -100,7 +100,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 				$temp = $this->_translateState($value, $item->cat_state);
 
 				// Update the item.
-				$this->_change($id, 'state', $temp);
+				$this->change($id, 'state', $temp);
 			}
 		}
 
@@ -142,7 +142,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 					$temp = $this->_translateState($item->state, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'state', $temp);
+					$this->change($item->id, 'state', $temp);
 				}
 			}
 		}
@@ -167,7 +167,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 					$temp = max($item->access, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'access', $temp);
+					$this->change($item->id, 'access', $temp);
 				}
 			}
 		}
@@ -185,7 +185,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	public function onDeleteJoomlaWeblink($ids)
 	{
 		// Remove the items.
-		return $this->_remove($ids);
+		return $this->remove($ids);
 	}
 
 	/**
@@ -194,13 +194,13 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @param	object		The item to index as an FinderIndexerResult object.
 	 * @throws	Exception on database error.
 	 */
-	protected function _index(FinderIndexerResult $item)
+	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
 		$item->params = new JParameter($item->params);
 
 		// Build the necessary route and path information.
-		$item->url		= $this->_getURL($item->id);
+		$item->url		= $this->getURL($item->id);
 		$item->route	= WeblinksHelperRoute::getWeblinkRoute($item->slug, $item->catslug);
 		$item->path		= FinderIndexerHelper::getContentPath($item->route);
 
@@ -230,7 +230,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 *
 	 * @return	boolean		True on success.
 	 */
-	protected function _setup()
+	protected function setup()
 	{
 		// Load dependent classes.
 		require_once JPATH_SITE.'/includes/application.php';
@@ -245,7 +245,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @param	mixed		A JDatabaseQuery object or null.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getListQuery($sql = null)
+	protected function getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
@@ -267,7 +267,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @param	string		The modified timestamp.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getUpdateQueryByTime($time)
+	protected function getUpdateQueryByTime($time)
 	{
 		// Build an SQL query based on the modified time.
 		$sql = $this->_db->getQuery(true);
@@ -283,7 +283,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @param	mixed		The id of the item.
 	 * @return	string		The URL of the item.
 	 */
-	protected function _getURL($id)
+	protected function getURL($id)
 	{
 		return 'index.php?option=com_weblinks&view=weblink&id='.$id;
 	}

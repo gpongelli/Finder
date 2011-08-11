@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: helper.php 1076 2010-10-26 19:54:08Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -17,8 +16,9 @@ JLoader::register('FinderIndexerToken', dirname(__FILE__).'/token.php');
 /**
  * Helper class for the Finder indexer package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerHelper
 {
@@ -26,17 +26,21 @@ class FinderIndexerHelper
 	 * The token stemmer object. The stemmer is set by whatever class
 	 * wishes to use it but it must be an instance of FinderIndexerStemmer.
 	 *
-	 * @var		object		Instance of FinderIndexerStemmer.
+	 * @var		object
+	 * @since	2.5
 	 */
 	public static $stemmer;
 
 	/**
 	 * Method to parse input into plain text.
 	 *
-	 * @param	string		The raw input.
-	 * @param	string		The format of the input.
-	 * @return	string		The parsed input.
-	 * @throws	Exception on invalid parser.
+	 * @param   string  $input   The raw input.
+	 * @param   string  $format  The format of the input.
+	 *
+	 * @return  string  The parsed input.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on invalid parser.
 	 */
 	public static function parse($input, $format = 'html')
 	{
@@ -47,10 +51,13 @@ class FinderIndexerHelper
 	/**
 	 * Method to tokenize a text string.
 	 *
-	 * @param	string		The input to tokenize.
-	 * @param	string		The language of the input.
-	 * @param	boolean		Flag to indicate whether input could be a phrase.
-	 * @return	array		An array of FinderIndexerToken objects.
+	 * @param   string   $input   The input to tokenize.
+	 * @param   string   $lang    The language of the input.
+	 * @param   boolean  $phrase  Flag to indicate whether input could be a phrase.
+	 *
+	 * @return  array  An array of FinderIndexerToken objects.
+	 *
+	 * @since   2.5
 	 */
 	public static function tokenize($input, $lang, $phrase = false)
 	{
@@ -58,7 +65,8 @@ class FinderIndexerHelper
 		$store = JString::strlen($input) < 128 ? md5($input.'::'.$lang.'::'.$phrase) : null;
 
 		// Check if the string has been tokenized already.
-		if ($store && isset($cache[$store])) {
+		if ($store && isset($cache[$store]))
+		{
 			return $cache[$store];
 		}
 
@@ -82,7 +90,8 @@ class FinderIndexerHelper
 		 *  7. Replace the assorted single quoation marks with the ASCII standard single quotation.
 		 *	8. Remove multiple space chracters and replaces with a single space.
 		 */
-		if (JX_FINDER_UNICODE) {
+		if (JX_FINDER_UNICODE)
+		{
 			$input	= JString::strtolower($input);
 			$input	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $input);
 			$input	= preg_replace('#(^|\s)[+-.,]+([\pL\pM]+)#mui', ' $1', $input);
@@ -93,7 +102,9 @@ class FinderIndexerHelper
 			$input	= preg_replace('#['.$quotes.']+#mui', '\'', $input);
 			$input	= preg_replace('#\s+#mui', ' ', $input);
 			$input	= JString::trim($input);
-		} else {
+		}
+		else
+		{
 			$input	= JString::strtolower($input);
 			$input	= preg_replace('#[^\w\d'.$quotes.'+-.,]+#mi', ' ', $input);
 			$input	= preg_replace('#(^|\s)[+-.,]+([\w]+)#mi', ' $1', $input);
@@ -127,9 +138,12 @@ class FinderIndexerHelper
 				for ($j = 0; $j < $charCount; $j++)
 				{
 					$tSplit	= JString::str_ireplace($charMatches[0][$j], '', $terms[$i], false);
-					if (!empty($tSplit)) {
+					if (!empty($tSplit))
+					{
 						$terms[$i] = $tSplit;
-					} else {
+					}
+					else
+					{
 						unset($terms[$i]);
 					}
 
@@ -154,7 +168,8 @@ class FinderIndexerHelper
 		else
 		{
 			// Create tokens from the terms.
-			for ($i = 0, $n = count($terms); $i < $n; $i++) {
+			for ($i = 0, $n = count($terms); $i < $n; $i++)
+			{
 				$tokens[] = new FinderIndexerToken($terms[$i], $lang);
 			}
 
@@ -189,10 +204,13 @@ class FinderIndexerHelper
 			}
 		}
 
-		if ($store) {
+		if ($store)
+		{
 			$cache[$store] = count($tokens) > 1 ? $tokens : array_shift($tokens);
 			return $cache[$store];
-		} else {
+		}
+		else
+		{
 			return count($tokens) > 1 ? $tokens : array_shift($tokens);
 		}
 	}
@@ -203,9 +221,12 @@ class FinderIndexerHelper
 	 * middle of a word, it will search backward to truncate to the last full
 	 * word.
 	 *
-	 * @param	string		The text to truncate.
-	 * @param	integer		The maximum length of the text.
-	 * @return	string		The truncated text.
+	 * @param   string   $input   The text to truncate.
+	 * @param   integer  $length  The maximum length of the text.
+	 *
+	 * @return  string  The truncated text.
+	 *
+	 * @since   2.5
 	 */
 	public static function truncate($input, $length = 0)
 	{
@@ -217,7 +238,8 @@ class FinderIndexerHelper
 			$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
 
 			// If we don't have 3 characters of room, go to the second space within the limit.
-			if (JString::strlen($tmp) >= $length - 3) {
+			if (JString::strlen($tmp) >= $length - 3)
+			{
 				$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
 			}
 
@@ -232,9 +254,12 @@ class FinderIndexerHelper
 	 * FinderIndexerHelper::$stemmer object if it is set. If no stemmer is set,
 	 * the original token is returned.
 	 *
-	 * @param	string		The token to stem.
-	 * @param	string		The language of the token.
-	 * @return	string		The root token.
+	 * @param   string  $token  The token to stem.
+	 * @param   string  $lang   The language of the token.
+	 *
+	 * @return  string  The root token.
+	 *
+	 * @since   2.5
 	 */
 	public static function stem($token, $lang)
 	{
@@ -242,14 +267,18 @@ class FinderIndexerHelper
 		$token = JString::trim($token, '\'');
 
 		// Trim everything after any apostrophe in the token.
-		if (($pos = JString::strpos($token, '\'')) !== false) {
+		if (($pos = JString::strpos($token, '\'')) !== false)
+		{
 			$token = JString::substr($token, 0, $pos);
 		}
 
 		// Stem the token if we have a valid stemmer to use.
-		if (self::$stemmer instanceof FinderIndexerStemmer) {
+		if (self::$stemmer instanceof FinderIndexerStemmer)
+		{
 			return self::$stemmer->stem($token, $lang);
-		} else {
+		}
+		else
+		{
 			return $token;
 		}
 	}
@@ -257,50 +286,56 @@ class FinderIndexerHelper
 	/**
 	 * Method to add a content type to the database.
 	 *
-	 * @param	string		The type of content. For example: PDF.
-	 * @param	string		The mime type of the content. For example: pdf.
-	 * @return	integer		The id of the content type.
-	 * @throws	Exception on database error.
+	 * @param   string  $title  The type of content. For example: PDF.
+	 * @param   string  $mime   The mime type of the content. For example: pdf.
+	 *
+	 * @return  integer  The id of the content type.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function addContentType($title, $mime = null)
 	{
 		static $types;
 
 		$db = JFactory::getDBO();
+		$query	= $db->getQuery(true);
 
 		// Check if the types are loaded.
 		if (empty($types))
 		{
 			// Build the query to get the types.
-			$query	= $db->getQuery(true);
 			$query->select('*');
-			$query->from('`#__finder_types`');
+			$query->from($db->quoteName('#__finder_types'));
 
 			// Get the types.
 			$db->setQuery($query);
 			$types = $db->loadObjectList('title');
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 		}
 
 		// Check if the type already exists.
-		if (isset($types[$title])) {
+		if (isset($types[$title]))
+		{
 			return (int)$types[$title]->id;
 		}
 
 		// Add the type.
-		$db->setQuery(
-			'INSERT INTO `#__finder_types` (`title`, `mime`)' .
-			' VALUES ('.$db->quote($title).', '.$db->quote($mime).')'
-		);
+		$query->clear();
+		$query->insert($db->quoteName('#__finder_types').' ('.$db->quoteName('title').', '.$db->quoteName('mime').')');
+		$query->values($db->quote($title).', '.$db->quote($mime));
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -312,23 +347,30 @@ class FinderIndexerHelper
 	/**
 	 * Method to check if a token is common in a language.
 	 *
-	 * @param	string		The token to test.
-	 * @param	string		The language to reference.
-	 * @return	boolean		True if common, false otherwise.
+	 * @param   string  $token  The token to test.
+	 * @param   string  $lang   The language to reference.
+	 *
+	 * @return  boolean  True if common, false otherwise.
+	 *
+	 * @since   2.5
 	 */
 	public static function isCommon($token, $lang)
 	{
 		static $data;
 
 		// Load the common tokens for the language if necessary.
-		if (!isset($data[$lang])){
+		if (!isset($data[$lang]))
+		{
 			$data[$lang] = FinderIndexerHelper::getCommonWords($lang);
 		}
 
 		// Check if the token is in the common array.
-		if (in_array($token, $data[$lang])) {
+		if (in_array($token, $data[$lang]))
+		{
 			return true;
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
@@ -336,9 +378,12 @@ class FinderIndexerHelper
 	/**
 	 * Method to get an array of common terms for a language.
 	 *
-	 * @param	string		The language to use.
-	 * @return	array		Array of common terms.
-	 * @throws	Exception on database error.
+	 * @param   string  $lang  The language to use.
+	 *
+	 * @return  array  Array of common terms.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function getCommonWords($lang)
 	{
@@ -346,16 +391,17 @@ class FinderIndexerHelper
 
 		// Create the query to load all the common terms for the language.
 		$query	= $db->getQuery(true);
-		$query->select('term');
-		$query->from('#__finder_terms_common');
-		$query->where('`language` = '.$db->quote($lang));
+		$query->select($db->quoteName('term'));
+		$query->from($db->quoteName('#__finder_terms_common'));
+		$query->where($db->quoteName('language').' = '.$db->quote($lang));
 
 		// Load all of the common terms for the language.
 		$db->setQuery($query);
 		$results = $db->loadResultArray();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -366,14 +412,17 @@ class FinderIndexerHelper
 	/**
 	 * Method to get the default language for the site.
 	 *
-	 * @return	string		The default language string.
+	 * @return  string  The default language string.
+	 *
+	 * @since   2.5
 	 */
 	public static function getDefaultLanguage()
 	{
 		static $lang;
 
 		// Get the default language.
-		if (empty($lang)) {
+		if (empty($lang))
+		{
 			$lang = JComponentHelper::getParams('com_languages')->get('site', 'en-GB');
 		}
 
@@ -383,19 +432,26 @@ class FinderIndexerHelper
 	/**
 	 * Method to parse a language/locale key and return a simple language string.
 	 *
-	 * @param	string		The language/locale key, for example: en-GB.
-	 * @return	string		The simple language string, for example: en.
+	 * @param   string  $lang  The language/locale key, for example: en-GB.
+	 *
+	 * @return  string  The simple language string, for example: en.
+	 *
+	 * @since   2.5
 	 */
 	public static function getPrimaryLanguage($lang)
 	{
 		static $data;
 
 		// Only parse the identifier if necessary.
-		if (!isset($data[$lang])) {
-			if (is_callable(array('Locale', 'getPrimaryLanguage'))) {
+		if (!isset($data[$lang]))
+		{
+			if (is_callable(array('Locale', 'getPrimaryLanguage')))
+			{
 				// Get the language key using the Locale package.
 				$data[$lang] = Locale::getPrimaryLanguage($lang);
-			} else {
+			}
+			else
+			{
 				// Get the language key using string position.
 				$data[$lang] = JString::substr($lang, 0, JString::strpos($lang, '-'));
 			}
@@ -407,8 +463,11 @@ class FinderIndexerHelper
 	/**
 	 * Method to get the path (SEF route) for a content item.
 	 *
-	 * @param	string		The non-SEF route to the content item.
-	 * @return	string		The path for the content item.
+	 * @param   string  $url  The non-SEF route to the content item.
+	 *
+	 * @return  string  The path for the content item.
+	 *
+	 * @since   2.5
 	 */
 	public static function getContentPath($url)
 	{
@@ -418,7 +477,7 @@ class FinderIndexerHelper
 		if (!($router instanceof JRouter))
 		{
 			jimport('joomla.application.router');
-			require_once JPATH_SITE.DS.'includes'.DS.'application.php';
+			include_once JPATH_SITE.'/includes/application.php';
 
 			// Get and configure the site router.
 			$config	= JFactory::getConfig();
@@ -438,9 +497,12 @@ class FinderIndexerHelper
 	 * Method to get extra data for a content before being indexed. This is how
 	 * we add Comments, Tags, Labels, etc. that should be available to Finder.
 	 *
-	 * @param	object		The item to index as an FinderIndexerResult object.
-	 * @return	boolean		True on success, false on failure.
-	 * @throws	Exception on database error.
+	 * @param   object  &$item  The item to index as an FinderIndexerResult object.
+	 *
+	 * @return  boolean  True on success, false on failure.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function getContentExtras(FinderIndexerResult &$item)
 	{
@@ -450,17 +512,20 @@ class FinderIndexerHelper
 		// Load the finder plugin group.
 		JPluginHelper::importPlugin('finder');
 
-		try {
+		try
+		{
 			// Trigger the event.
 			$results = $dispatcher->trigger('onPrepareFinderContent', array(&$item));
 
 			// Check the returned results. This is for plugins that don't throw
 			// exceptions when they encounter serious errors.
-			if (in_array(false, $results)) {
+			if (in_array(false, $results))
+			{
 				throw new Exception($dispatcher->getError(), 500);
 			}
 		}
-		catch (Exception $e) {
+		catch (Exception $e)
+		{
 			// Handle a caught exception.
 			throw $e;
 		}
@@ -471,9 +536,12 @@ class FinderIndexerHelper
 	/**
 	 * Method to process content text using the onPrepareContent event trigger.
 	 *
-	 * @param	string		The content to process.
-	 * @param	object		A JParameter object.
-	 * @return	string		The processed content.
+	 * @param   string  $text    The content to process.
+	 * @param   object  $params  The parameters object.
+	 *
+	 * @return  string  The processed content.
+	 *
+	 * @since   2.5
 	 */
 	public static function prepareContent($text, $params = null)
 	{
@@ -504,11 +572,13 @@ class FinderIndexerHelper
 				foreach ($dispatcher->_observers as $key => $handler)
 				{
 					// Remove any function based event handlers that conflict with Finder.
-					if (is_array($handler) && isset($handler['handler']) && in_array($handler['handler'], $conflicts)) {
+					if (is_array($handler) && isset($handler['handler']) && in_array($handler['handler'], $conflicts))
+					{
 						unset($dispatcher->_observers[$key]);
 					}
 					// Remove any object based event handlers that conflict with Finder.
-					elseif (is_object($handler) && method_exists($handler, 'update') && in_array(get_class($handler), $conflicts)) {
+					else if (is_object($handler) && method_exists($handler, 'update') && in_array(get_class($handler), $conflicts))
+					{
 						unset($dispatcher->_observers[$key]);
 					}
 				}
@@ -516,7 +586,9 @@ class FinderIndexerHelper
 		}
 
 		// Instantiate the parameter object if necessary.
-		if (!($params instanceof JParameter)) {
+		// TODO: Break JParameter dependency
+		if (!($params instanceof JParameter))
+		{
 			$params = new JParameter($params);
 		}
 

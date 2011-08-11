@@ -100,7 +100,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$temp = $this->_translateState($value, $item->cat_state);
 
 				// Update the item.
-				$this->_change($id, 'state', $temp);
+				$this->change($id, 'state', $temp);
 			}
 		}
 		// Check if we are changing the contact access level.
@@ -121,7 +121,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$temp = max($value, $item->cat_access);
 
 				// Update the item.
-				$this->_change($id, 'access', $temp);
+				$this->change($id, 'access', $temp);
 			}
 		}
 
@@ -163,7 +163,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 					$temp = $this->_translateState($item->state, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'state', $temp);
+					$this->change($item->id, 'state', $temp);
 				}
 			}
 		}
@@ -188,7 +188,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 					$temp = max($item->access, $value);
 
 					// Update the item.
-					$this->_change($item->id, 'access', $temp);
+					$this->change($item->id, 'access', $temp);
 				}
 			}
 		}
@@ -206,7 +206,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	public function onDeleteJoomlaContact($ids)
 	{
 		// Remove the items.
-		return $this->_remove($ids);
+		return $this->remove($ids);
 	}
 
 	/**
@@ -215,7 +215,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * @param	object		The item to index as an FinderIndexerResult object.
 	 * @throws	Exception on database error.
 	 */
-	protected function _index(FinderIndexerResult $item)
+	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
 		$item->params = new JParameter($item->params);
@@ -226,12 +226,12 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		$Itemid = !empty($tmp['Itemid']) ? '&Itemid='.$tmp['Itemid'] : null;
 
 		// Build the necessary route and path information.
-		$item->url		= $this->_getURL($item->id);
-		$item->route	= $this->_getURL($item->slug).'&catid='.$item->catslug.$Itemid;
+		$item->url		= $this->getURL($item->id);
+		$item->route	= $this->getURL($item->slug).'&catid='.$item->catslug.$Itemid;
 		$item->path		= FinderIndexerHelper::getContentPath($item->route);
 
 		// Get the menu title if it exists.
-		$title = $this->_getItemMenuTitle($item->url);
+		$title = $this->getItemMenuTitle($item->url);
 
 		// Adjust the title if necessary.
 		if (!empty($title) && $this->params->get('use_menu_title', true)) {
@@ -333,7 +333,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 *
 	 * @return	boolean		True on success.
 	 */
-	protected function _setup()
+	protected function setup()
 	{
 		// Load dependent classes.
 		require_once JPATH_SITE.'/components/com_contact/router.php';
@@ -350,7 +350,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * @param	mixed		A JDatabaseQuery object or null.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getListQuery($sql = null)
+	protected function getListQuery($sql = null)
 	{
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
@@ -375,7 +375,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * @param	string		The modified timestamp.
 	 * @return	object		A JDatabaseQuery object.
 	 */
-	protected function _getUpdateQueryByTime($time)
+	protected function getUpdateQueryByTime($time)
 	{
 		/*
 		 * The #__contact_details table does not have a modified date column
@@ -395,7 +395,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * @param	string		The id of the item.
 	 * @return	string		The URL of the item.
 	 */
-	protected function _getURL($id)
+	protected function getURL($id)
 	{
 		return 'index.php?option=com_contact&view=contact&id='.$id;
 	}
