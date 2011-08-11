@@ -1,6 +1,5 @@
 <?php
 /**
- * @version		$Id: string.php 992 2010-06-24 04:21:05Z robs $
  * @package		JXtended.Finder
  * @subpackage	com_finder
  * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
@@ -32,7 +31,7 @@ class JHtmlString
 		if ($doc->getType() == 'html' && JRequest::getCmd('tmpl') !== 'component')
 		{
 			// Add the highlighter media.
-			JHtml::script('highlighter.js', 'components/com_finder/media/js/');
+			JHtml::script('components/com_finder/media/js/highlighter.js', false, false);
 
 			// Add the terms to highlight.
 			$doc->addScriptDeclaration("window.highlight = [\"".implode('","', $terms)."\"];");
