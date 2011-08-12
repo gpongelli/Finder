@@ -1,17 +1,17 @@
 <?php
 /**
- * @version		$Id: indexer.php 1090 2010-11-15 20:11:51Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
 // Detect if we have full UTF-8 and unicode support.
-if (!defined('JX_FINDER_UNICODE')) {
+if (!defined('JX_FINDER_UNICODE'))
+{
 	define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
 }
 
@@ -35,55 +35,80 @@ jimport('joomla.filesystem.file');
  * Note: All exceptions thrown from within this class should be caught
  * by the controller.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexer
 {
 	/**
-	 * @var		integer		The title context identifier.
+	 * The title context identifier.
+	 *
+	 * @var    integer
+	 * @since  2.5
 	 */
 	const TITLE_CONTEXT = 1;
 
 	/**
-	 * @var		integer		The text context identifier.
+	 * The text context identifier.
+	 *
+	 * @var    integer
+	 * @since  2.5
 	 */
 	const TEXT_CONTEXT = 2;
 
 	/**
-	 * @var		integer		The meta context identifier.
+	 * The meta context identifier.
+	 *
+	 * @var    integer
+	 * @since  2.5
 	 */
 	const META_CONTEXT = 3;
 
 	/**
-	 * @var		integer		The path context identifier.
+	 * The path context identifier.
+	 *
+	 * @var    integer
+	 * @since  2.5
 	 */
 	const PATH_CONTEXT = 4;
 
 	/**
-	 * @var		integer		The misc context identifier.
+	 * The misc context identifier.
+	 *
+	 * @var    integer
+	 * @since  2.5
 	 */
 	const MISC_CONTEXT = 5;
 
 	/**
-	 * @var		object		The indexer state object.
+	 * The indexer state object.
+	 *
+	 * @var    object
+	 * @since  2.5
 	 */
 	public static $state;
 
 	/**
-	 * @var		object		The indexer profiler object.
+	 * The indexer profiler object.
+	 *
+	 * @var    object
+	 * @since  2.5
 	 */
 	public static $profiler;
 
 	/**
 	 * Method to get the indexer state.
 	 *
-	 * @return	object		The indexer state object.
+	 * @return  object  The indexer state object.
+	 *
+	 * @since   2.5
 	 */
 	public static function getState()
 	{
 		// First, try to load from the internal state.
-		if (!empty(self::$state)) {
+		if (!empty(self::$state))
+		{
 			return self::$state;
 		}
 
@@ -119,13 +144,15 @@ class FinderIndexer
 		}
 
 		// Setup the profiler if debugging is enabled.
-		if (JFactory::getApplication()->getCfg('debug')) {
+		if (JFactory::getApplication()->getCfg('debug'))
+		{
 			jimport('joomla.error.profiler');
 			self::$profiler = JProfiler::getInstance('FinderIndexer');
 		}
 
 		// Setup the stemmer.
-		if ($data->options->get('stem', 1) && $data->options->get('stemmer', 'porter_en')) {
+		if ($data->options->get('stem', 1) && $data->options->get('stemmer', 'porter_en'))
+		{
 			FinderIndexerHelper::$stemmer = FinderIndexerStemmer::getInstance($data->options->get('stemmer', 'porter_en'));
 		}
 
@@ -138,13 +165,17 @@ class FinderIndexer
 	/**
 	 * Method to set the indexer state.
 	 *
-	 * @param	array		A new indexer state object.
-	 * @return	boolean		True on success, false on failure.
+	 * @param   array  $data  A new indexer state object.
+	 *
+	 * @return  boolean  True on success, false on failure.
+	 *
+	 * @since   2.5
 	 */
 	public static function setState($data)
 	{
 		// Check the state object.
-		if (empty($data) || !is_a($data, 'JObject')) {
+		if (empty($data) || !is_a($data, 'JObject'))
+		{
 			return false;
 		}
 
@@ -161,7 +192,9 @@ class FinderIndexer
 	/**
 	 * Method to reset the indexer state.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function resetState()
 	{
@@ -176,10 +209,13 @@ class FinderIndexer
 	/**
 	 * Method to index a content item.
 	 *
-	 * @param	object		The content item to index.
-	 * @param	string		The format of the content.
-	 * @return	integer		The id of the record in the links table.
-	 * @throws	Exception on database error.
+	 * @param   object  $item    The content item to index.
+	 * @param   string  $format  The format of the content.
+	 *
+	 * @return  integer  The id of the record in the links table.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function index($item, $format = 'html')
 	{
@@ -192,16 +228,17 @@ class FinderIndexer
 		// Check if the item is in the database.
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);
-		$query->select('`link_id`, `md5sum`');
-		$query->from('`#__finder_links`');
-		$query->where('`url` = '.$db->quote($item->url));
+		$query->select($db->quoteName('link_id').', '.$db->quoteName('md5sum'));
+		$query->from($db->quoteName('#__finder_links'));
+		$query->where($db->quoteName('url').' = '.$db->quote($item->url));
 
 		// Load the item  from the database.
 		$db->setQuery($query);
 		$link = $db->loadObject();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -218,7 +255,8 @@ class FinderIndexer
 		$isNew	= empty($link->link_id) ? true : false;
 
 		// Check the signatures. If they match, the item is up to date.
-		if (!$isNew && $curSig == $oldSig) {
+		if (!$isNew && $curSig == $oldSig)
+		{
 			return $linkId;
 		}
 
@@ -239,7 +277,8 @@ class FinderIndexer
 				$db->query();
 
 				// Check for a database error.
-				if ($db->getErrorNum()) {
+				if ($db->getErrorNum())
+				{
 					// Throw database error exception.
 					throw new Exception($db->getErrorMsg(), 500);
 				}
@@ -293,7 +332,8 @@ class FinderIndexer
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -327,7 +367,8 @@ class FinderIndexer
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -345,7 +386,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -355,7 +397,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -371,7 +414,8 @@ class FinderIndexer
 			foreach ($properties as $property)
 			{
 				// Check if the property exists in the item.
-				if (empty($item->$property)) {
+				if (empty($item->$property))
+				{
 					continue;
 				}
 
@@ -384,7 +428,8 @@ class FinderIndexer
 						// If the group is path, we need to a few extra processing
 						// steps to strip the extension and convert slashes and dashes
 						// to spaces.
-						if ($group === self::PATH_CONTEXT) {
+						if ($group === self::PATH_CONTEXT)
+						{
 							$ip = JFile::stripExt($ip);
 							$ip = str_replace('/', ' ', $ip);
 							$ip = str_replace('-', ' ', $ip);
@@ -394,7 +439,8 @@ class FinderIndexer
 						$count += FinderIndexer::tokenizeToDB($ip, $group, $item->language, $format);
 
 						// Check if we're approaching the memory limit of the token table.
-						if ($count > self::$state->options->get('memory_table_limit', 30000)) {
+						if ($count > self::$state->options->get('memory_table_limit', 30000))
+						{
 							FinderIndexer::toggleTables(false);
 						}
 					}
@@ -404,7 +450,8 @@ class FinderIndexer
 					// If the group is path, we need to a few extra processing
 					// steps to strip the extension and convert slashes and dashes
 					// to spaces.
-					if ($group === self::PATH_CONTEXT) {
+					if ($group === self::PATH_CONTEXT)
+					{
 						$item->$property = JFile::stripExt($item->$property);
 						$item->$property = str_replace('/', ' ', $item->$property);
 						$item->$property = str_replace('-', ' ', $item->$property);
@@ -414,7 +461,8 @@ class FinderIndexer
 					$count += FinderIndexer::tokenizeToDB($item->$property, $group, $item->language, $format);
 
 					// Check if we're approaching the memory limit of the token table.
-					if ($count > self::$state->options->get('memory_table_limit', 30000)) {
+					if ($count > self::$state->options->get('memory_table_limit', 30000))
+					{
 						FinderIndexer::toggleTables(false);
 					}
 				}
@@ -475,7 +523,8 @@ class FinderIndexer
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -515,7 +564,8 @@ class FinderIndexer
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 		}
@@ -534,7 +584,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -555,7 +606,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -577,7 +629,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -612,7 +665,8 @@ class FinderIndexer
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -630,7 +684,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -643,7 +698,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -653,7 +709,8 @@ class FinderIndexer
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -670,13 +727,17 @@ class FinderIndexer
 	/**
 	 * Method to remove a link from the index.
 	 *
-	 * @param	integer		The id of the link.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   integer  $linkId  The id of the link.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function remove($linkId)
 	{
 		$db	= JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		// Get the indexer state.
 		$state = FinderIndexer::getState();
@@ -685,55 +746,62 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Update the link counts for the terms.
-			$db->setQuery(
-				'UPDATE `#__finder_terms` AS t' .
-				' INNER JOIN `#__finder_links_terms'.dechex($i).'` AS m ON m.term_id = t.term_id' .
-				' SET t.links = t.links - 1' .
-				' WHERE m.link_id = '.(int)$linkId
-			);
+			$query->update($db->quoteName('#__finder_terms').' AS t');
+			$query->join('INNER', $db->quoteName('#__finder_links_terms'.dechex($i)).' AS m ON m.term_id = t.term_id');
+			$query->set($db->quoteName('t.links').' = '.$db->quoteName('t.links').' - 1');
+			$query->where($db->quoteName('m.link_id').' = '.(int)$linkId);
+			$db->setQuery($query);
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 
 			// Remove all records from the mapping tables.
-			$db->setQuery(
-				'DELETE FROM `#__finder_links_terms'.dechex($i).'`' .
-				' WHERE `link_id` = '.(int)$linkId
-			);
+			$query->clear();
+			$query->delete();
+			$query->from($db->quoteName('#__finder_links_terms'.dechex($i)));
+			$query->where($db->quoteName('link_id').' = '.(int)$linkId);
+			$db->setQuery($query);
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 		}
 
 		// Delete all orphaned terms.
-		$db->setQuery(
-			'DELETE FROM `#__finder_terms` WHERE `links` <= 0'
-		);
+		$query->clear();
+		$query->delete();
+		$query->from($db->quoteName('#__finder_links_terms'));
+		$query->where($db->quoteName('links').' <= 0');
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Delete the link from the index.
-		$db->setQuery(
-			'DELETE FROM `#__finder_links`' .
-			' WHERE `link_id` = '.(int)$linkId
-		);
+		$query->clear();
+		$query->delete();
+		$query->from($db->quoteName('#__finder_links'));
+		$query->where($db->quoteName('link_id').' = '.(int)$linkId);
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -751,8 +819,10 @@ class FinderIndexer
 	 * Method to optimize the index. We use this method to remove unused terms
 	 * and any other opitmizations that might be necessary.
 	 *
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public static function optimize()
 	{
@@ -761,25 +831,29 @@ class FinderIndexer
 
 		// Get the database object.
 		$db	= JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		// Delete all orphaned terms.
-		$db->setQuery(
-			'DELETE FROM `#__finder_terms` WHERE `links` <= 0'
-		);
+		$query->delete();
+		$query->from($db->quoteName('#__finder_links_terms'));
+		$query->where($db->quoteName('links').' <= 0');
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Optimize the links table.
-		$db->setQuery('OPTIMIZE TABLE `#__finder_links`');
+		$db->setQuery('OPTIMIZE TABLE '.$db->quoteName('#__finder_links'));
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -787,22 +861,24 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Optimize the terms mapping table.
-			$db->setQuery('OPTIMIZE TABLE `#__finder_links_terms'.dechex($i).'`');
+			$db->setQuery('OPTIMIZE TABLE '.$db->quoteName('#__finder_links_terms'.dechex($i)));
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 		}
 
 		// Optimize the terms mapping table.
-		$db->setQuery('OPTIMIZE TABLE `#__finder_links_terms`');
+		$db->setQuery('OPTIMIZE TABLE '.$db->quoteName('#__finder_links_terms'));
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -811,11 +887,12 @@ class FinderIndexer
 		FinderIndexerTaxonomy::removeOrphanNodes();
 
 		// Optimize the taxonomy mapping table.
-		$db->setQuery('OPTIMIZE TABLE `#__finder_taxonomy_map`');
+		$db->setQuery('OPTIMIZE TABLE '.$db->quoteName('#__finder_taxonomy_map'));
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -826,8 +903,11 @@ class FinderIndexer
 	/**
 	 * Method to get a content item's signature.
 	 *
-	 * @param	object		The content item to index.
-	 * @return	string		The content item's signature.
+	 * @param   object  $item  The content item to index.
+	 *
+	 * @return  string  The content item's signature.
+	 *
+	 * @since   2.5
 	 */
 	protected static function getSignature($item)
 	{
@@ -846,14 +926,17 @@ class FinderIndexer
 	/**
 	 * Method to parse input, tokenize it, and then add it to the database.
 	 *
-	 * @param	mixed		String or resource to use as input. A resource
-	 * 						input will automatically be chunked to conserve
-	 * 						memory. Strings will be chunked if longer than
-	 * 						2K in size.
-	 * @param	integer		The context of the input. See context constants.
-	 * @param	string		The language of the input.
-	 * @param	string		The format of the input.
-	 * @return	integer		The number of tokens extracted from the input.
+	 * @param   mixed    $input    String or resource to use as input. A resource
+	 *                             input will automatically be chunked to conserve
+	 *                             memory. Strings will be chunked if longer than
+	 *                             2K in size.
+	 * @param   integer  $context  The context of the input. See context constants.
+	 * @param   string   $lang     The language of the input.
+	 * @param   string   $format   The format of the input.
+	 *
+	 * @return  integer  The number of tokens extracted from the input.
+	 *
+	 * @since   2.5
 	 */
 	protected static function tokenizeToDB($input, $context, $lang, $format)
 	{
@@ -878,7 +961,8 @@ class FinderIndexer
 					$ls = strrpos($buffer, ' ');
 
 					// Adjust string based on the last space character.
-					if ($ls) {
+					if ($ls)
+					{
 						// Truncate the string to the last space character.
 						$string = substr($buffer, 0, $ls);
 
@@ -887,12 +971,14 @@ class FinderIndexer
 						$buffer = JString::trim(substr($buffer, $ls));
 					}
 					// No space character was found.
-					else {
+					else
+					{
 						$string = $buffer;
 					}
 				}
 				// We've reached the end of the file, so parse whatever remains.
-				else {
+				else
+				{
 					$string = $buffer;
 				}
 
@@ -900,7 +986,8 @@ class FinderIndexer
 				$string = FinderIndexerHelper::parse($string, $format);
 
 				// Check the input.
-				if (empty($string)) {
+				if (empty($string))
+				{
 					continue;
 				}
 
@@ -911,7 +998,8 @@ class FinderIndexer
 				$count += FinderIndexer::addTokensToDB($tokens, $context);
 
 				// Check if we're approaching the memory limit of the token table.
-				if ($count > self::$state->options->get('memory_table_limit', 30000)) {
+				if ($count > self::$state->options->get('memory_table_limit', 30000))
+				{
 					FinderIndexer::toggleTables(false);
 				}
 
@@ -921,7 +1009,7 @@ class FinderIndexer
 		}
 		// If the input is greater than 2K in size, it is more efficient to
 		// batch out the operation into smaller chunks of work.
-		elseif (strlen($input) > 2048)
+		else if (strlen($input) > 2048)
 		{
 			$start	= 0;
 			$end	= strlen($input);
@@ -939,7 +1027,8 @@ class FinderIndexer
 				$ls = (($start + $chunk) < $end ? strrpos($string, ' ') : false);
 
 				// Truncate to the last space character.
-				if ($ls !== false) {
+				if ($ls !== false)
+				{
 					$string = substr($string, 0, $ls);
 				}
 
@@ -950,7 +1039,8 @@ class FinderIndexer
 				$string = FinderIndexerHelper::parse($string, $format);
 
 				// Check the input.
-				if (empty($string)) {
+				if (empty($string))
+				{
 					continue;
 				}
 
@@ -961,7 +1051,8 @@ class FinderIndexer
 				$count += FinderIndexer::addTokensToDB($tokens, $context);
 
 				// Check if we're approaching the memory limit of the token table.
-				if ($count > self::$state->options->get('memory_table_limit', 30000)) {
+				if ($count > self::$state->options->get('memory_table_limit', 30000))
+				{
 					FinderIndexer::toggleTables(false);
 				}
 			}
@@ -972,7 +1063,8 @@ class FinderIndexer
 			$input = FinderIndexerHelper::parse($input, $format);
 
 			// Check the input.
-			if (empty($input)) {
+			if (empty($input))
+			{
 				return $count;
 			}
 
@@ -989,15 +1081,19 @@ class FinderIndexer
 	/**
 	 * Method to add a set of tokens to the database.
 	 *
-	 * @param	mixed		An array or single FinderIndexerToken object.
-	 * @param	integer		The context of the tokens. See context constants.
-	 * @return	integer		The number of tokens inserted into the database.
-	 * @throws	Exception on database error.
+	 * @param   mixed    $tokens   An array or single FinderIndexerToken object.
+	 * @param   integer  $context  The context of the tokens. See context constants.
+	 *
+	 * @return  integer  The number of tokens inserted into the database.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected static function addTokensToDB($tokens, $context = '')
 	{
 		// Get the database object.
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		// Force tokens to an array.
 		$tokens = is_array($tokens) ? $tokens : array($tokens);
@@ -1006,21 +1102,25 @@ class FinderIndexer
 		$values = array();
 
 		// Iterate through the tokens to create SQL value sets.
-		foreach ($tokens as $token) {
+		foreach ($tokens as $token)
+		{
 			$values[] = '( '.$db->quote($token->term).', '.$db->quote($token->stem).', '.(int)$token->common.
 						', '.(int)$token->phrase.', '.(float)$token->weight.', '.(int)$context.' )';
 		}
 
 		// Insert the tokens into the database.
-		$db->setQuery(
-			'INSERT INTO `#__finder_tokens`' .
-			' (`term`, `stem`, `common`, `phrase`, `weight`, `context` )' .
-			' VALUES '.implode(', ', $values)
+		$query->insert(
+					$db->quoteName('#__finder_tokens')
+					. '('.$db->quoteName('term').', '.$db->quoteName('stem').', '.$db->quoteName('common').','
+					. $db->quoteName('phrase').', '.$db->quoteName('weight').', '.$db->quoteName('context').')'
 		);
+		$query->values(implode(', ', $values));
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -1032,9 +1132,12 @@ class FinderIndexer
 	 * Method to switch the token tables from Memory tables to MyISAM tables
 	 * when they are close to running out of memory.
 	 *
-	 * @param	boolean		Flag to control how they should be toggled.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   boolean  $memory  Flag to control how they should be toggled.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected static function toggleTables($memory)
 	{
@@ -1042,26 +1145,29 @@ class FinderIndexer
 
 		// Get the database adapter.
 		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
 		// Check if we are setting the tables to the Memory engine.
 		if ($memory === true && $state !== true)
 		{
 			// Set the tokens table to Memory.
-			$db->setQuery('ALTER TABLE #__finder_tokens ENGINE = MEMORY');
+			$db->setQuery('ALTER TABLE '.$db->quoteName('#__finder_tokens').' ENGINE = MEMORY');
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 
 			// Set the tokens aggregate table to Memory.
-			$db->setQuery('ALTER TABLE #__finder_tokens_aggregate ENGINE = MEMORY');
+			$db->setQuery('ALTER TABLE '.$db->quoteName('#__finder_tokens_aggregate').' ENGINE = MEMORY');
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -1070,24 +1176,26 @@ class FinderIndexer
 			$state = $memory;
 		}
 		// We must be setting the tables to the MyISAM engine.
-		elseif ($memory === false && $state !== false)
+		else if ($memory === false && $state !== false)
 		{
 			// Set the tokens table to MyISAM.
-			$db->setQuery('ALTER TABLE #__finder_tokens ENGINE = MYISAM');
+			$db->setQuery('ALTER TABLE '.$db->quoteName('#__finder_tokens').' ENGINE = MYISAM');
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 
 			// Set the tokens aggregate table to MyISAM.
-			$db->setQuery('ALTER TABLE #__finder_tokens_aggregate ENGINE = MYISAM');
+			$db->setQuery('ALTER TABLE '.$db->quoteName('#__finder_tokens_aggregate').' ENGINE = MYISAM');
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}

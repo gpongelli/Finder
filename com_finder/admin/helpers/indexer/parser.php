@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: parser.php 922 2010-03-11 20:17:33Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,29 +12,35 @@ defined('_JEXEC') or die;
 /**
  * Parser base class for the Finder indexer package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 abstract class FinderIndexerParser
 {
 	/**
 	 * Method to get a parser, creating it if necessary.
 	 *
-	 * @param	string		The type of parser to load.
-	 * @return	object		A FinderIndexerParser.
-	 * @throws	JException on invalid parser.
+	 * @param   string  $format  The type of parser to load.
+	 *
+	 * @return  object  A FinderIndexerParser.
+	 *
+	 * @since   2.5
+	 * @throws  JException on invalid parser.
 	 */
 	public static function getInstance($format)
 	{
 		static $instances;
 
 		// Only create one parser for each format.
-		if (isset($instances[$format])) {
+		if (isset($instances[$format]))
+		{
 			return $instances[$format];
 		}
 
 		// Create an array of instances if necessary.
-		if (!is_array($instances)) {
+		if (!is_array($instances))
+		{
 			$instances = array();
 		}
 
@@ -45,12 +50,14 @@ abstract class FinderIndexerParser
 		$class	= 'FinderIndexerParser'.ucfirst($format);
 
 		// Check if a parser exists for the format.
-		if (file_exists($path)) {
+		if (file_exists($path))
+		{
 			// Instantiate the parser.
-			require_once $path;
+			include_once $path;
 			$instances[$format] = new $class;
 		}
-		else {
+		else
+		{
 			// Throw invalid format exception.
 			throw new Exception(JText::sprintf('FINDER_INDEXER_INVALID_PARSER', $format));
 		}
@@ -64,8 +71,11 @@ abstract class FinderIndexerParser
 	 * batch out its parsing functionality to deal with the inefficiencies of
 	 * regular expressions. We will parse recursively in 2KB chunks.
 	 *
-	 * @param	string		The input to parse.
-	 * @return	string		The plain text input.
+	 * @param   string  $input  The input to parse.
+	 *
+	 * @return  string  The plain text input.
+	 *
+	 * @since   2.5
 	 */
 	public function parse($input)
 	{
@@ -87,7 +97,8 @@ abstract class FinderIndexerParser
 				$ls = (($start + $chunk) < $end ? strrpos($string, ' ') : false);
 
 				// Truncate to the last space character.
-				if ($ls !== false) {
+				if ($ls !== false)
+				{
 					$string = substr($string, 0, $ls);
 				}
 
@@ -111,8 +122,11 @@ abstract class FinderIndexerParser
 	/**
 	 * Method to process input and extract the plain text.
 	 *
-	 * @param	string		The input to process.
-	 * @return	string		The plain text input.
+	 * @param   string  $input  The input to process.
+	 *
+	 * @return  string  The plain text input.
+	 *
+	 * @since   2.5
 	 */
 	abstract protected function process($input);
 }
