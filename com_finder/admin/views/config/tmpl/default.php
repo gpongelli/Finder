@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id: default.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -45,15 +45,13 @@ JHtml::_('behavior.formvalidation');
 		$fieldSets = $this->form->getFieldsets();
 		foreach ($fieldSets as $name => $fieldSet) :
 			$label = empty($fieldSet->label) ? 'COM_CONFIG_'.$name.'_FIELDSET_LABEL' : $fieldSet->label;
-			echo JHtml::_('tabs.panel',JText::_($label), 'publishing-details');
+			echo JHtml::_('tabs.panel', JText::_($label), 'publishing-details');
 			if (isset($fieldSet->description) && !empty($fieldSet->description)) :
 				echo '<p class="tab-description">'.JText::_($fieldSet->description).'</p>';
 			endif;
 	?>
 			<ul class="config-option-list">
-			<?php
-			foreach ($this->form->getFieldset($name) as $field):
-			?>
+			<?php foreach ($this->form->getFieldset($name) as $field) : ?>
 				<li>
 				<?php if (!$field->hidden) : ?>
 				<?php echo $field->label; ?>
@@ -67,8 +65,7 @@ JHtml::_('behavior.formvalidation');
 
 
 	<div class="clr"></div>
-	<?php
-		endforeach;
+	<?php endforeach;
 	echo JHtml::_('tabs.end');
 	?>
 	<div>

@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id: view.html.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,20 +14,20 @@ jimport('joomla.application.component.view');
 /**
  * Indexer view class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderViewIndexer extends JView
 {
 	/**
 	 * Method to display the view.
 	 *
-	 * @access	public
-	 * @param	string	$tpl	A template file to load.
-	 * @return	mixed	JError object on failure, void on success.
-	 * @throws	object	JError
-	 * @since	1.0
+	 * @param   string  $tpl  A template file to load.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	function display($tpl = null)
 	{
@@ -38,10 +38,14 @@ class FinderViewIndexer extends JView
 		$this->state		= $this->get('State');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (count($errors = $this->get('Errors')))
+		{
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
+
+		JHtml::stylesheet('administrator/components/com_finder/media/css/indexer.css', false, false, false);
+		JHtml::script('administrator/components/com_finder/media/js/indexer12.js', false, false);
 
 		parent::display();
 	}

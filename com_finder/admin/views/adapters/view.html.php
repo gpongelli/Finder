@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,15 +14,20 @@ jimport('joomla.application.component.view');
 /**
  * Adapters view class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderViewAdapters extends JView
 {
 	/**
 	 * Method to display the view.
 	 *
-	 * @param	string		A template file to load.
+	 * @param   string  $tpl  A template file to load.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function display($tpl = null)
 	{
@@ -34,12 +39,15 @@ class FinderViewAdapters extends JView
 		$user				= JFactory::getUser();
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (count($errors = $this->get('Errors')))
+		{
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 
-		JHTML::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
+		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
+		JHtml::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
 
 		// Configure the toolbar.
 		$this->addToolbar();
@@ -50,7 +58,9 @@ class FinderViewAdapters extends JView
 	/**
 	 * Method to configure the toolbar for this view.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function addToolbar()
 	{
@@ -59,13 +69,15 @@ class FinderViewAdapters extends JView
 		JToolBarHelper::title(JText::_('COM_FINDER_ADAPTERS_TOOLBAR_TITLE'), 'finder');
 		$toolbar = &JToolBar::getInstance('toolbar');
 
-		if ($canDo->get('core.edit.state')) {
+		if ($canDo->get('core.edit.state'))
+		{
 			JToolBarHelper::publish('adapters.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('adapters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::divider();
 		}
 
-		if ($canDo->get('core.admin')) {
+		if ($canDo->get('core.admin'))
+		{
 			$toolbar->appendButton('Popup', 'options', 'JTOOLBAR_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 875, 550);
 		}
 

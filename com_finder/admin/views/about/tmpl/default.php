@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC.  All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -18,9 +20,8 @@ defined('_JEXEC') or die;
 		</div>
 	</fieldset>
 
-	<?php
-	echo JHtml::_('tabs.start', 'config-tabs-com_finder_about', array('useCookie'=>1));
-		echo JHtml::_('tabs.panel',JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
+	<?php echo JHtml::_('tabs.start', 'config-tabs-com_finder_about', array('useCookie'=>1));
+		echo JHtml::_('tabs.panel', JText::_('COM_FINDER_ABOUT_TAB_STATS'), 'pane-stats'); ?>
 		<p class="tab-description"><?php echo JText::sprintf('COM_FINDER_ABOUT_STATS_DESCRIPTION', number_format($this->data->term_count), number_format($this->data->link_count), number_format($this->data->taxonomy_node_count), number_format($this->data->taxonomy_branch_count)); ?></p>
 		<table class="adminlist">
 			<thead>

@@ -1,17 +1,15 @@
 <?php
 /**
- * @version		$Id: default.php 1074 2010-10-11 19:21:37Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.mootools');
-JHTML::stylesheet('administrator/components/com_finder/media/css/indexer.css', false, false, false);
-JHTML::script('administrator/components/com_finder/media/js/indexer12.js', false, false);
+JHtml::_('behavior.framework');
 ?>
 
 <div id="finder-indexer-container">

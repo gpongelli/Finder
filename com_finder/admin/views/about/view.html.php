@@ -1,10 +1,12 @@
 <?php
 /**
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC.  All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
-// no direct access
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
@@ -12,20 +14,20 @@ jimport('joomla.application.component.view');
 /**
  * Groups view class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @stats		1.1
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderViewAbout extends JView
 {
 	/**
 	 * Method to display the view.
 	 *
-	 * @access	public
-	 * @param	string	$tpl	A template file to load.
-	 * @return	mixed	JError object on failure, void on success.
-	 * @throws	object	JError
-	 * @since	1.0
+	 * @param   string  $tpl  A template file to load.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	function display($tpl = null)
 	{
@@ -35,7 +37,8 @@ class FinderViewAbout extends JView
 		$this->upgrades	= $this->get('Upgrades');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (count($errors = $this->get('Errors')))
+		{
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
