@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: token.php 1072 2010-10-06 18:49:14Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,8 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Token class for the Finder indexer package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerToken
 {
@@ -22,7 +22,8 @@ class FinderIndexerToken
 	 * This is the term that will be referenced in the terms table and the
 	 * mapping tables.
 	 *
-	 * @var		string		The token term.
+	 * @var    string
+	 * @since  2.5
 	 */
 	public $term;
 
@@ -30,7 +31,8 @@ class FinderIndexerToken
 	 * The stem is used to match the root term and produce more potential
 	 * matches when searching the index.
 	 *
-	 * @var		string		The stemmed term.
+	 * @var    string
+	 * @since  2.5
 	 */
 	public $stem;
 
@@ -38,7 +40,8 @@ class FinderIndexerToken
 	 * If the token is numeric, it is likely to be short and uncommon so the
 	 * weight is adjusted to compensate for that situation.
 	 *
-	 * @var		boolean		Flag for numeric tokens.
+	 * @var    boolean
+	 * @since  2.5
 	 */
 	public $numeric;
 
@@ -46,19 +49,24 @@ class FinderIndexerToken
 	 * If the token is a common term, the weight is adjusted to compensate for
 	 * the higher frequency of the term in relation to other terms.
 	 *
-	 * @var		boolean		Flag for common tokens.
+	 * @var    boolean
+	 * @since  2.5
 	 */
 	public $common;
 
 	/**
-	 * @var		boolean		Flag for phrase tokens.
+	 * Flag for phrase tokens.
+	 *
+	 * @var    boolean
+	 * @since  2.5
 	 */
 	public $phrase;
 
 	/**
 	 * The length is used to calculate the weight of the token.
 	 *
-	 * @var		integer		Length of token term.
+	 * @var    integer
+	 * @since  2.5
 	 */
 	public $length;
 
@@ -66,16 +74,21 @@ class FinderIndexerToken
 	 * The weight is calculated based on token size and whether the token is
 	 * considered a common term.
 	 *
-	 * @var		integer		The relative weight of the token.
+	 * @var    integer
+	 * @since  2.5
 	 */
 	public $weight;
 
 	/**
 	 * Method to construct the token object.
 	 *
-	 * @param	mixed		The term as a string for words or an array for phrases.
-	 * @param	string		The simple language identifier.
-	 * @param	string		The space separator for phrases.
+	 * @param   mixed   $term    The term as a string for words or an array for phrases.
+	 * @param   string  $lang    The simple language identifier.
+	 * @param   string  $spacer  The space separator for phrases.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function __construct($term, $lang, $spacer = ' ')
 	{
