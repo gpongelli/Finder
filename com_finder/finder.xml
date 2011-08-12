@@ -46,7 +46,6 @@
 			<filename>controller.php</filename>
 			<filename>finder.php</filename>
 			<filename>index.html</filename>
-			<filename>version.php</filename>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
 			<folder>media</folder>
