@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id: indexer.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,23 +14,28 @@ jimport('joomla.application.component.model');
 /**
  * Indexer model class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.1
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelIndexer extends JModel
 {
 	/**
-	 * @var		boolean		Flag to indicate model state initialization.
+	 * Flag to indicate model state initialization.
+	 *
+	 * @var    boolean
+	 * @since  2.5
 	 */
 	protected $__state_set;
 
 	/**
 	 * Overridden method to get model state variables.
 	 *
-	 * @param	string	$property	Optional parameter name.
-	 * @return	object	The property where specified, the state object where omitted.
-	 * @since	1.0
+	 * @param   string  $property  Optional parameter name.
+	 *
+	 * @return  object	The property where specified, the state object where omitted.
+	 *
+	 * @since   2.5
 	 */
 	public function getState($property = null)
 	{

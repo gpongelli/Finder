@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -12,22 +14,26 @@ jimport('joomla.application.component.modellist');
 /**
  * Index model class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelIndex extends JModelList
 {
 	/**
 	 * Constructor.
 	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	1.6
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 * @see     JController
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields'])) {
+		if (empty($config['filter_fields']))
+		{
 			$config['filter_fields'] = array(
 				'state', 'l.state',
 				'title', 'l.title',
@@ -43,10 +49,11 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object   $record  A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return  boolean  True if allowed to delete the record. Defaults to the permission for the component.
-	 * @since   11.1
+	 *
+	 * @since   2.5
 	 */
 	protected function canDelete($record)
 	{
@@ -57,10 +64,11 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Method to test whether a record can be deleted.
 	 *
-	 * @param   object   $record	A record object.
+	 * @param   object  $record  A record object.
 	 *
 	 * @return  boolean  True if allowed to change the state of the record. Defaults to the permission for the component.
-	 * @since   11.1
+	 *
+	 * @since   2.5
 	 */
 	protected function canEditState($record)
 	{
@@ -71,10 +79,11 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Method to delete one or more records.
 	 *
-	 * @param   array    $pks  An array of record primary keys.
+	 * @param   array  &$pks  An array of record primary keys.
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
-	 * @since   11.1
+	 *
+	 * @since   2.5
 	 */
 	public function delete(&$pks)
 	{
@@ -88,43 +97,48 @@ class FinderModelIndex extends JModelList
 		JPluginHelper::importPlugin('content');
 
 		// Iterate the items to delete each one.
-		foreach ($pks as $i => $pk) {
-
-			if ($table->load($pk)) {
-
-				if ($this->canDelete($table)) {
-
+		foreach ($pks as $i => $pk)
+		{
+			if ($table->load($pk))
+			{
+				if ($this->canDelete($table))
+				{
 					$context = $this->option.'.'.$this->name;
 
 					// Trigger the onContentBeforeDelete event.
 					$result = $dispatcher->trigger($this->event_before_delete, array($context, $table));
-					if (in_array(false, $result, true)) {
+					if (in_array(false, $result, true))
+					{
 						$this->setError($table->getError());
 						return false;
 					}
 
-					if (!$table->delete($pk)) {
+					if (!$table->delete($pk))
+					{
 						$this->setError($table->getError());
 						return false;
 					}
 
 					// Trigger the onContentAfterDelete event.
 					$dispatcher->trigger($this->event_after_delete, array($context, $table));
-
-				} else {
-
+				}
+				else
+				{
 					// Prune items that you can't change.
 					unset($pks[$i]);
 					$error = $this->getError();
-					if ($error) {
+					if ($error)
+					{
 						JError::raiseWarning(500, $error);
 					}
-					else {
+					else
+					{
 						JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
 					}
 				}
-
-			} else {
+			}
+			else
+			{
 				$this->setError($table->getError());
 				return false;
 			}
@@ -139,8 +153,9 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Build an SQL query to load the list data.
 	 *
-	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
-	 * @since	1.6
+	 * @return  JDatabaseQuery  A JDatabaseQuery object
+	 *
+	 * @since   2.5
 	 */
 	function getListQuery()
 	{
@@ -153,12 +168,14 @@ class FinderModelIndex extends JModelList
 		$query->join('INNER', $db->quoteName('#__finder_types').' AS t ON t.id = l.type_id');
 
 		// Check the type filter.
-		if ($this->getState('filter.type')) {
+		if ($this->getState('filter.type'))
+		{
 			$query->where($db->quoteName('l.type_id').' = '.(int)$this->getState('filter.type'));
 		}
 
 		// Check for state filter.
-		if ($this->getState('filter.state')) {
+		if ($this->getState('filter.state'))
+		{
 			$query->where($db->quoteName('l.state').' = '.(int)$this->getState('filter.state'));
 		}
 
@@ -166,15 +183,18 @@ class FinderModelIndex extends JModelList
 		if ($this->getState('filter.search') != '')
 		{
 			$search = $this->_db->getEscaped($this->getState('filter.search'));
-			$query->where($db->quoteName('l.title').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
-						' OR '.$db->quoteName('l.url').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
-				 		' OR '.$db->quoteName('l.indexdate').' LIKE "%'.$this->_db->getEscaped($search).'%"');
+			$query->where(
+				$db->quoteName('l.title').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
+				' OR '.$db->quoteName('l.url').' LIKE "%'.$this->_db->getEscaped($search).'%"' .
+				' OR '.$db->quoteName('l.indexdate').' LIKE "%'.$this->_db->getEscaped($search).'%"'
+			);
 		}
 
 		// Handle the list ordering.
 		$ordering	= $this->getState('list.ordering');
 		$direction	= $this->getState('list.direction');
-		if (!empty($ordering)) {
+		if (!empty($ordering))
+		{
 			$query->order($db->getEscaped($ordering).' '.$db->getEscaped($direction));
 		}
 
@@ -188,10 +208,11 @@ class FinderModelIndex extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string		$id	A prefix for the store id.
+	 * @param   string  $id  A prefix for the store id.
 	 *
-	 * @return	string		A store id.
-	 * @since	1.6
+	 * @return  string  A store id.
+	 *
+	 * @since   2.5
 	 */
 	protected function getStoreId($id = '')
 	{
@@ -206,11 +227,13 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Returns a Table object, always creating it.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 *
-	 * @return	JTable	A database object
+	 * @return  JTable  A database object
+	 *
+	 * @since   2.5
 	*/
 	public function getTable($type = 'Link', $prefix = 'FinderTable', $config = array())
 	{
@@ -231,7 +254,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -246,7 +270,8 @@ class FinderModelIndex extends JModelList
 			$db->query();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				// Throw database error exception.
 				throw new Exception($db->getErrorMsg(), 500);
 			}
@@ -257,7 +282,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -267,7 +293,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -277,7 +304,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -287,7 +315,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -297,7 +326,8 @@ class FinderModelIndex extends JModelList
 		$db->query();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			// Throw database error exception.
 			throw new Exception($db->getErrorMsg(), 500);
 		}
@@ -308,10 +338,12 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string	$ordering	An optional ordering field.
-	 * @param   string	$direction	An optional direction.
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction.
 	 *
-	 * @since	1.7
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -339,11 +371,12 @@ class FinderModelIndex extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
-	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   array    &$pks   A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
 	 *
 	 * @return  boolean  True on success.
-	 * @since   11.1
+	 *
+	 * @since   2.5
 	 */
 	function publish(&$pks, $value = 1)
 	{
@@ -357,11 +390,14 @@ class FinderModelIndex extends JModelList
 		JPluginHelper::importPlugin('content');
 
 		// Access checks.
-		foreach ($pks as $i => $pk) {
+		foreach ($pks as $i => $pk)
+		{
 			$table->reset();
 
-			if ($table->load($pk)) {
-				if (!$this->canEditState($table)) {
+			if ($table->load($pk))
+			{
+				if (!$this->canEditState($table))
+				{
 					// Prune items that you can't change.
 					unset($pks[$i]);
 					JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
@@ -371,7 +407,8 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Attempt to change the state of the records.
-		if (!$table->publish($pks, $value, $user->get('id'))) {
+		if (!$table->publish($pks, $value, $user->get('id')))
+		{
 			$this->setError($table->getError());
 			return false;
 		}
@@ -381,7 +418,8 @@ class FinderModelIndex extends JModelList
 		// Trigger the onContentChangeState event.
 		$result = $dispatcher->trigger($this->event_change_state, array($context, $pks, $value));
 
-		if (in_array(false, $result, true)) {
+		if (in_array(false, $result, true))
+		{
 			$this->setError($table->getError());
 			return false;
 		}

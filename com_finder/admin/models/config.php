@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,17 +15,18 @@ require_once JPATH_ADMINISTRATOR.'/components/com_config/models/component.php';
 /**
  * Configuration model class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelConfig extends ConfigModelComponent
 {
 	/**
 	 * Get the component information.
 	 *
-	 * @return	object
-	 * @since	1.6
+	 * @return  object  The component information
+	 *
+	 * @since   2.5
 	 */
 	function getComponent()
 	{
@@ -45,11 +48,12 @@ class FinderModelConfig extends ConfigModelComponent
 	/**
 	 * Method to get a form object.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	1.6
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since   2.5
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -67,7 +71,8 @@ class FinderModelConfig extends ConfigModelComponent
 				'/config'
 			);
 
-		if (empty($form)) {
+		if (empty($form))
+		{
 			return false;
 		}
 
@@ -77,21 +82,23 @@ class FinderModelConfig extends ConfigModelComponent
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
 	 *
-	 * @return	mixed	$form		A JForm object on success, false on failure
-	 * @since	1.6
+	 * @return  mixed  A JForm object on success, false on failure
+	 *
+	 * @since   2.5
 	 */
 	public function getImport($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_finder.import', 'import', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
+
+		if (empty($form))
+		{
 			return false;
 		}
 
 		return $form;
 	}
-
 }

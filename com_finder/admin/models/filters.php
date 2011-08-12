@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,38 +14,42 @@ jimport('joomla.application.component.modellist');
 /**
  * Filters model class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.1
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelFilters extends JModelList
 {
 	/**
 	 * The number of visible filters.
 	 *
-	 * @access	private
-	 * @var		integer
+	 * @var    integer
+	 * @since  2.5
 	 */
-	var $_filter_count		= null;
+	private $_filter_count = null;
 
 	/**
 	 * The total number of filters.
 	 *
-	 * @access	private
-	 * @var		integer
+	 * @var    integer
+	 * @since  2.5
 	 */
-	var $_filter_total		= null;
+	private $_filter_total = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	1.6
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 * @see     JController
 	 */
 	public function __construct($config = array())
 	{
-		if (empty($config['filter_fields'])) {
+		if (empty($config['filter_fields']))
+		{
 			$config['filter_fields'] = array(
 				'filter_id', 'a.filter_id',
 				'title', 'a.title',
@@ -61,13 +66,14 @@ class FinderModelFilters extends JModelList
 	/**
 	 * Method to get the relevant number of filters.
 	 *
-	 * @access	public
-	 * @return	mixed	False on failure, integer on success.
-	 * @since	1.0
+	 * @return  mixed  False on failure, integer on success.
+	 *
+	 * @since   2.5
 	 */
 	function getCount()
 	{
-		if (!empty($this->_filter_count)) {
+		if (!empty($this->_filter_count))
+		{
 			return $this->_filter_count;
 		}
 
@@ -75,7 +81,8 @@ class FinderModelFilters extends JModelList
 		$return = $this->_getListCount($this->_getListQuery());
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($this->_db->getErrorNum())
+		{
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
@@ -88,8 +95,9 @@ class FinderModelFilters extends JModelList
 	/**
 	 * Build an SQL query to load the list data.
 	 *
-	 * @return	JDatabaseQuery	$query	A JDatabaseQuery object
-	 * @since	1.6
+	 * @return  JDatabaseQuery  A JDatabaseQuery object
+	 *
+	 * @since   2.5
 	 */
 	function getListQuery()
 	{
@@ -109,12 +117,14 @@ class FinderModelFilters extends JModelList
 		$query->join('LEFT', $db->quoteName('#__users').' AS ua ON ua.id = a.created_by');
 
 		// Check for a search filter.
-		if ($this->getState('filter.search')) {
+		if ($this->getState('filter.search'))
+		{
 			$query->where('( '.$db->quoteName('a.title').' LIKE \'%'.$this->_db->getEscaped($this->getState('filter.search')).'%\' )');
 		}
 
 		// If the model is set to check item state, add to the query.
-		if ($this->getState('filter.state')) {
+		if ($this->getState('filter.state'))
+		{
 			$query->where($db->quoteName('a.state').' = '.(int)$this->getState('filter.state'));
 		}
 
@@ -131,9 +141,11 @@ class FinderModelFilters extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string	$id	A prefix for the store id.
-	 * @return	string	$id	A store id.
-	 * @since	1.6
+	 * @param   string  $id  A prefix for the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   2.5
 	 */
 	protected function getStoreId($id = '')
 	{
@@ -144,6 +156,13 @@ class FinderModelFilters extends JModelList
 		return parent::getStoreId($id);
 	}
 
+	/**
+	 * Method to get the total number of items for the data set.
+	 *
+	 * @return  integer  The total number of items available in the data set.
+	 *
+	 * @since   2.5
+	 */
 	function getTotal()
 	{
 		// Assemble the query.
@@ -155,7 +174,8 @@ class FinderModelFilters extends JModelList
 		$return = $db->loadResult();
 
 		// Check for a database error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			$this->setError($db->getErrorMsg());
 			return false;
 		}
@@ -168,10 +188,12 @@ class FinderModelFilters extends JModelList
 	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string	$ordering	An optional ordering field.
-	 * @param   string	$direction	An optional direction.
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction.
 	 *
-	 * @since	1.6
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{

@@ -1,8 +1,10 @@
 <?php
 /**
- * @version		$Id: about.php 981 2010-06-15 18:38:02Z robs $
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 // no direct access
@@ -13,45 +15,58 @@ jimport('joomla.application.component.model');
 /**
  * Filter model class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @since		1.1
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelAbout extends JModel
 {
+	/**
+	 * Method to get the component statistics
+	 *
+	 * @return  object  Component statistics
+	 *
+	 * @since   2.5
+	 */
 	function getData()
 	{
+		// Initialise
 		$db		= &$this->getDbo();
+		$query	= $db->getQuery(true);
 		$data	= new JObject;
 
-		$db->setQuery(
-			'SELECT COUNT(term_id) FROM #__finder_terms'
-		);
+		$query->select('COUNT(term_id)');
+		$query->from($db->quoteName('#__finder_terms'));
+		$db->setQuery($query);
 		$data->term_count = $db->loadResult();
 
-		$db->setQuery(
-			'SELECT COUNT(link_id) FROM #__finder_links'
-		);
+		$query->clear();
+		$query->select('COUNT(link_id)');
+		$query->from($db->quoteName('#__finder_links'));
+		$db->setQuery($query);
 		$data->link_count = $db->loadResult();
 
-		$db->setQuery(
-			'SELECT COUNT(id) FROM #__finder_taxonomy WHERE parent_id = 1'
-		);
+		$query->clear();
+		$query->select('COUNT(id)');
+		$query->from($db->quoteName('#__finder_taxonomy'));
+		$query->where($db->quoteName('parent_id').' = 1');
+		$db->setQuery($query);
 		$data->taxonomy_branch_count = $db->loadResult();
 
-		$db->setQuery(
-			'SELECT COUNT(id) FROM #__finder_taxonomy WHERE parent_id > 1'
-		);
+		$query->clear();
+		$query->select('COUNT(id)');
+		$query->from($db->quoteName('#__finder_taxonomy'));
+		$query->where($db->quoteName('parent_id').' > 1');
+		$db->setQuery($query);
 		$data->taxonomy_node_count = $db->loadResult();
 
-		$db->setQuery(
-			'SELECT t.title AS type_title, COUNT(a.link_id) AS link_count' .
-			' FROM #__finder_links AS a' .
-			' INNER JOIN #__finder_types AS t ON t.id = a.type_id' .
-			' GROUP BY a.type_id'
-		);
+		$query->clear();
+		$query->select('t.title AS type_title, COUNT(a.link_id) AS link_count');
+		$query->from($db->quoteName('#__finder_links').' AS a');
+		$query->join('INNER', $db->quoteName('#__finder_types').' AS t ON t.id = a.type_id');
+		$query->group($db->quoteName('a.type_id'));
+		$db->setQuery($query);
 		$data->type_list = $db->loadObjectList();
-
 
 		return $data;
 	}

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_BASE') or die;
@@ -20,24 +20,26 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
 /**
  * Renders a list of directories.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class JFormFieldDirectories extends JFormFieldList
 {
 	/**
 	 * The form field type.
 	 *
-	 * @var		string
-	 * @since	1.7
+	 * @var    string
+	 * @since  1.7
 	 */
 	protected $type = 'Directories';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return	array	The field option objects.
-	 * @since	1.7
+	 * @return  array  The field option objects.
+	 *
+	 * @since   1.7
 	 */
 	public function getOptions()
 	{
@@ -66,7 +68,8 @@ class JFormFieldDirectories extends JFormFieldList
 		foreach ($dirs as $dir)
 		{
 			// Check if the directory should be excluded.
-			if (in_array($dir, $exclude)) {
+			if (in_array($dir, $exclude))
+			{
 				continue;
 			}
 
@@ -74,14 +77,16 @@ class JFormFieldDirectories extends JFormFieldList
 			$return = JFolder::folders($dir, '.', true, true);
 
 			// Merge the directories.
-			if (is_array($return)) {
+			if (is_array($return))
+			{
 				$values[]	= $dir;
 				$values		= array_merge($values, $return);
 			}
 		}
 
 		// Convert the values to options.
-		for ($i = 0, $c = count($values); $i < $c; $i++) {
+		for ($i = 0, $c = count($values); $i < $c; $i++)
+		{
 			$options[] = JHtml::_('select.option', str_replace(JPATH_SITE.DS, '', $values[$i]), str_replace(JPATH_SITE.DS, '', $values[$i]));
 		}
 
