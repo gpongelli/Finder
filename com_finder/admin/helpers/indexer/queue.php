@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id$
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,18 +12,22 @@ defined('_JEXEC') or die;
 /**
  * Queue class for the Finder indexer package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerQueue
 {
 	/**
 	 * Method to add a content item to the queue.
 	 *
-	 * @param	string		The content context.
-	 * @param	integer		The content id.
-	 * @param	string		The content creation date.
-	 * @return	void
+	 * @param   string   $context  The content context.
+	 * @param   integer  $id       The content id.
+	 * @param   string   $time     The content creation date.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function add($context, $id, $time)
 	{
@@ -32,16 +35,21 @@ class FinderIndexerQueue
 		$queue = JFactory::getSession()->get('_finder.queue', array());
 
 		// Initialize the context if necessary.
-		if (!array_key_exists($context, $queue)) {
+		if (!array_key_exists($context, $queue))
+		{
 			$queue[$context] = array();
 		}
 
 		// Add the item to the queue if it is unique or new.
-		if (!array_key_exists($id, $queue[$context]) || empty($id)) {
-			if (empty($id)) {
+		if (!array_key_exists($id, $queue[$context]) || empty($id))
+		{
+			if (empty($id))
+			{
 				// Add an item to be indexed.
 				$queue[$context][] = array('context' => $context, 'id' => $id, 'timestamp' => $time);
-			} else {
+			}
+			else
+			{
 				// Add an item to be updated.
 				$queue[$context][$id] = array('context' => $context, 'id' => $id, 'timestamp' => $time);
 			}
@@ -54,8 +62,11 @@ class FinderIndexerQueue
 	/**
 	 * Method to get the content items in the queue.
 	 *
-	 * @param	string		The content context.
-	 * @return	array		An array of content items.
+	 * @param   string  $context  The content context.
+	 *
+	 * @return  array  An array of content items.
+	 *
+	 * @since   2.5
 	 */
 	public static function get($context = null)
 	{
@@ -63,12 +74,14 @@ class FinderIndexerQueue
 		$queue	= JFactory::getSession()->get('_finder.queue', array());
 		$return = array();
 
-		if ($context === null) {
+		if ($context === null)
+		{
 			return $queue;
 		}
 
 		// Get the context from the queue.
-		if (array_key_exists($context, $queue)) {
+		if (array_key_exists($context, $queue))
+		{
 			$return = $queue[$context];
 		}
 
@@ -78,8 +91,11 @@ class FinderIndexerQueue
 	/**
 	 * Method to remove items from the queue.
 	 *
-	 * @param	string		The content context.
-	 * @return	void
+	 * @param   string  $context  The content context.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function remove($context)
 	{
@@ -100,7 +116,9 @@ class FinderIndexerQueue
 	/**
 	 * Method to purge the queue.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function purge()
 	{
