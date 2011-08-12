@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: snowball.php 922 2010-03-11 20:17:33Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -13,17 +12,21 @@ defined('_JEXEC') or die;
 /**
  * Snowball stemmer class for the Finder indexer package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerStemmerSnowball extends FinderIndexerStemmer
 {
 	/**
 	 * Method to stem a token and return the root.
 	 *
-	 * @param	string		The token to stem.
-	 * @param	string		The language of the token.
-	 * @return	string		The root token.
+	 * @param   string  $token  The token to stem.
+	 * @param   string  $lang   The language of the token.
+	 *
+	 * @return  string  The root token.
+	 *
+	 * @since   2.5
 	 */
 	public function stem($token, $lang)
 	{
