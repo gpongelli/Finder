@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -11,20 +12,21 @@ defined('_JEXEC') or die;
 /**
  * Filter HTML Behaviors for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.1
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class JHtmlFilter
 {
 	/**
-	 * Method to generate filters using the slider widget
-	 * and decorated with the FinderFilter JavaScript behaviors.
+	 * Method to generate filters using the slider widget and decorated
+	 * with the FinderFilter JavaScript behaviors.
 	 *
-	 * @access	public
-	 * @param	array	$options	An array of configuration options.
-	 * @return	mixed	A rendered HTML widget on success, null otherwise.
-	 * @since	1.1
+	 * @param   array  $options  An array of configuration options.
+	 *
+	 * @return  mixed  A rendered HTML widget on success, null otherwise.
+	 *
+	 * @since   2.5
 	 */
 	function slider($options = array())
 	{
@@ -46,25 +48,28 @@ class JHtmlFilter
 		$showDates		= array_key_exists('show_date_filters', $options)	? $options['show_date_filters']	: false;
 
 		// Load the predefined filter if specified.
-		if (!empty($filterId)) {
-			$query->select('f.data, f.params');
+		if (!empty($filterId))
+		{
+			$query->select($db->quoteName('f.data').', '.$db->quoteName('f.params'));
 			$query->from($db->quoteName('#__finder_filters').' AS f');
-			$query->where('f.filter_id = '.(int)$filterId);
+			$query->where($db->quoteName('f.filter_id').' = '.(int)$filterId);
 
 			// Load the filter data.
 			$db->setQuery($query);
 			$filter = $db->loadObject();
 
 			// Check for an error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				return null;
 			}
 
 			// Initialize the filter parameters.
-			if ($filter) {
-                $registry = new JRegistry;
+			if ($filter)
+			{
+				$registry = new JRegistry;
 				$registry->loadString($filter->params);
-                $filter->params = $registry;
+				$filter->params = $registry;
 			}
 		}
 
@@ -82,7 +87,8 @@ class JHtmlFilter
 		$query->order('t.ordering, t.title');
 
 		// Limit the branch children to a predefined filter.
-		if ($filter) {
+		if ($filter)
+		{
 			$query->where('c.id IN('.$filter->data.')');
 		}
 
@@ -91,17 +97,20 @@ class JHtmlFilter
 		$branches = $db->loadObjectList('id');
 
 		// Check for an error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			return null;
 		}
 
 		// Check that we have at least one branch.
-		if (count($branches) === 0) {
+		if (count($branches) === 0)
+		{
 			return null;
 		}
 
 		// Load the CSS/JS resources.
-		if ($loadMedia) {
+		if ($loadMedia)
+		{
 			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
 			JHtml::script('components/com_finder/media/js/sliderfilter.js', false, false);
 		}
@@ -147,7 +156,8 @@ class JHtmlFilter
 			$nodes = $db->loadObjectList('id');
 
 			// Check for an error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				return null;
 			}
 
@@ -190,9 +200,12 @@ class JHtmlFilter
 	/**
 	 * Method to generate filters using select box drop down controls.
 	 *
-	 * @param	object		A FinderIndexerQuery object.
-	 * @param	array		A JParameter object.
-	 * @return	mixed		A rendered HTML widget on success, null otherwise.
+	 * @param   object  $query    A FinderIndexerQuery object.
+	 * @param   array   $options  A JParameter object.
+	 *
+	 * @return  mixed  A rendered HTML widget on success, null otherwise.
+	 *
+	 * @since   2.5
 	 */
 	function select($query, $options)
 	{
@@ -218,7 +231,8 @@ class JHtmlFilter
 		if ($data !== false && !empty($data))
 		{
 			// Load the CSS/JS resources.
-			if ($loadMedia) {
+			if ($loadMedia)
+			{
 				JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
 			}
 
@@ -228,24 +242,26 @@ class JHtmlFilter
 		// Load the predefined filter if specified.
 		if (!empty($query->filter))
 		{
-			$sql->select('f.data, f.params');
+			$sql->select($db->quoteName('f.data').', '.$db->quoteName('f.params'));
 			$sql->from($db->quoteName('#__finder_filters').' AS f');
-			$sql->where('f.filter_id = '.(int)$query->filter);
+			$sql->where($db->quoteName('f.filter_id').' = '.(int)$query->filter);
 
 			// Load the filter data.
 			$db->setQuery($sql);
 			$filter = $db->loadObject();
 
 			// Check for an error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				return null;
 			}
 
 			// Initialize the filter parameters.
-			if ($filter) {
-                $registry = new JRegistry;
+			if ($filter)
+			{
+				$registry = new JRegistry;
 				$registry->loadString($filter->params);
-                $filter->params = $registry;
+				$filter->params = $registry;
 			}
 		}
 
@@ -263,7 +279,8 @@ class JHtmlFilter
 		$sql->order('t.ordering, t.title');
 
 		// Limit the branch children to a predefined filter.
-		if ($filter) {
+		if ($filter)
+		{
 			$sql->where('c.id IN('.$filter->data.')');
 		}
 
@@ -272,22 +289,26 @@ class JHtmlFilter
 		$branches = $db->loadObjectList('id');
 
 		// Check for an error.
-		if ($db->getErrorNum()) {
+		if ($db->getErrorNum())
+		{
 			return null;
 		}
 
 		// Check that we have at least one branch.
-		if (count($branches) === 0) {
+		if (count($branches) === 0)
+		{
 			return null;
 		}
 
 		// Load the CSS/JS resources.
-		if ($loadMedia) {
+		if ($loadMedia)
+		{
 			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
 		}
 
 		// Add the dates if enabled.
-		if ($showDates) {
+		if ($showDates)
+		{
 			$html .= JHtml::_('filter.dates', $query, $options);
 		}
 
@@ -306,7 +327,8 @@ class JHtmlFilter
 			$sql->order('t.ordering, t.title');
 
 			// Limit the nodes to a predefined filter.
-			if ($filter) {
+			if ($filter)
+			{
 				$sql->where('t.id IN('.$filter->data.')');
 			}
 
@@ -315,12 +337,14 @@ class JHtmlFilter
 			$nodes = $db->loadObjectList('id');
 
 			// Check for an error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				return null;
 			}
 
 			// Skip the branch if less than two nodes are available.
-			if (count($nodes) < 2) {
+			if (count($nodes) < 2)
+			{
 				continue;
 			}
 
@@ -344,7 +368,7 @@ class JHtmlFilter
 			$html .= '<label for="tax-'.JFilterOutput::stringUrlSafe($bv->title).'">';
 			$html .= JText::sprintf('COM_FINDER_FILTER_BRANCH_LABEL', JText::_($bv->title));
 			$html .= '</label>';
-			$html .= JHTML::_('select.genericlist', $nodes, 't[]', 'class="inputbox"', 'id', 'title', $active, 'tax-'.JFilterOutput::stringUrlSafe($bv->title), true);
+			$html .= JHtml::_('select.genericlist', $nodes, 't[]', 'class="inputbox"', 'id', 'title', $active, 'tax-'.JFilterOutput::stringUrlSafe($bv->title), true);
 			$html .= '</li>';
 		}
 
@@ -357,6 +381,16 @@ class JHtmlFilter
 		return $html;
 	}
 
+	/**
+	 * Method to generate fields for filtering dates
+	 *
+	 * @param   object  $query    A FinderIndexerQuery object.
+	 * @param   array   $options  A JParameter object.
+	 *
+	 * @return  mixed  A rendered HTML widget on success, null otherwise.
+	 *
+	 * @since   2.5
+	 */
 	function dates($query, $options)
 	{
 		$html = '';
@@ -375,7 +409,8 @@ class JHtmlFilter
 			$operators[]	= JHtml::_('select.option', 'after', JText::_('COM_FINDER_FILTER_DATE_AFTER'));
 
 			// Load the CSS/JS resources.
-			if ($loadMedia) {
+			if ($loadMedia)
+			{
 				JHtml::stylesheet('components/com_finder/media/css/dates.css', false, false, false);
 			}
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -20,16 +20,17 @@ jimport('joomla.application.component.modellist');
 /**
  * Search model class for the Finder package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelSearch extends JModelList
 {
 	/**
-	 * Context string for the model type.  This is used to handle uniqueness
-	 * when dealing with the _getStoreId() method and caching data structures.
+	 * Context string for the model type
 	 *
-	 * @var		string
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $_context = 'com_finder.search';
 
@@ -38,40 +39,54 @@ class FinderModelSearch extends JModelList
 	 * models the entire search query including the text input; static and
 	 * dynamic taxonomy filters; date filters; etc.
 	 *
-	 * @var		object		A FinderIndexerQuery object.
+	 * @var    object
+	 * @since  2.5
 	 */
 	protected $_query;
 
 	/**
-	 * @var		array		An array of all excluded terms ids.
+	 * An array of all excluded terms ids.
+	 *
+	 * @var    array
+	 * @since  2.5
 	 */
 	protected $_excludedTerms = array();
 
 	/**
-	 * @var		array		An array of all included terms ids.
+	 * An array of all included terms ids.
+	 *
+	 * @var    array
+	 * @since  2.5
 	 */
 	protected $_includedTerms = array();
 
 	/**
-	 * @var		array		An array of all required terms ids.
+	 * An array of all required terms ids.
+	 *
+	 * @var    array
+	 * @since  2.5
 	 */
 	protected $_requiredTerms = array();
 
 	/**
 	 * Method to get the results of the query.
 	 *
-	 * @return	array		An array of FinderIndexerResult objects.
-	 * @throws	Exception on database error.
+	 * @return  array  An array of FinderIndexerResult objects.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function getResults()
 	{
 		// Check if the search query is valid.
-		if (empty($this->_query->search)) {
+		if (empty($this->_query->search))
+		{
 			return null;
 		}
 
 		// Check if we should return results.
-		if (empty($this->_includedTerms) && (empty($this->_query->filters) || !$this->_query->empty)) {
+		if (empty($this->_includedTerms) && (empty($this->_query->filters) || !$this->_query->empty))
+		{
 			return null;
 		}
 
@@ -79,7 +94,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResults');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store)) {
+		if ($this->_retrieve($store))
+		{
 			return $this->_retrieve($store);
 		}
 
@@ -87,7 +103,8 @@ class FinderModelSearch extends JModelList
 		$items = $this->getResultsData();
 
 		// Check the data.
-		if (empty($items)) {
+		if (empty($items))
+		{
 			return null;
 		}
 
@@ -95,17 +112,18 @@ class FinderModelSearch extends JModelList
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
-		$query->select('link_id, object');
-		$query->from('#__finder_links');
-		$query->where('link_id IN ('.implode(',', array_keys($items)).')');
+		$query->select($db->quoteName('link_id').', '.$db->quoteName('object'));
+		$query->from($db->quoteName('#__finder_links'));
+		$query->where($db->quoteName('link_id').' IN ('.implode(',', array_keys($items)).')');
 
 		// Load the results from the database.
-		$this->_db->setQuery($query);
-		$rows = $this->_db->loadObjectList('link_id');
+		$db->setQuery($query);
+		$rows = $db->loadObjectList('link_id');
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
-			throw new Exception($this->_db->getErrorMsg(), 500);
+		if ($db->getErrorNum())
+		{
+			throw new Exception($db->getErrorMsg(), 500);
 		}
 
 		// Set up our results container.
@@ -136,18 +154,22 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to get the total number of results.
 	 *
-	 * @return	integer		The total number of results.
-	 * @throws	Exception on database error.
+	 * @return  integer  The total number of results.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function getTotal()
 	{
 		// Check if the search query is valid.
-		if (empty($this->_query->search)) {
+		if (empty($this->_query->search))
+		{
 			return null;
 		}
 
 		// Check if we should return results.
-		if (empty($this->_includedTerms) && (empty($this->_query->filters) || !$this->_query->empty)) {
+		if (empty($this->_includedTerms) && (empty($this->_query->filters) || !$this->_query->empty))
+		{
 			return null;
 		}
 
@@ -155,7 +177,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->_getStoreId('getTotal');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store)) {
+		if ($this->_retrieve($store))
+		{
 			return $this->_retrieve($store);
 		}
 
@@ -172,7 +195,9 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to get the query object.
 	 *
-	 * @return	object		A FinderIndexerQuery object.
+	 * @return  object  A FinderIndexerQuery object.
+	 *
+	 * @since   2.5
 	 */
 	public function getQuery()
 	{
@@ -186,7 +211,9 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	string	$query	An SQL query
+	 * @return  string  An SQL query
+	 *
+	 * @since   2.5
 	 */
 	protected function getListQuery()
 	{
@@ -194,7 +221,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->_getStoreId('_getListQuery');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store, false)) {
+		if ($this->_retrieve($store, false))
+		{
 			return clone($this->_retrieve($store, false));
 		}
 
@@ -243,11 +271,16 @@ class FinderModelSearch extends JModelList
 			$date1 = $db->quote($this->_query->date1);
 
 			// Add the appropriate WHERE condition.
-			if ($this->_query->when1 == 'before') {
+			if ($this->_query->when1 == 'before')
+			{
 				$query->where($db->quoteName('l.start_date').' <= '.$date1);
-			} else if ($this->_query->when1 == 'after') {
+			}
+			else if ($this->_query->when1 == 'after')
+			{
 				$query->where($db->quoteName('l.start_date').' >= '.$date1);
-			} else {
+			}
+			else
+			{
 				$query->where($db->quoteName('l.start_date').' = '.$date1);
 			}
 		}
@@ -259,11 +292,16 @@ class FinderModelSearch extends JModelList
 			$date2 = $db->quote($this->_query->date2);
 
 			// Add the appropriate WHERE condition.
-			if ($this->_query->when2 == 'before') {
+			if ($this->_query->when2 == 'before')
+			{
 				$query->where($db->quoteName('l.start_date').' <= '.$date2);
-			} else if ($this->_query->when2 == 'after') {
+			}
+			else if ($this->_query->when2 == 'after')
+			{
 				$query->where($db->quoteName('l.start_date').' >= '.$date2);
-			} else {
+			}
+			else
+			{
 				$query->where($db->quoteName('l.start_date').' = '.$date2);
 			}
 		}
@@ -278,8 +316,10 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to get the total number of results for the search query.
 	 *
-	 * @return	integer		The results total.
-	 * @throws	Exception on database error.
+	 * @return  integer  The results total.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected function getResultsTotal()
 	{
@@ -287,7 +327,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResultsTotal', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store)) {
+		if ($this->_retrieve($store))
+		{
 			return $this->_retrieve($store);
 		}
 
@@ -306,14 +347,16 @@ class FinderModelSearch extends JModelList
 		{
 			// Adjust the query to join on the appropriate mapping table.
 			$sql = clone($base);
-			$sql->clear('select')->select('COUNT(l.link_id)');
+			$sql->clear('select');
+			$sql->select('COUNT(l.link_id)');
 
 			// Get the total from the database.
 			$this->_db->setQuery($sql);
 			$total = $this->_db->loadResult();
 
 			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
+			if ($this->_db->getErrorNum())
+			{
 				throw new Exception($this->_db->getErrorMsg(), 500);
 			}
 
@@ -348,7 +391,8 @@ class FinderModelSearch extends JModelList
 			$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
 
 			// Initialize the mapping group.
-			if (!array_key_exists($suffix, $maps)) {
+			if (!array_key_exists($suffix, $maps))
+			{
 				$maps[$suffix] = array();
 			}
 			// Add the terms to the mapping group.
@@ -359,7 +403,8 @@ class FinderModelSearch extends JModelList
 		 * When the query contains search terms we need to find and process the
 		 * result total iteratively using a do-while loop.
 		 */
-		do {
+		do
+		{
 			// Create a container for the fetched results.
 			$results 	= array();
 			$more		= false;
@@ -374,7 +419,8 @@ class FinderModelSearch extends JModelList
 				$setId = $this->_getStoreId('getResultsTotal:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId)) {
+				if ($this->_retrieve($setId))
+				{
 					$temp = $this->_retrieve($setId);
 				}
 				// Load the data from the database.
@@ -390,7 +436,8 @@ class FinderModelSearch extends JModelList
 					$temp = $this->_db->loadObjectList();
 
 					// Check for a database error.
-					if ($this->_db->getErrorNum()) {
+					if ($this->_db->getErrorNum())
+					{
 						throw new Exception($this->_db->getErrorMsg(), 500);
 					}
 
@@ -402,7 +449,8 @@ class FinderModelSearch extends JModelList
 					$temp = array();
 
 					// Convert to an associative array.
-					for ($i = 0, $c = count($junk); $i < $c; $i++) {
+					for ($i = 0, $c = count($junk); $i < $c; $i++)
+					{
 						$temp[$junk[$i]->link_id] = $junk[$i];
 					}
 
@@ -418,8 +466,12 @@ class FinderModelSearch extends JModelList
 			if (count($excluded))
 			{
 				// Remove any results that match excluded terms.
-				for ($i = 0, $c = count($results); $i < $c; $i++) {
-					if (in_array($results[$i]->link_id, $excluded)) unset($results[$i]);
+				for ($i = 0, $c = count($results); $i < $c; $i++)
+				{
+					if (in_array($results[$i]->link_id, $excluded))
+					{
+						unset($results[$i]);
+					}
 				}
 
 				// Reset the array keys.
@@ -429,7 +481,8 @@ class FinderModelSearch extends JModelList
 			// Iterate through the set to extract the unique items.
 			for ($i = 0, $c = count($results); $i < $c; $i++)
 			{
-				if (!isset($sorted[$results[$i]->link_id])) {
+				if (!isset($sorted[$results[$i]->link_id]))
+				{
 					$sorted[$results[$i]->link_id] = $results[$i]->ordering;
 				}
 			}
@@ -469,11 +522,13 @@ class FinderModelSearch extends JModelList
 				$setId = $this->_getStoreId('getResultsTotal:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId)) {
+				if ($this->_retrieve($setId))
+				{
 					$reqTemp = $this->_retrieve($setId);
 				}
 				// Check if the token was matched.
-				elseif (empty($required)) {
+				else if (empty($required))
+				{
 					return null;
 				}
 				// Load the data from the database.
@@ -484,7 +539,8 @@ class FinderModelSearch extends JModelList
 					$reqStart	= 0;
 					$reqTemp	= array();
 
-					do {
+					do
+					{
 						// Get the map table suffix.
 						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
 
@@ -498,7 +554,8 @@ class FinderModelSearch extends JModelList
 						$temp = $this->_db->loadObjectList('link_id');
 
 						// Check for a database error.
-						if ($this->_db->getErrorNum()) {
+						if ($this->_db->getErrorNum())
+						{
 							throw new Exception($this->_db->getErrorMsg(), 500);
 						}
 
@@ -511,7 +568,8 @@ class FinderModelSearch extends JModelList
 						// Increment the term offset.
 						$reqStart += $limit;
 
-					} while ($reqMore == true);
+					}
+					while ($reqMore == true);
 
 					// Store this set in cache.
 					$this->_store($setId, $reqTemp);
@@ -541,7 +599,8 @@ class FinderModelSearch extends JModelList
 			}
 
 		// End do-while loop.
-		} while ($more === true);
+		}
+		while ($more === true);
 
 		// Set the total.
 		$total = count($items);
@@ -557,8 +616,10 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to get the results for the search query.
 	 *
-	 * @return	array		An array of result data objects.
-	 * @throws	Exception on database error.
+	 * @return  array  An array of result data objects.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected function getResultsData()
 	{
@@ -566,7 +627,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResultsData', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store)) {
+		if ($this->_retrieve($store))
+		{
 			return $this->_retrieve($store);
 		}
 
@@ -590,7 +652,8 @@ class FinderModelSearch extends JModelList
 			$return = $this->_db->loadObjectList('link_id');
 
 			// Check for a database error.
-			if ($this->_db->getErrorNum()) {
+			if ($this->_db->getErrorNum())
+			{
 				throw new Exception($this->_db->getErrorMsg(), 500);
 			}
 
@@ -628,9 +691,11 @@ class FinderModelSearch extends JModelList
 			$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
 
 			// Initialize the mapping group.
-			if (!array_key_exists($suffix, $maps)) {
+			if (!array_key_exists($suffix, $maps))
+			{
 				$maps[$suffix] = array();
 			}
+
 			// Add the terms to the mapping group.
 			$maps[$suffix] = array_merge($maps[$suffix], $ids);
 		}
@@ -639,7 +704,8 @@ class FinderModelSearch extends JModelList
 		 * When the query contains search terms we need to find and process the
 		 * results iteratively using a do-while loop.
 		 */
-		do {
+		do
+		{
 			// Create a container for the fetched results.
 			$results 	= array();
 			$more		= false;
@@ -654,7 +720,8 @@ class FinderModelSearch extends JModelList
 				$setId = $this->_getStoreId('getResultsData:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId)) {
+				if ($this->_retrieve($setId))
+				{
 					$temp = $this->_retrieve($setId);
 				}
 				// Load the data from the database.
@@ -662,7 +729,7 @@ class FinderModelSearch extends JModelList
 				{
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
-					$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms').$suffix.' AS m ON m.link_id = l.link_id');
+					$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms'.$suffix).' AS m ON m.link_id = l.link_id');
 					$sql->where('m.term_id IN ('.implode(',', $ids).')');
 
 					// Load the results from the database.
@@ -670,7 +737,8 @@ class FinderModelSearch extends JModelList
 					$temp = $this->_db->loadObjectList('link_id');
 
 					// Check for a database error.
-					if ($this->_db->getErrorNum()) {
+					if ($this->_db->getErrorNum())
+					{
 						throw new Exception($this->_db->getErrorMsg(), 500);
 					}
 
@@ -692,8 +760,12 @@ class FinderModelSearch extends JModelList
 			if (count($excluded))
 			{
 				// Remove any results that match excluded terms.
-				for ($i = 0, $c = count($results); $i < $c; $i++) {
-					if (in_array($results[$i]->link_id, $excluded)) unset($results[$i]);
+				for ($i = 0, $c = count($results); $i < $c; $i++)
+				{
+					if (in_array($results[$i]->link_id, $excluded))
+					{
+						unset($results[$i]);
+					}
 				}
 
 				// Reset the array keys.
@@ -710,9 +782,12 @@ class FinderModelSearch extends JModelList
 				for ($i = 0, $c = count($results); $i < $c; $i++)
 				{
 					// Add the total weights for all included search terms.
-					if (isset($sorted[$results[$i]->link_id])) {
+					if (isset($sorted[$results[$i]->link_id]))
+					{
 						$sorted[$results[$i]->link_id] += (float)$results[$i]->ordering;
-					} else {
+					}
+					else
+					{
 						$sorted[$results[$i]->link_id] = (float)$results[$i]->ordering;
 					}
 				}
@@ -721,12 +796,13 @@ class FinderModelSearch extends JModelList
 			 * If we are ordering by start date we have to add convert the
 			 * dates to unix timestamps.
 			 */
-			elseif ($ordering === 'l.start_date')
+			else if ($ordering === 'l.start_date')
 			{
 				// Iterate through the set to extract the unique items.
 				for ($i = 0, $c = count($results); $i < $c; $i++)
 				{
-					if (!isset($sorted[$results[$i]->link_id])) {
+					if (!isset($sorted[$results[$i]->link_id]))
+					{
 						$sorted[$results[$i]->link_id] = strtotime($results[$i]->ordering);
 					}
 				}
@@ -740,16 +816,20 @@ class FinderModelSearch extends JModelList
 				// Iterate through the set to extract the unique items.
 				for ($i = 0, $c = count($results); $i < $c; $i++)
 				{
-					if (!isset($sorted[$results[$i]->link_id])) {
+					if (!isset($sorted[$results[$i]->link_id]))
+					{
 						$sorted[$results[$i]->link_id] = $results[$i]->ordering;
 					}
 				}
 			}
 
 			// Sort the results.
-			if ($direction === 'ASC') {
+			if ($direction === 'ASC')
+			{
 				natcasesort($items);
-			} else {
+			}
+			else
+			{
 				natcasesort($items);
 				$items = array_reverse($items, true);
 			}
@@ -789,11 +869,13 @@ class FinderModelSearch extends JModelList
 				$setId = $this->_getStoreId('getResultsData:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId)) {
+				if ($this->_retrieve($setId))
+				{
 					$reqTemp = $this->_retrieve($setId);
 				}
 				// Check if the token was matched.
-				elseif (empty($required)) {
+				else if (empty($required))
+				{
 					return null;
 				}
 				// Load the data from the database.
@@ -804,13 +886,14 @@ class FinderModelSearch extends JModelList
 					$reqStart	= 0;
 					$reqTemp	= array();
 
-					do {
+					do
+					{
 						// Get the map table suffix.
 						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
-						$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms').$suffix.' AS m ON m.link_id = l.link_id');
+						$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms'.$suffix).' AS m ON m.link_id = l.link_id');
 						$sql->where('m.term_id IN ('.implode(',', $required).')');
 
 						// Load the results from the database.
@@ -818,7 +901,8 @@ class FinderModelSearch extends JModelList
 						$temp = $this->_db->loadObjectList('link_id');
 
 						// Check for a database error.
-						if ($this->_db->getErrorNum()) {
+						if ($this->_db->getErrorNum())
+						{
 							throw new Exception($this->_db->getErrorMsg(), 500);
 						}
 
@@ -831,7 +915,8 @@ class FinderModelSearch extends JModelList
 						// Increment the term offset.
 						$reqStart += $limit;
 
-					} while ($reqMore == true);
+					}
+					while ($reqMore == true);
 
 					// Store this set in cache.
 					$this->_store($setId, $reqTemp);
@@ -861,7 +946,8 @@ class FinderModelSearch extends JModelList
 			}
 
 		// End do-while loop.
-		} while ($more === true);
+		}
+		while ($more === true);
 
 		// Push the results into cache.
 		$this->_store($store, $items);
@@ -873,13 +959,16 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to get an array of link ids that match excluded terms.
 	 *
-	 * @return	array		An array of links ids.
-	 * @throws	Exception on database error.
+	 * @return  array  An array of links ids.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected function getExcludedLinkIds()
 	{
 		// Check if the search query has excluded terms.
-		if (empty($this->_excludedTerms)) {
+		if (empty($this->_excludedTerms))
+		{
 			return array();
 		}
 
@@ -887,7 +976,8 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getExcludedLinkIds', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store)) {
+		if ($this->_retrieve($store))
+		{
 			return $this->_retrieve($store);
 		}
 
@@ -907,7 +997,8 @@ class FinderModelSearch extends JModelList
 			$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
 
 			// Initialize the mapping group.
-			if (!array_key_exists($suffix, $maps)) {
+			if (!array_key_exists($suffix, $maps))
+			{
 				$maps[$suffix] = array();
 			}
 
@@ -927,16 +1018,17 @@ class FinderModelSearch extends JModelList
 
 			// Create the query to get the links ids.
 			$query->select('link_id');
-			$query->from($db->quoteName('#__finder_links_terms').$suffix);
-			$query->where('term_id IN ('.implode(',', $ids).')');
-			$query->group('link_id');
+			$query->from($db->quoteName('#__finder_links_terms'.$suffix));
+			$query->where($db->quoteName('term_id').' IN ('.implode(',', $ids).')');
+			$query->group($db->quoteName('link_id'));
 
 			// Load the link ids from the database.
 			$db->setQuery($query);
 			$temp = $db->loadResultArray();
 
 			// Check for a database error.
-			if ($db->getErrorNum()) {
+			if ($db->getErrorNum())
+			{
 				throw new Exception($db->getErrorMsg(), 500);
 			}
 
@@ -958,8 +1050,11 @@ class FinderModelSearch extends JModelList
 	 * Method to get a subquery for filtering link ids mapped to specific
 	 * terms ids.
 	 *
-	 * @param	array		An array of search term ids.
-	 * @return	object		A JDatabaseQuery object.
+	 * @param   array  $terms  An array of search term ids.
+	 *
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	protected function getTermsQuery($terms)
 	{
@@ -980,8 +1075,12 @@ class FinderModelSearch extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string	An identifier string to generate the store id.
-	 * @return	string	A store id.
+	 * @param   string   $id    An identifier string to generate the store id.
+	 * @param   boolean  $page
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   2.5
 	 */
 	protected function getStoreId($id = '', $page = true)
 	{
@@ -1013,20 +1112,23 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string	$ordering	An optional ordering field.
-	 * @param   string	$direction	An optional direction.
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Get the configuration options.
 		$app	= JFactory::getApplication();
-		$params	= JComponentHelper::getParams('com_podcastmanager');
+		$params	= JComponentHelper::getParams('com_finder');
 		$user	= JFactory::getUser();
 
 		// Setup the stemmer.
-		if ($params->get('stem', 1) && $params->get('stemmer', 'porter_en')) {
+		if ($params->get('stem', 1) && $params->get('stemmer', 'porter_en'))
+		{
 			FinderIndexerHelper::$stemmer = FinderIndexerStemmer::getInstance($params->get('stemmer', 'porter_en'));
 		}
 

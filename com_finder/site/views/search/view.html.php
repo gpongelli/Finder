@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id: view.html.php 1056 2010-09-21 19:00:13Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,16 +14,20 @@ jimport('joomla.application.component.view');
 /**
  * Search HTML view class for the Finder package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderViewSearch extends JView
 {
 	/**
 	 * Method to display the view.
 	 *
-	 * @param	string	A template file to load.
-	 * @return	mixed	JError object on failure, void on success.
+	 * @param   string  $tpl  A template file to load.
+	 *
+	 * @return  mixed  JError object on failure, void on success.
+	 *
+	 * @since   2.5
 	 */
 	public function display($tpl = null)
 	{
@@ -36,13 +40,15 @@ class FinderViewSearch extends JView
 		$pagination	= $this->get('Pagination');		JDEBUG ? $GLOBALS['_PROFILER']->mark('afterFinderPagination') : null;
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
+		if (count($errors = $this->get('Errors')))
+		{
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 
 		// Configure the pathway.
-		if (!empty($query->input)) {
+		if (!empty($query->input))
+		{
 			JFactory::getApplication()->getPathWay()->addItem($this->escape($query->input));
 		}
 
@@ -61,7 +67,8 @@ class FinderViewSearch extends JView
 			$router =& JFactory::getApplication()->getRouter();
 
 			// Fix the q variable in the URL.
-			if ($router->getVar('q') !== $this->query->input) {
+			if ($router->getVar('q') !== $this->query->input)
+			{
 				$router->setVar('q', $this->query->input);
 			}
 		}
@@ -75,13 +82,15 @@ class FinderViewSearch extends JView
 		$this->document->setTitle($params->get('page_title'));
 
 		// Configure the document meta-description.
-		if (!empty($this->explained)) {
+		if (!empty($this->explained))
+		{
 			$explained = $this->escape(html_entity_decode(strip_tags($this->explained), ENT_QUOTES, 'UTF-8'));
 			$this->document->setDescription($explained);
 		}
 
 		// Configure the document meta-keywords.
-		if (!empty($query->highlight)) {
+		if (!empty($query->highlight))
+		{
 			$this->document->setMetadata('keywords', implode(', ', $query->highlight));
 		}
 
@@ -110,7 +119,9 @@ class FinderViewSearch extends JView
 	 * Method to get hidden input fields for a get form so that control variables
 	 * are not lost upon form submission
 	 *
-	 * @return	string		A string of hidden input form fields
+	 * @return  string  A string of hidden input form fields
+	 *
+	 * @since   2.5
 	 */
 	protected function _getGetFields()
 	{
@@ -127,8 +138,10 @@ class FinderViewSearch extends JView
 		$uri->delVar('w2');
 
 		// Create hidden input elements for each part of the URI.
-		foreach ($uri->getQuery(true) as $n => $v) {
-			if (is_scalar($v)) {
+		foreach ($uri->getQuery(true) as $n => $v)
+		{
+			if (is_scalar($v))
+			{
 				$fields .= '<input type="hidden" name="'.$n.'" value="'.$v.'" />';
 			}
 		}
@@ -139,8 +152,11 @@ class FinderViewSearch extends JView
 	/**
 	 * Method to get the layout file for a search result object.
 	 *
-	 * @param	string		The layout file to check.
-	 * @return	string		The layout file to use.
+	 * @param   string  $layout  The layout file to check.
+	 *
+	 * @return  string  The layout file to use.
+	 *
+	 * @since   2.5
 	 */
 	protected function _getLayoutFile($layout = null)
 	{

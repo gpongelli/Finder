@@ -1,9 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -11,16 +12,20 @@ defined('_JEXEC') or die;
 /**
  * String Behaviors for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class JHtmlString
 {
 	/**
 	 * Method to setup the JavaScript highlight behavior.
 	 *
-	 * @param	array		An array of terms to highlight.
-	 * @return	void
+	 * @param   array  $terms  An array of terms to highlight.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public static function highlighter($terms)
 	{
@@ -41,9 +46,12 @@ class JHtmlString
 	/**
 	 * Method to format a file size in bytes to a human readable format.
 	 *
-	 * @param	integer		The file size in bytes.
-	 * @param	integer		The number of decimal points to use when rounding.
-	 * @return	string		The formatted file size.
+	 * @param   integer  $bytes      The file size in bytes.
+	 * @param   integer  $precision  The number of decimal points to use when rounding.
+	 *
+	 * @return  string  The formatted file size.
+	 *
+	 * @since   2.5
 	 */
 	public static function size($bytes, $precision = 1)
 	{
@@ -67,9 +75,12 @@ class JHtmlString
 	 * middle of a word, it will search backward to truncate to the last full
 	 * word.
 	 *
-	 * @param	string		The text to truncate.
-	 * @param	integer		The maximum length of the text.
-	 * @return	string		The truncated text.
+	 * @param   string   $input   The text to truncate.
+	 * @param   integer  $length  The maximum length of the text.
+	 *
+	 * @return  string  The truncated text.
+	 *
+	 * @since   2.5
 	 */
 	public static function truncate($input, $length = 0)
 	{
@@ -86,7 +97,8 @@ class JHtmlString
 				$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
 
 				// If we don't have 3 characters of room, go to the second to last space.
-				if (JString::strlen($tmp) >= $length - 3) {
+				if (JString::strlen($tmp) >= $length - 3)
+				{
 					$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
 				}
 			}

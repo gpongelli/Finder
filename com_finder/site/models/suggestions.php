@@ -1,37 +1,39 @@
 <?php
 /**
- * @version		$Id$
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-jx('jx.application.component.modellist');
+jimport('joomla.application.component.modellist');
 
 /**
  * Suggestions model class for the Finder package.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderModelSuggestions extends JModelList
 {
 	/**
-	 * Context string for the model type.  This is used to handle uniqueness
-	 * when dealing with the _getStoreId() method and caching data structures.
+	 * Context string for the model type.
 	 *
-	 * @var		string
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $_context = 'com_finder.suggestions';
 
 	/**
 	 * Method to get an array of data items.
 	 *
-	 * @return	array	An array of data items.
+	 * @return  array  An array of data items.
+	 *
+	 * @since   2.5
 	 */
 	public function getItems()
 	{
@@ -39,7 +41,8 @@ class FinderModelSuggestions extends JModelList
 		$items	= &parent::getItems();
 
 		// Convert them to a simple array.
-		foreach ($items as $k => $v) {
+		foreach ($items as $k => $v)
+		{
 			$items[$k] = $v->term;
 		}
 
@@ -49,7 +52,9 @@ class FinderModelSuggestions extends JModelList
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
-	 * @return	string	$query	An SQL query
+	 * @return  string  An SQL query
+	 *
+	 * @since   2.5
 	 */
 	protected function getListQuery()
 	{
@@ -75,8 +80,11 @@ class FinderModelSuggestions extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string	An identifier string to generate the store id.
-	 * @return	string	A store id.
+	 * @param   string  An identifier string to generate the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   2.5
 	 */
 	protected function getStoreId($id = '')
 	{
@@ -94,10 +102,12 @@ class FinderModelSuggestions extends JModelList
 	/**
 	 * Method to auto-populate the model state.  Calling getState in this method will result in recursion.
 	 *
-	 * @param   string	$ordering	An optional ordering field.
-	 * @param   string	$direction	An optional direction.
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	protected function populateState()
 	{

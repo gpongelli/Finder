@@ -1,9 +1,10 @@
 <?php
 /**
- * @version		$Id: router.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,8 +15,11 @@ JLoader::register('JSite', JPATH_SITE.DS.'includes'.DS.'application.php');
 /**
  * Method to build a SEF route.
  *
- * @param	array		An array of route variables.
- * @return	array		An array of route segments.
+ * @param   array  &$query  An array of route variables.
+ *
+ * @return  array  An array of route segments.
+ *
+ * @since   2.5
  */
 function FinderBuildRoute(&$query)
 {
@@ -23,7 +27,8 @@ function FinderBuildRoute(&$query)
 	$segments = array();
 
 	// Load the menu if necessary.
-	if (!$menu) {
+	if (!$menu)
+	{
 		$menu = JSite::getMenu();
 	}
 
@@ -32,7 +37,8 @@ function FinderBuildRoute(&$query)
 	 * route, it only provides the option and the menu item id. We don't have
 	 * to do anything to these routes.
 	 */
-	if (count($query) === 2 && isset($query['Itemid']) && isset($query['option'])) {
+	if (count($query) === 2 && isset($query['Itemid']) && isset($query['option']))
+	{
 		return $segments;
 	}
 
@@ -49,17 +55,20 @@ function FinderBuildRoute(&$query)
 		$item = $menu->getItem($query['Itemid']);
 
 		// Check if the view matches.
-		if ($item && @$item->query['view'] === @$query['view']) {
+		if ($item && @$item->query['view'] === @$query['view'])
+		{
 			unset($query['view']);
 		}
 
 		// Check if the search query filter matches.
-		if ($item && @$item->query['f'] === @$query['f']) {
+		if ($item && @$item->query['f'] === @$query['f'])
+		{
 			unset($query['f']);
 		}
 
 		// Check if the search query string matches.
-		if ($item && @$item->query['q'] === @$query['q']) {
+		if ($item && @$item->query['q'] === @$query['q'])
+		{
 			unset($query['q']);
 		}
 
@@ -84,15 +93,19 @@ function FinderBuildRoute(&$query)
 /**
  * Method to parse a SEF route.
  *
- * @param	array		An array of route segments.
- * @return	array		An array of route variables.
+ * @param   array  $segments  An array of route segments.
+ *
+ * @return  array  An array of route variables.
+ *
+ * @since   2.5
  */
 function FinderParseRoute($segments)
 {
 	$vars = array();
 
 	// Check if the view segment is set and it equals search or advanced.
-	if (@$segments[0] === 'search' || @$segments[0] === 'advanced') {
+	if (@$segments[0] === 'search' || @$segments[0] === 'advanced')
+	{
 		$vars['view'] = $segments[0];
 	}
 

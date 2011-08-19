@@ -1,8 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -10,17 +12,20 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controller');
 
 /**
- * Suggest controller for JXtended Finder.
+ * Suggestions JSON controller for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerSuggestions extends JController
 {
 	/**
 	 * Method to find search query suggestions.
 	 *
-	 * @return	void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	public function display()
 	{
@@ -29,7 +34,8 @@ class FinderControllerSuggestions extends JController
 		$return	= $model->getItems();
 
 		// Check the data.
-		if (empty($return)) {
+		if (empty($return))
+		{
 			$return = array();
 		}
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -12,50 +12,62 @@ defined('_JEXEC') or die;
 /**
  * Query HTML behavior class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
-class JHTMLQuery
+class JHtmlQuery
 {
 	/**
 	 * Method to get the explained (human-readable) search query.
 	 *
-	 * @param	object		A FinderIndexerQuery object to explain.
-	 * @return	mixed		String if there is data to explain, null otherwise.
+	 * @param   object  $query  A FinderIndexerQuery object to explain.
+	 *
+	 * @return  mixed  String if there is data to explain, null otherwise.
+	 *
+	 * @since   2.5
 	 */
 	public static function explained(FinderIndexerQuery $query)
 	{
 		$parts = array();
 
 		// Process the required tokens.
-		foreach ($query->included as $token) {
-			if ($token->required && (!isset($token->derived) || $token->derived == false)) {
+		foreach ($query->included as $token)
+		{
+			if ($token->required && (!isset($token->derived) || $token->derived == false))
+			{
 				$parts[] = '<span class="query-required">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_REQUIRED', $token->term).'</span>';
 			}
 		}
 
 		// Process the optional tokens.
-		foreach ($query->included as $token) {
-			if (!$token->required && (!isset($token->derived) || $token->derived == false)) {
+		foreach ($query->included as $token)
+		{
+			if (!$token->required && (!isset($token->derived) || $token->derived == false))
+			{
 				$parts[] = '<span class="query-optional">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_OPTIONAL', $token->term).'</span>';
 			}
 		}
 
 		// Process the excluded tokens.
-		foreach ($query->excluded as $token) {
-			if (!isset($token->derived) || $token->derived == false) {
+		foreach ($query->excluded as $token)
+		{
+			if (!isset($token->derived) || $token->derived == false)
+			{
 				$parts[] = '<span class="query-excluded">'.JText::sprintf('COM_FINDER_QUERY_TOKEN_EXCLUDED', $token->term).'</span>';
 			}
 		}
 
 		// Process the start date.
-		if ($query->date1) {
+		if ($query->date1)
+		{
 			$date = JFactory::getDate($query->date1)->toFormat('%B %e, %Y');
 			$parts[] = '<span class="query-start-date">'.JText::sprintf('COM_FINDER_QUERY_START_DATE', $query->when1, $date).'</span>';
 		}
 
 		// Process the end date.
-		if ($query->date2) {
+		if ($query->date2)
+		{
 			$date = JFactory::getDate($query->date2)->toFormat('%B %e, %Y');
 			$parts[] = '<span class="query-end-date">'.JText::sprintf('COM_FINDER_QUERY_END_DATE', $query->when2, $date).'</span>';
 		}
@@ -73,7 +85,10 @@ class JHTMLQuery
 				foreach ($nodes as $title => $id)
 				{
 					// Don't include the node if it is not in the request.
-					if (!in_array($id, $t)) continue;
+					if (!in_array($id, $t))
+					{
+						continue;
+					}
 
 					// Add the node to the explanation.
 					$bv = JString::strtolower($branch);
@@ -90,15 +105,19 @@ class JHTMLQuery
 	/**
 	 * Method to get the suggested search query.
 	 *
-	 * @param	object		A FinderIndexerQuery object.
-	 * @return	mixed		String if there is a suggestion, false otherwise.
+	 * @param   object  $query  A FinderIndexerQuery object.
+	 *
+	 * @return  mixed  String if there is a suggestion, false otherwise.
+	 *
+	 * @since   2.5
 	 */
 	public static function suggested(FinderIndexerQuery $query)
 	{
 		$suggested = false;
 
 		// Check if the query input is empty.
-		if (empty($query->input)) {
+		if (empty($query->input))
+		{
 			return $suggested;
 		}
 
@@ -108,21 +127,26 @@ class JHTMLQuery
 			$suggested = $query->input;
 
 			// Replace the ignored keyword suggestions.
-			foreach (array_reverse($query->ignored) as $token) {
-				if (isset($token->suggestion)) {
+			foreach (array_reverse($query->ignored) as $token)
+			{
+				if (isset($token->suggestion))
+				{
 					$suggested = str_replace($token->term, $token->suggestion, $suggested);
 				}
 			}
 
 			// Replace the included keyword suggestions.
-			foreach (array_reverse($query->included) as $token) {
-				if (isset($token->suggestion)) {
+			foreach (array_reverse($query->included) as $token)
+			{
+				if (isset($token->suggestion))
+				{
 					$suggested = str_replace($token->term, $token->suggestion, $suggested);
 				}
 			}
 
 			// Check if we made any changes.
-			if ($suggested == $query->input) {
+			if ($suggested == $query->input)
+			{
 				$suggested = false;
 			}
 		}

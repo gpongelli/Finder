@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -14,20 +14,22 @@ jimport('joomla.application.component.controller');
 /**
  * Finder Component Controller.
  *
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @version		1.0
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderController extends JController
 {
 	/**
 	 * Method to display a view.
 	 *
-	 * @param	boolean	$cachable	If true, the view output will be cached
-	 * @param	array	$urlparams	An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean  $cachable   If true, the view output will be cached
+	 * @param   array    $urlparams  An array of safe url parameters and their variable types,
+	 *                               for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return	JController			This object is to support chaining.
-	 * @since	1.6
+	 * @return  JController  This object is to support chaining.
+	 *
+	 * @since   1.6
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
@@ -39,7 +41,8 @@ class FinderController extends JController
 		$viewName	= JRequest::getWord('view', 'search');
 		JRequest::setVar('view', $viewName);
 
-		if ($user->get('id') ||($_SERVER['REQUEST_METHOD'] == 'POST' && $vName = 'feed')) {
+		if ($user->get('id') ||($_SERVER['REQUEST_METHOD'] == 'POST' && $vName = 'search'))
+		{
 			$cachable = false;
 		}
 
