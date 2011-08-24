@@ -26,7 +26,7 @@ abstract class FinderIndexerParser
 	 * @return  object  A FinderIndexerParser.
 	 *
 	 * @since   2.5
-	 * @throws  JException on invalid parser.
+	 * @throws  Exception on invalid parser.
 	 */
 	public static function getInstance($format)
 	{

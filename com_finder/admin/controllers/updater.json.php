@@ -140,7 +140,7 @@ class FinderControllerUpdater extends JController
 	 * can be a Exception object for when an error has occurred or
 	 * a JObject for a good response.
 	 *
-	 * @param   object  $data  JObject on success, JException/Exception on error.
+	 * @param   object  $data  JObject on success, Exception on error.
 	 *
 	 * @return  void
 	 *
