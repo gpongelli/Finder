@@ -720,7 +720,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$sql->from($this->db->quoteName('#__menu'));
 		$sql->where($this->db->quoteName('link').' = '.$this->db->quote($url));
 		$sql->where($this->db->quoteName('published').' = 1');
-		$sql->where($this->db->quoteName('m.access').' IN ('.$groups.')');
+		$sql->where($this->db->quoteName('access').' IN ('.$groups.')');
 
 		// Get the menu params from the database.
 		$this->db->setQuery($sql);
