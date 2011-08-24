@@ -65,6 +65,7 @@ window.addEvent('domready', function () {
 			});
 			mySlider.slideOut();
 		});
+		// TODO: bindWithEvent deprecated in MT 1.3
 		a.addEvent('click', hideWarning.bindWithEvent(a));
 	});
 });

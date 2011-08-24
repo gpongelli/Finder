@@ -10,8 +10,8 @@ var FinderProgressBar = new Class({
 		speed: 10,
 		step: 1,
 		allowMore: false,
-		onComplete: $empty,
-		onChange: $empty
+		onComplete: function () {},
+		onChange: function () {}
 	},
 	initialize: function (options) {
 		this.setOptions(options);
@@ -139,7 +139,7 @@ var FinderIndexer = new Class({
 		json = json ? JSON.decode(json, true) : null;
 		if (this.pb) $(this.pb.options.container).dispose();
 		if (json) {
-			json = $chk(json.responseText) ? Json.evaluate(json.responseText, true) : json;
+			json = json.responseText != null ? Json.evaluate(json.responseText, true) : json;
 		}
 		var header = json ? json.header : 'An Error Has Occurred';
 		var message = json ? json.message : 'The following message was returned by the server: <br />' + json

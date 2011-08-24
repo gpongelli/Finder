@@ -51,7 +51,7 @@ var FinderFilter = Fx.Elements.extend({
 					cba += 1;
 				}
 			}, this);
-			if (cbs > 0 && cbs === cba && $chk(el.getElement('input.branch-selector'))) {
+			if (cbs > 0 && cbs === cba && el.getElement('input.branch-selector') != null) {
 				el.getElement('input.branch-selector').setProperty('checked', 'checked');
 			}
 			if (cba) {
@@ -80,9 +80,9 @@ var FinderFilter = Fx.Elements.extend({
 		this.togglers.include(toggler);
 		this.elements.include(element);
 		if (len && (!test || pos)) {
-			pos = $pick(pos, len - 1);
+			pos = Array.pick(pos, len - 1);
 			toggler.injectBefore(this.togglers[pos]);
-			element.injectAfter(toggler);
+			element.inject(toggler, after);
 		} else if (this.container && !test) {
 			toggler.inject(this.container);
 			element.inject(this.container);
@@ -102,7 +102,7 @@ var FinderFilter = Fx.Elements.extend({
 		return this;
 	},
 	toggle: function (index) {
-		index = ($type(index) == 'element') ? this.elements.indexOf(index) : index;
+		index = (typeOf(index) == 'element') ? this.elements.indexOf(index) : index;
 		if (this.timer && this.options.wait) return this;
 		this.active = index;
 		var obj = {};

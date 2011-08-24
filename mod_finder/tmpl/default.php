@@ -88,42 +88,42 @@ JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
 		var value;
 
 		// Set the input value if not already set.
-		if (!$('<?php echo $fldId; ?>').getProperty('value')) {
-			$('<?php echo $fldId; ?>').setProperty('value', '<?php echo JText::_('MOD_FINDER_SEARCH_VALUE', true); ?>');
+		if (!document.id('<?php echo $fldId; ?>').getProperty('value')) {
+			document.id('<?php echo $fldId; ?>').setProperty('value', '<?php echo JText::_('MOD_FINDER_SEARCH_VALUE', true); ?>');
 		}
 
 		// Get the current value.
-		value = $('<?php echo $fldId; ?>').getProperty('value');
+		value = document.id('<?php echo $fldId; ?>').getProperty('value');
 
 		// If the current value equals the previous value, clear it.
-		$('<?php echo $fldId; ?>').addEvent('focus', function() {
+		document.id('<?php echo $fldId; ?>').addEvent('focus', function() {
 			if (this.getProperty('value') == value) {
 				this.setProperty('value', '');
 			}
 		});
 
 		// If the current value is empty, set the previous value.
-		$('<?php echo $fldId; ?>').addEvent('blur', function() {
+		document.id('<?php echo $fldId; ?>').addEvent('blur', function() {
 			if (!this.getProperty('value')) {
 				this.setProperty('value', value);
 			}
 		});
 <?php endif; ?>
 
-		$('<?php echo $formId; ?>').addEvent('submit', function(e){
+		document.id('<?php echo $formId; ?>').addEvent('submit', function(e){
 			e = new Event(e);
 			e.stop();
 
 			// Disable select boxes with no value selected.
-			if ($chk($('<?php echo $formId; ?>-advanced'))) {
-				$('<?php echo $formId; ?>-advanced').getElements('select').each(function(s){
+			if (document.id('<?php echo $formId; ?>-advanced') != null) {
+				document.id('<?php echo $formId; ?>-advanced').getElements('select').each(function(s){
 					if (!s.getProperty('value')) {
 						s.setProperty('disabled', 'disabled');
 					}
 				});
 			}
 
-			$('<?php echo $formId; ?>').submit();
+			document.id('<?php echo $formId; ?>').submit();
 		});
 
 		/*
@@ -132,7 +132,7 @@ JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
 <?php if ($params->get('show_autosuggest', 1)): ?>
 	<?php JHtml::script('components/com_finder/media/js/autocompleter.js', false, false); ?>
 	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
-	var ModCompleter = new Autocompleter.Request.JSON($('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
+	var ModCompleter = new Autocompleter.Request.JSON(document.id('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});
 //]]>
