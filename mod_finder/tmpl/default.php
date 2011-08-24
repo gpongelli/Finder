@@ -130,15 +130,9 @@ JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
 		 * This segment of code sets up the autocompleter.
 		 */
 <?php if ($params->get('show_autosuggest', 1)): ?>
-	<?php if (class_exists('plgSystemMTUpgrade')): ?>
-		<?php JHtml::script('autocompleter12.js', 'components/com_finder/media/js/'); ?>
-		var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
-		var ModCompleter = new Autocompleter.Request.JSON($('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
-	<?php else: ?>
-		<?php JHtml::script('autocompleter.js', 'components/com_finder/media/js/'); ?>
-		var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
-		var ModCompleter = new Autocompleter.Ajax.Json($('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
-	<?php endif; ?>
+	<?php JHtml::script('components/com_finder/media/js/autocompleter.js', false, false); ?>
+	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
+	var ModCompleter = new Autocompleter.Request.JSON($('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});
 //]]>

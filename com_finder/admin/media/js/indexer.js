@@ -1,7 +1,168 @@
-
-var FinderProgressBar=new Class({options:{container:$$('body')[0],boxID:'',percentageID:'',displayID:'',startPercentage:0,displayText:false,speed:10},initialize:function(options){this.setOptions(options);this.createElements();},createElements:function(){var box=new Element('div',{id:this.options.boxID});var perc=new Element('div',{id:this.options.percentageID,'style':'width:0px;'});perc.inject(box);box.inject(this.options.container);if(this.options.displayText){var text=new Element('div',{id:this.options.displayID});text.injectInside(this.options.container);}
-this.set(this.options.startPercentage);},calculate:function(percentage){return($(this.options.boxID).getStyle('width').replace('px','')*(percentage/100)).toInt();},animate:function(to){var myEffect=$(this.options.percentageID).effects({duration:this.options.speed});myEffect.start({'width':this.calculate(to.toInt())});if(this.options.displayText){$(this.options.displayID).setText(to.toInt()+'%');}},set:function(to){this.animate(to);}});FinderProgressBar.implement(new Options);var FinderIndexer=new Class({totalItems:null,batchSize:null,offset:null,progress:null,optimized:false,path:'index.php?option=com_finder&tmpl=component&format=json&protocol=json',ajax:null,initialize:function(){this.offset=0;this.progress=0;this.pb=new FinderProgressBar({container:$('finder-progress-container'),startPercentage:0,speed:600,boxID:'finder-progress-box',percentageID:'finder-progress-perc',displayID:'finder-progress-status',displayText:true});this.ajax=new Ajax(this.path,{method:'get',data:$('finder-indexer-token').getProperty('name')+"=1&task=indexer.start",evalScripts:true});this.ajax.addEvent('onComplete',this.handleResponse.bind(this));this.ajax.addEvent('onFailure',this.handleResponse.bind(this));this.ajax.request()},handleResponse:function(resp){json=Json.evaluate(resp,true);if(json)$('finder-indexer-token').setProperty('name',json.token);if(json==null||json.error==true){if(this.pb)$(this.pb.options.container).remove();if(!json){json=$chk(resp.responseText)?Json.evaluate(resp.responseText,true):null;}
-var header=json?json.header:'An Error Has Occurred';var message=json?json.message:'The following message was returned by the server: <br />'+resp
-$('finder-progress-header').setText(header).addClass('finder-error');$('finder-progress-message').setHTML(message).addClass('finder-error');}else{if(json.start)this.totalItems=json.totalItems;this.offset+=json.batchOffset;this.updateProgress(json.header,json.message);if(this.offset<this.totalItems){this.ajax.setOptions({data:json.token+"=1&task=indexer.batch"});this.ajax.request();}
-else if(!this.optimized){this.optimized=true;this.ajax.setOptions({data:json.token+"=1&task=indexer.optimize"});this.ajax.request();}}},updateProgress:function(header,message){this.progress=(this.offset/this.totalItems)*100;$('finder-progress-header').setText(header);$('finder-progress-message').setHTML(message);if(this.pb&&this.progress<100){this.pb.set(this.progress);}
-else if(this.pb){$(this.pb.options.container).remove();this.pb=false;}}});window.addEvent('domready',function(){Indexer=new FinderIndexer();if(typeof window.parent.SqueezeBox=='object'){window.parent.SqueezeBox.addEvent('onClose',function(){Indexer.ajax.cancel();window.parent.location.reload(true);});}});
+var FinderProgressBar = new Class({
+	Implements: [Events, Options],
+	options: {
+		container: document.body,
+		boxID: 'progress-bar-box-id',
+		percentageID: 'progress-bar-percentage-id',
+		displayID: 'progress-bar-display-id',
+		startPercentage: 0,
+		displayText: false,
+		speed: 10,
+		step: 1,
+		allowMore: false,
+		onComplete: $empty,
+		onChange: $empty
+	},
+	initialize: function (options) {
+		this.setOptions(options);
+		this.options.container = document.id(this.options.container);
+		this.createElements();
+	},
+	createElements: function () {
+		var box = new Element('div', {
+			id: this.options.boxID
+		});
+		var perc = new Element('div', {
+			id: this.options.percentageID,
+			'style': 'width:0px;'
+		});
+		perc.inject(box);
+		box.inject(this.options.container);
+		if (this.options.displayText) {
+			var text = new Element('div', {
+				id: this.options.displayID
+			});
+			text.inject(this.options.container);
+		}
+		this.set(this.options.startPercentage);
+	},
+	calculate: function (percentage) {
+		return (document.id(this.options.boxID).getStyle('width').replace('px', '') * (percentage / 100)).toInt();
+	},
+	animate: function (go) {
+		var run = false;
+		var self = this;
+		if (!self.options.allowMore && go > 100) {
+			go = 100;
+		}
+		self.to = go.toInt();
+		document.id(self.options.percentageID).set('morph', {
+			duration: this.options.speed,
+			link: 'cancel',
+			onComplete: function () {
+				self.fireEvent('change', [self.to]);
+				if (go >= 100) {
+					self.fireEvent('complete', [self.to]);
+				}
+			}
+		}).morph({
+			width: self.calculate(go)
+		});
+		if (self.options.displayText) {
+			document.id(self.options.displayID).set('text', self.to + '%');
+		}
+	},
+	set: function (to) {
+		this.animate(to);
+	},
+	step: function () {
+		this.set(this.to + this.options.step);
+	}
+});
+var FinderIndexer = new Class({
+	totalItems: null,
+	batchSize: null,
+	offset: null,
+	progress: null,
+	optimized: false,
+	path: 'index.php?option=com_finder&tmpl=component&format=json&protocol=json',
+	initialize: function () {
+		this.offset = 0;
+		this.progress = 0;
+		this.pb = new FinderProgressBar({
+			container: $('finder-progress-container'),
+			startPercentage: 0,
+			speed: 600,
+			boxID: 'finder-progress-box',
+			percentageID: 'finder-progress-perc',
+			displayID: 'finder-progress-status',
+			displayText: true
+		});
+		this.path = this.path + '&' + $('finder-indexer-token').get('name') + '=1';
+		this.getRequest('indexer.start').send()
+	},
+	getRequest: function (task) {
+		return new Request.JSON({
+			url: this.path,
+			method: 'get',
+			data: 'task=' + task,
+			onSuccess: this.handleResponse.bind(this),
+			onFailure: this.handleFailure.bind(this)
+		});
+	},
+	handleResponse: function (json, resp) {
+		try {
+			if (json === null) {
+				throw resp;
+			}
+			if (json.error) {
+				throw json;
+			}
+			if (json.start) this.totalItems = json.totalItems;
+			this.offset += json.batchOffset;
+			this.updateProgress(json.header, json.message);
+			if (this.offset < this.totalItems) {
+				this.getRequest('indexer.batch').send();
+			} else if (!this.optimized) {
+				this.optimized = true;
+				this.getRequest('indexer.optimize').send();
+			}
+		} catch (error) {
+			if (this.pb) $(this.pb.options.container).dispose();
+			try {
+				if (json.error) {
+					$('finder-progress-header').set('text', json.header).addClass('finder-error');
+					$('finder-progress-message').set('html', json.message).addClass('finder-error');
+				}
+			} catch (ignore) {
+				if (error == '') {
+					error = 'No error was returned. Make sure error reporting is enabled.';
+				}
+				$('finder-progress-header').set('text', 'An Error Has Occurred').addClass('finder-error');
+				$('finder-progress-message').set('html', error).addClass('finder-error');
+			}
+		}
+		return true;
+	},
+	handleFailure: function (xhr) {
+		json = (typeof xhr == 'object' && xhr.responseText) ? xhr.responseText : null;
+		json = json ? JSON.decode(json, true) : null;
+		if (this.pb) $(this.pb.options.container).dispose();
+		if (json) {
+			json = $chk(json.responseText) ? Json.evaluate(json.responseText, true) : json;
+		}
+		var header = json ? json.header : 'An Error Has Occurred';
+		var message = json ? json.message : 'The following message was returned by the server: <br />' + json
+		$('finder-progress-header').set('text', header).addClass('finder-error');
+		$('finder-progress-message').set('html', message).addClass('finder-error');
+	},
+	updateProgress: function (header, message) {
+		this.progress = (this.offset / this.totalItems) * 100;
+		$('finder-progress-header').set('text', header);
+		$('finder-progress-message').set('html', message);
+		if (this.pb && this.progress < 100) {
+			this.pb.set(this.progress);
+		} else if (this.pb) {
+			$(this.pb.options.container).dispose();
+			this.pb = false;
+		}
+	}
+});
+window.addEvent('domready', function () {
+	Indexer = new FinderIndexer();
+	if (typeof window.parent.SqueezeBox == 'object') {
+		window.parent.SqueezeBox.addEvent('onClose', function () {
+			window.parent.location.reload(true);
+		});
+	}
+});
