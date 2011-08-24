@@ -84,7 +84,7 @@ class FinderControllerIndexer extends JController
 		header('Expires: -1');
 
 		// Check for a valid token. If invalid, send a 403 with the error message.
-		JRequest::checkToken('request') or $this->sendResponse(new JException(JText::_('JINVALID_TOKEN'), 403));
+		JRequest::checkToken('request') or $this->sendResponse(new Exception(JText::_('JINVALID_TOKEN'), 403));
 
 		// Put in a buffer to silence noise.
 		ob_start();
