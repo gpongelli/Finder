@@ -10,12 +10,13 @@
 defined('_JEXEC') or die;
 
 $lang = &JFactory::getLanguage();
+JText::script('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');
 ?>
 
 <script type="text/javascript">
 Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'map.delete') {
-		if (confirm(<?php echo JText::_('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT');?>)) {
+		if (confirm(Joomla.JText._('COM_FINDER_MAPS_CONFIRM_DELETE_PROMPT'))) {
 			Joomla.submitform(pressbutton);
 		} else {
 			return false;

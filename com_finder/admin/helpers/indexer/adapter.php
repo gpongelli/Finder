@@ -739,7 +739,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$params	= json_decode($params);
 
 		// Get the page title if it is set.
-		if ($params->page_title && $params->show_page_title)
+		if ($params->page_title)
 		{
 			$return = $params->page_title;
 		}

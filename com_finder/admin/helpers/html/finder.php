@@ -34,7 +34,7 @@ abstract class JHtmlFinder
 		$query = $db->getQuery(true);
 		$query->select('DISTINCT t.title AS text, t.id AS value');
 		$query->from($db->quoteName('#__finder_types').' AS t');
-		$query->join($db->quoteName('#__finder_links').' AS l ON l.type_id = t.id');
+		$query->join('LEFT', $db->quoteName('#__finder_links').' AS l ON l.type_id = t.id');
 		$query->order('t.title ASC');
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();

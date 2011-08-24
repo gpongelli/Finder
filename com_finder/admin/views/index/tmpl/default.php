@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 
 $lang = &JFactory::getLanguage();
+JText::script('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');
+JText::script('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');
 ?>
 
 <script type="text/javascript">
