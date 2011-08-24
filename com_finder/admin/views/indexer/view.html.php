@@ -44,6 +44,7 @@ class FinderViewIndexer extends JView
 			return false;
 		}
 
+		JHtml::_('behavior.framework');
 		JHtml::stylesheet('administrator/components/com_finder/media/css/indexer.css', false, false, false);
 		JHtml::script('administrator/components/com_finder/media/js/indexer.js', false, false);
 

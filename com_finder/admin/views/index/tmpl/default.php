@@ -17,14 +17,14 @@ $lang = &JFactory::getLanguage();
 <script type="text/javascript">
 Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'index.purge') {
-		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');?>)) {
+		if (confirm(Joomla.JText._('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT'))) {
 			Joomla.submitform(pressbutton);
 		} else {
 			return false;
 		}
 	}
 	if (pressbutton == 'index.delete') {
-		if (confirm(<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT');?>)) {
+		if (confirm(Joomla.JText._('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'))) {
 			Joomla.submitform(pressbutton);
 		} else {
 			return false;
