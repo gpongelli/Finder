@@ -1,1 +1,38 @@
-#finder-indexer-container{text-align:center;}#finder-progress-container{width:350px;text-align:center;margin:0 auto;}#finder-progress-box{background-color:#eee;border:1px solid #ccc;width:350px;height:20px;}#finder-progress-perc{margin: -1px 0 0 -1px;background-color:#96B4E0;border:1px solid #0B55C4;height:20px;}#finder-progress-status{font-size:14px;padding:3px 0 0 10px;font-weight:bold;}h1.finder-error{color:#FF0000;}p.finder-error{font-weight:bold;color:#FF0000;}
+#finder-indexer-container {
+	text-align:center;
+}
+
+#finder-progress-container {
+	width:350px;
+	text-align:center;
+	margin:0 auto;
+}
+
+#finder-progress-box {
+	background-color:#eee;
+	border:1px solid #ccc;
+	width:350px;
+	height:20px;
+}
+
+#finder-progress-perc {
+	margin: -1px 0 0 -1px;
+	background-color:#96B4E0;
+	border:1px solid #0B55C4;
+	height:20px;
+}
+
+#finder-progress-status {
+	font-size:14px;
+	padding:3px 0 0 10px;
+	font-weight:bold;
+}
+
+h1.finder-error {
+	color:#FF0000;
+}
+
+p.finder-error {
+	font-weight:bold;
+	color:#FF0000;
+}

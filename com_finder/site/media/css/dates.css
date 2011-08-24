@@ -1,1 +1,26 @@
- #finder-filter-window{width:100%;padding:0px;margin:10px 0px 10px;overflow:auto;}ul#finder-filter-select-dates{list-style: none;padding:0px;margin:0px;}ul#finder-filter-select-dates li.filter-date{list-style: none;padding:5px 0px;margin:0px;float: left;width:49%;background: none;text-align: left;}ul#finder-filter-select-dates li.filter-date select.filter-date-operator{margin-right:10px;}
+ #finder-filter-window {
+	width:100%;
+	padding:0px;
+	margin:10px 0px 10px;
+	overflow:auto;
+}
+
+ul#finder-filter-select-dates {
+	list-style: none;
+	padding:0px;
+	margin:0px;
+}
+
+ul#finder-filter-select-dates li.filter-date {
+	list-style: none;
+	padding:5px 0px;
+	margin:0px;
+	float: left;
+	width:49%;
+	background: none;
+	text-align: left;
+}
+
+ul#finder-filter-select-dates li.filter-date select.filter-date-operator {
+	margin-right:10px;
+}
