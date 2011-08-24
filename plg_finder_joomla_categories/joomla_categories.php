@@ -214,8 +214,9 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.title, a.alias, a.description AS summary');
 		$sql->select('a.published AS state, a.access, a.params');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');

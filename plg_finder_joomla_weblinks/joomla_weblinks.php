@@ -247,8 +247,9 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.catid, a.title, a.alias, a.url AS link, a.description AS summary');
 		$sql->select('a.state AS state, a.ordering, a.approved, a.date AS start_date, a.params');
 		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');

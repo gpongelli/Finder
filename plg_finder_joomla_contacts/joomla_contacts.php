@@ -352,8 +352,9 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.name AS title, a.alias, con_position AS position, a.address');
 		$sql->select('a.suburb AS city, a.state AS region, a.country, a.postcode AS zip');
 		$sql->select('a.telephone, a.fax, a.misc AS summary, a.email_to AS email, a.mobile');

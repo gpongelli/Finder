@@ -317,8 +317,9 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
-		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $this->_db->getQuery(true);
+		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.title, a.alias, a.introtext AS summary, a.fulltext AS body');
 		$sql->select('a.state, a.catid, a.created AS start_date, a.created_by');
 		$sql->select('a.created_by_alias, a.modified, a.modified_by, a.attribs AS params');
