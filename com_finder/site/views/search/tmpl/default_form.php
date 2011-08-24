@@ -78,16 +78,16 @@ defined('_JEXEC') or die;
 
 	<input type="text" name="q" id="q" size="50" value="<?php echo $this->escape($this->query->input); ?>" />
 
-	<button class="button" type="submit"><?php echo JText::_('FINDER_SEARCH_BUTTON'); ?></button>
+	<button class="button" type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
 
 	<?php if ($this->params->get('show_advanced', 1)): ?>
 		<br />
-		<a id="advanced-search-toggle"><?php echo JText::_('FINDER_ADVANCED_SEARCH_TOGGLE'); ?></a>
+		<a id="advanced-search-toggle"><?php echo JText::_('COM_FINDER_ADVANCED_SEARCH_TOGGLE'); ?></a>
 
 		<div id="advanced-search">
 			<?php if ($this->params->get('show_advanced_tips', 1)): ?>
 				<div class="advanced-search-tip">
-					<?php echo JText::_('FINDER_ADVANCED_TIPS'); ?>
+					<?php echo JText::_('COM_FINDER_ADVANCED_TIPS'); ?>
 				</div>
 			<?php endif; ?>
 			<div id="finder-filter-window">

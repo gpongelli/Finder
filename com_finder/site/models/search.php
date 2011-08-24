@@ -236,7 +236,7 @@ class FinderModelSearch extends JModelList
 
 		$query->select('l.link_id');
 		$query->from($db->quoteName('#__finder_links').' AS l');
-		$query->where($this->db->quoteName('l.access').' IN ('.$groups.')');
+		$query->where($db->quoteName('l.access').' IN ('.$groups.')');
 		$query->where($db->quoteName('l.state').' = 1');
 
 		// Get the null date and the current date, minus seconds.

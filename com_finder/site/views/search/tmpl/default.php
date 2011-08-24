@@ -8,9 +8,9 @@
 
 defined('_JEXEC') or die;
 
-JHTML::_('behavior.mootools');
-JHtml::addIncludePath(JPATH_COMPONENT.DS.'helpers'.DS.'html');
-JHTML::stylesheet('finder.css', 'components/com_finder/media/css/');
+JHtml::_('behavior.framework');
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, false);
 
 // Check if we need to show the page title.
 if ($this->params->get('show_page_title', 1)):

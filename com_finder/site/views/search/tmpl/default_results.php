@@ -30,7 +30,7 @@ if (($this->suggested && $this->params->get('show_suggested_query', 1)) || ($thi
 					. $this->escape($this->suggested)
 					. '</a>';
 
-			echo JText::sprintf('FINDER_SEARCH_SIMILAR', $link);
+			echo JText::sprintf('COM_FINDER_SEARCH_SIMILAR', $link);
 		}
 		// Display the explained search query.
 		elseif ($this->explained && $this->params->get('show_explained_query', 1)) {
@@ -44,8 +44,8 @@ endif;
 if ($this->total == 0):
 ?>
 	<div id="search-result-empty">
-		<h2><?php echo JText::_('FINDER_SEARCH_NO_RESULTS_HEADING'); ?></h2>
-		<p><?php echo JText::sprintf('FINDER_SEARCH_NO_RESULTS_BODY', $this->escape($this->query->input)); ?></p>
+		<h2><?php echo JText::_('COM_FINDER_SEARCH_NO_RESULTS_HEADING'); ?></h2>
+		<p><?php echo JText::sprintf('COM_FINDER_SEARCH_NO_RESULTS_BODY', $this->escape($this->query->input)); ?></p>
 	</div>
 <?php
 else:
@@ -54,7 +54,7 @@ else:
 	$total	= (int)$this->pagination->get('total');
 	$limit	= (int)$this->pagination->get('limit') * $this->pagination->get('pages.current');
 	$limit	= (int)($limit > $total ? $total : $limit);
-	$pages	= JText::sprintf('FINDER_SEARCH_RESULTS_OF', $start, $limit, $total);
+	$pages	= JText::sprintf('COM_FINDER_SEARCH_RESULTS_OF', $start, $limit, $total);
 ?>
 	<br id="finder-highlighter-start" />
 	<ul class="search-results-list">
