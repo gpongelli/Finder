@@ -1,10 +1,10 @@
 <?php
 /**
-* @package		JXtended.Finder
- * @subpackage	plgFinderZoo_Items
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  mod_finder_status
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 /**
@@ -83,7 +83,7 @@ class Mod_Finder_StatusInstallerScript {
 		$query->insert($db->quoteName('#__modules_menu'));
 		$query->values($moduleId.', 0');
 		$db->setQuery($query);
-			if (!$db->query()) {
+		if (!$db->query()) {
 			JError::raiseNotice(1, JText::_('MOD_FINDER_ERROR_PUBLISH'));
 		}
 	}

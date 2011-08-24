@@ -1,18 +1,21 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	plgFinderZoo_Items
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Administrator
+ * @subpackage  mod_finder_status
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_BASE') or die;
 
 // Pause if the main menu is disabled.
-if (JRequest::getBool('hidemainmenu')) {
+if (JRequest::getBool('hidemainmenu'))
+{
 	$text = JText::_('MOD_FINDER_STATUS_PAUSED');
-} else {
+}
+else
+{
 	$text = JText::_('MOD_FINDER_STATUS_WAITING');
 	JHtml::script('administrator/modules/mod_finder_status/media/js/status.js', false, false);
 }

@@ -1,20 +1,22 @@
 <?php
 /**
- * @version		$Id:default.php 80 2008-04-24 19:57:50Z rob.schley $
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  mod_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
-JHtml::_('behavior.mootools');
-JHtml::addIncludePath(JPATH_SITE.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'html');
+JHtml::_('behavior.framework');
+JHtml::addIncludePath(JPATH_SITE.'/components/com_finder/helpers/html');
 
-if (!defined('FINDER_PATH_INDEXER')) {
-	define('FINDER_PATH_INDEXER', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'indexer');
+if (!defined('FINDER_PATH_INDEXER'))
+{
+	define('FINDER_PATH_INDEXER', JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer');
 }
-JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER.DS.'query.php');
+JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER.'/query.php');
 
 // Instantiate a query object.
 $query = new FinderIndexerQuery(array('filter' => $params->get('f')));
@@ -26,13 +28,15 @@ $output = '<input type="text" name="q" id="'.$fldId.'" class="inputbox" size="'.
 $button = '';
 $label	= '';
 
-if ($params->get('show_label', 1)) {
+if ($params->get('show_label', 1))
+{
 	$label	= '<label for="'.$fldId.'" class="finder'.$suffix.'">'
 			. $params->get('alt_label', JText::_('JSEARCH_FILTER_SUBMIT'))
 			. '</label>';
 }
 
-if ($params->get('show_button', 1)) {
+if ($params->get('show_button', 1))
+{
 	$button	= '<button class="button'.$suffix.' finder'.$suffix.'" type="submit">'.JText::_('MOD_FINDER_SEARCH_BUTTON').'</button>';
 }
 
@@ -78,7 +82,7 @@ switch ($params->get('button_pos', 'right')):
 	    break;
 endswitch;
 
-JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
+JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, false);
 ?>
 
 <script type="text/javascript">
@@ -150,10 +154,10 @@ JHtml::stylesheet('finder.css', 'components/com_finder/media/css/');
 <?php if ($params->get('show_advanced', 1)): ?>
 	<?php if ($params->get('show_advanced', 1) == 2): ?>
 		<br />
-		<a href="<?php echo JRoute::_($route); ?>"><?php echo JText::_('FINDER_ADVANCED_SEARCH'); ?></a>
+		<a href="<?php echo JRoute::_($route); ?>"><?php echo JText::_('COM_FINDER_ADVANCED_SEARCH'); ?></a>
 	<?php elseif ($params->get('show_advanced', 1) == 1): ?>
 		<div id="mod-finder-advanced">
-			<?php echo JHTML::_('filter.select', $query, $params); ?>
+			<?php echo JHtml::_('filter.select', $query, $params); ?>
 		</div>
 	<?php endif; ?>
 <?php endif; ?>

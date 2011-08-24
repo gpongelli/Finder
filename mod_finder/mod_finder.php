@@ -1,18 +1,19 @@
 <?php
 /**
- * @version		$Id:mod_finder.php 80 2008-04-24 19:57:50Z rob.schley $
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  mod_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
 // Register dependent classes.
-JLoader::register('FinderHelperRoute', JPATH_SITE.DS.'components'.DS.'com_finder'.DS.'helpers'.DS.'route.php');
+JLoader::register('FinderHelperRoute', JPATH_SITE.'/components/com_finder/helpers/route.php');
 
 // Include the helper.
-require_once dirname(__FILE__).DS.'helper.php';
+require_once dirname(__FILE__).'/helper.php';
 
 // Initialize module parameters.
 $params->def('field_size', 20);
