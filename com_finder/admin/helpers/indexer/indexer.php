@@ -1103,8 +1103,8 @@ class FinderIndexer
 		// Iterate through the tokens to create SQL value sets.
 		foreach ($tokens as $token)
 		{
-			$values[] = '( '.$db->quote($token->term).', '.$db->quote($token->stem).', '.(int)$token->common.
-						', '.(int)$token->phrase.', '.(float)$token->weight.', '.(int)$context.' )';
+			$query->values($db->quote($token->term).', '.$db->quote($token->stem).', '.(int)$token->common.
+						', '.(int)$token->phrase.', '.(float)$token->weight.', '.(int)$context);
 		}
 
 		// Insert the tokens into the database.
@@ -1113,7 +1113,6 @@ class FinderIndexer
 					. '('.$db->quoteName('term').', '.$db->quoteName('stem').', '.$db->quoteName('common').','
 					. $db->quoteName('phrase').', '.$db->quoteName('weight').', '.$db->quoteName('context').')'
 		);
-		$query->values(implode(', ', $values));
 		$db->setQuery($query);
 		$db->query();
 
