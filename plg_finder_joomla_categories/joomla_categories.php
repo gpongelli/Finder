@@ -221,6 +221,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		$sql->select('a.published AS state, a.access, a.params');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
 		$sql->from('#__categories AS a');
+		$sql->where($db->quoteName('a.id').' > 1');
 
 		return $sql;
 	}
