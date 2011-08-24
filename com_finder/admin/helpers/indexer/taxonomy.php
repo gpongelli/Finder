@@ -245,14 +245,17 @@ class FinderIndexerTaxonomy
 	{
 		$db = JFactory::getDBO();
 
+		// Set user variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Create a query to get the taxonomy branch titles.
-		// TODO: Handle access
 		$query	= $db->getQuery(true);
 		$query->select('title');
 		$query->from($db->quoteName('#__finder_taxonomy'));
 		$query->where($db->quoteName('parent_id').' = 1');
 		$query->where($db->quoteName('state').' = 1');
-		//$query->where('access <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('access').' IN ('.$groups.')');
 
 		// Get the branch titles.
 		$db->setQuery($query);
@@ -283,16 +286,19 @@ class FinderIndexerTaxonomy
 	{
 		$db = JFactory::getDBO();
 
+		// Set user variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Create a query to get the node.
-		// TODO: Handle access
 		$query	= $db->getQuery(true);
 		$query->select('t1.*');
 		$query->from($db->quoteName('#__finder_taxonomy').' AS t1');
 		$query->join('INNER', $db->quoteName('#__finder_taxonomy').' AS t2 ON t2.id = t1.parent_id');
-		//$query->where($db->quoteName('t1.access').' <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t1.access').' IN ('.$groups.')');
 		$query->where($db->quoteName('t1.state').' = 1');
 		$query->where($db->quoteName('t1.title').' LIKE "'.$db->getEscaped($title).'%"');
-		//$query->where($db->quoteName('t2.access').' <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t2.access').' IN ('.$groups.')');
 		$query->where($db->quoteName('t2.state').' = 1');
 		$query->where($db->quoteName('t2.title').' = '.$db->quote($branch));
 

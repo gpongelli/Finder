@@ -226,14 +226,17 @@ class FinderModelSearch extends JModelList
 			return clone($this->_retrieve($store, false));
 		}
 
+		// Set variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
 
 		$query->select('l.link_id');
 		$query->from($db->quoteName('#__finder_links').' AS l');
-		//$query->where('l.access <= '.(int)$this->getState('user.aid'));
-		$query->where($db->quoteName('l.state').' = 1');
+		$query->where($this->db->quoteName('l.access').' IN ('.$groups.')');
 		$query->where($db->quoteName('l.state').' = 1');
 
 		// Get the null date and the current date, minus seconds.
@@ -1224,6 +1227,6 @@ class FinderModelSearch extends JModelList
 
 		// Load the user state.
 		$this->setState('user.id', (int)$user->get('id'));
-		//$this->setState('user.aid',	(int)$user->get('aid'));
+		$this->setState('user.groups', $user->getAuthorisedViewLevels());
 	}
 }

@@ -710,13 +710,17 @@ abstract class FinderIndexerAdapter extends JPlugin
 	{
 		$return = null;
 
+		// Set variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Build a query to get the menu params.
 		$sql = $this->db->getQuery(true);
 		$sql->select($this->db->quoteName('params'));
 		$sql->from($this->db->quoteName('#__menu'));
 		$sql->where($this->db->quoteName('link').' = '.$this->db->quote($url));
 		$sql->where($this->db->quoteName('published').' = 1');
-		//$sql->where('access <= '.(int)JFactory::getUser()->get('aid'));
+		$sql->where($this->db->quoteName('m.access').' IN ('.$groups.')');
 
 		// Get the menu params from the database.
 		$this->db->setQuery($sql);

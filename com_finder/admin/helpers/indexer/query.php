@@ -486,6 +486,10 @@ class FinderIndexerQuery
 		// Get the database object.
 		$db = JFactory::getDBO();
 
+		// Initialize user variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Load the predefined filter.
 		$query	= $db->getQuery(true);
 		$query->select($db->quoteName('f.data').', '.$db->quoteName('f.params'));
@@ -543,16 +547,15 @@ class FinderIndexerQuery
 		 * two reasons: one, it allows us to ensure that the filters being used
 		 * are real; two, we need to sort the filters by taxonomy branch.
 		 */
-		//TODO: Update access portion of query
 		$query->clear();
 		$query->select('t1.id, t1.title, t2.title AS branch');
 		$query->from($db->quoteName('#__finder_taxonomy').' AS t1');
 		$query->join('INNER', $db->quoteName('#__finder_taxonomy').' AS t2 ON t2.id = t1.parent_id');
 		$query->where('t1.state = 1');
-		//$query->where('t1.access <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t1.access').' IN ('.$groups.')');
 		$query->where('t1.id IN ('.implode(',', $filters).')');
 		$query->where('t2.state = 1');
-		//$query->where('t2.access <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t2.access').' IN ('.$groups.')');
 
 		// Load the filters.
 		$db->setQuery($query);
@@ -590,6 +593,10 @@ class FinderIndexerQuery
 	 */
 	protected function processDynamicTaxonomy($filters)
 	{
+		// Initialize user variables
+		$user = JFactory::getUser();
+		$groups = implode(',', $user->getAuthorisedViewLevels());
+
 		// Remove duplicates and sanitize.
 		$filters = array_unique($filters);
 		JArrayHelper::toInteger($filters);
@@ -615,15 +622,14 @@ class FinderIndexerQuery
 		 * two reasons: one, it allows us to ensure that the filters being used
 		 * are real; two, we need to sort the filters by taxonomy branch.
 		 */
-		//TODO: Update access portion of query
 		$query->select('t1.id, t1.title, t2.title AS branch');
 		$query->from($db->quoteName('#__finder_taxonomy').' AS t1');
 		$query->join('INNER', $db->quoteName('#__finder_taxonomy').' AS t2 ON t2.id = t1.parent_id');
 		$query->where('t1.state = 1');
-		//$query->where('t1.access <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t1.access').' IN ('.$groups.')');
 		$query->where('t1.id IN ('.implode(',', $filters).')');
 		$query->where('t2.state = 1');
-		//$query->where('t2.access <= '.(int)JFactory::getUser()->get('aid'));
+		$query->where($this->db->quoteName('t2.access').' IN ('.$groups.')');
 
 		// Load the filters.
 		$db->setQuery($query);
