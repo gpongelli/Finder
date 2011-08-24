@@ -226,7 +226,6 @@ class FinderIndexer
 		$nd = $db->getNullDate();
 
 		// Check if the item is in the database.
-		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);
 		$query->select($db->quoteName('link_id').', '.$db->quoteName('md5sum'));
 		$query->from($db->quoteName('#__finder_links'));

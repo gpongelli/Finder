@@ -238,8 +238,14 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
-		$item->params	= new JParameter($item->params);
-		$item->metadata	= new JParameter($item->metadata);
+		$registry = new JRegistry;
+		$registry->loadString($item->params);
+		$item->params = JComponentHelper::getParams('com_content', true);
+		$item->params->merge($registry);
+
+		$registry = new JRegistry;
+		$registry->loadString($item->metadata);
+		$item->metadata = $registry;
 
 		// Trigger the onPrepareContent event.
 		$item->summary	= FinderIndexerHelper::prepareContent($item->summary, $item->params);
@@ -254,7 +260,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 		$title = $this->getItemMenuTitle($item->url);
 
 		// Adjust the title if necessary.
-		if (!empty($title) && $this->params->get('use_menu_title', true)) {
+		if (!empty($title) && $this->params->get('use_menu_title', true))
+		{
 			$item->title = $title;
 		}
 
@@ -278,14 +285,18 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 		$item->addTaxonomy('Type', 'Article');
 
 		// Add the author taxonomy data.
-		if (!empty($item->author) || !empty($item->created_by_alias)) {
+		if (!empty($item->author) || !empty($item->created_by_alias))
+		{
 			$item->addTaxonomy('Author', !empty($item->created_by_alias) ? $item->created_by_alias : $item->author);
 		}
 
 		// Add the category taxonomy data.
-		if (!empty($item->category)) {
+		if (!empty($item->category))
+		{
 			$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
-		} else {
+		}
+		else
+		{
 			$item->addTaxonomy('Category', JText::_('Uncategorized'));
 		}
 

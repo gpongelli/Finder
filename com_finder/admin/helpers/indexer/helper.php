@@ -586,18 +586,19 @@ class FinderIndexerHelper
 		}
 
 		// Instantiate the parameter object if necessary.
-		// TODO: Break JParameter dependency
-		if (!($params instanceof JParameter))
+		if (!($params instanceof JRegistry))
 		{
-			$params = new JParameter($params);
+			$registry = new JRegistry;
+			$registry->loadString($params);
+			$params = $registry;
 		}
 
 		// Create a mock content object.
 		$content = JTable::getInstance('Content');
 		$content->text = $text;
 
-		// Fire the onPrepareContent event.
-		$dispatcher->trigger('onPrepareContent', array(&$content, &$params, 0));
+		// Fire the onContentPrepare event.
+		$dispatcher->trigger('onContentPrepare', array('com_finder.indexer', &$content, &$params, 0));
 
 		return $content->text;
 	}

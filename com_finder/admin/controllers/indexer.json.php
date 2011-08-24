@@ -280,7 +280,7 @@ class FinderIndexerResponse
 		{
 			// Prepare the error response.
 			$this->error		= true;
-			$this->header		= JText::_('FINDER_INDEXER_HEADER_ERROR');
+			$this->header		= JText::_('COM_FINDER_INDEXER_HEADER_ERROR');
 			$this->message		= $state->getMessage();
 		}
 		else
