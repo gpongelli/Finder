@@ -191,8 +191,7 @@ class FinderIndexerQuery
 		$this->mode = 'AND';
 
 		// Initialize the temporary date storage.
-		// TODO: Convert from JParameter
-		$this->dates = new JParameter('');
+		$this->dates = new JRegistry();
 
 		// Populate the temporary date storage.
 		if (isset($options['date1']) && !empty($options['date1']))
@@ -516,8 +515,9 @@ class FinderIndexerQuery
 		$this->filter = (int)$filterId;
 
 		// Get a parameter object for the filter date options.
-		//TODO: Convert from JParameter
-		$params = new JParameter($return->params);
+		$registry = new JRegistry;
+		$registry->loadString($return->params);
+		$params = $registry;
 
 		// Set the dates if not already set.
 		$this->dates->def('d1', $params->get('d1'));
@@ -704,7 +704,7 @@ class FinderIndexerQuery
 		if ($date1 === JString::strtolower(JText::_('COM_FINDER_QUERY_FILTER_TODAY')))
 		{
 			$today = JFactory::getDate('now', $offset);
-			$date1 = $today->toFormat('%Y-%m-%d');
+			$date1 = $today->format('%Y-%m-%d');
 		}
 
 		// Try to parse the date string.
@@ -722,7 +722,7 @@ class FinderIndexerQuery
 		if ($date2 === JString::strtolower(JText::_('COM_FINDER_QUERY_FILTER_TODAY')))
 		{
 			$today = JFactory::getDate('now', $offset);
-			$date2 = $today->toFormat('%Y-%m-%d');
+			$date2 = $today->format('%Y-%m-%d');
 		}
 
 		// Try to parse the date string.
@@ -774,7 +774,7 @@ class FinderIndexerQuery
 		foreach (FinderIndexerTaxonomy::getBranchTitles() as $branch)
 		{
 			// Add the pattern.
-			$patterns[$branch] = JString::strtolower(JText::_('FINDER_QUERY_FILTER_BRANCH_'.$branch));
+			$patterns[$branch] = JString::strtolower(JText::_('COM_FINDER_QUERY_FILTER_BRANCH_'.$branch));
 		}
 
 		// Container for search terms and phrases.
@@ -831,7 +831,7 @@ class FinderIndexerQuery
 						if ($value === JString::strtolower(JText::_('COM_FINDER_QUERY_FILTER_TODAY')))
 						{
 							$today = JFactory::getDate('now', $offset);
-							$value = $today->toFormat('%Y-%m-%d');
+							$value = $today->format('%Y-%m-%d');
 						}
 
 						// Try to parse the date string.

@@ -59,7 +59,7 @@ abstract class FinderIndexerParser
 		else
 		{
 			// Throw invalid format exception.
-			throw new Exception(JText::sprintf('FINDER_INDEXER_INVALID_PARSER', $format));
+			throw new Exception(JText::sprintf('COM_FINDER_INDEXER_INVALID_PARSER', $format));
 		}
 
 		return $instances[$format];

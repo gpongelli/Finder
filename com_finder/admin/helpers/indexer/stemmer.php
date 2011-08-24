@@ -67,7 +67,7 @@ abstract class FinderIndexerStemmer
 		else
 		{
 			// Throw invalid adapter exception.
-			throw new Exception(JText::sprintf('FINDER_INDEXER_INVALID_STEMMER', $adapter));
+			throw new Exception(JText::sprintf('COM_FINDER_INDEXER_INVALID_STEMMER', $adapter));
 		}
 
 		return $instances[$adapter];

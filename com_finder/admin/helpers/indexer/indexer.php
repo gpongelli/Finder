@@ -269,10 +269,11 @@ class FinderIndexer
 			for ($i = 0; $i <= 15; $i++)
 			{
 				// Flush the maps for the link.
-				$db->setQuery(
-					'DELETE FROM `#__finder_links_terms'.dechex($i).'`' .
-					' WHERE `link_id` = '.(int)$linkId
-				);
+				$query->clear();
+				$query->delete();
+				$query->from($db->quoteName('#__finder_links_terms'.dechex($i)));
+				$query->where($db->quoteName('link_id').' = '.(int)$linkId);
+				$db->setQuery($query);
 				$db->query();
 
 				// Check for a database error.
@@ -597,11 +598,11 @@ class FinderIndexer
 		 * and the aggregate table has the correct term ids, we need to update
 		 * the links counter for each term by one.
 		 */
-		$db->setQuery(
-			'UPDATE `#__finder_terms` AS t' .
-			' INNER JOIN `#__finder_tokens_aggregate` AS ta ON ta.term_id = t.term_id' .
-			' SET t.links = t.links + 1'
-		);
+		$query->clear();
+		$query->update($db->quoteName('#__finder_terms').' AS t');
+		$query->join('INNER', $db->quoteName('#__finder_tokens_aggregate').' AS ta ON ta.term_id = t.term_id');
+		$query->set($db->quoteName('t.links'). ' = t.links + 1');
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
@@ -621,10 +622,10 @@ class FinderIndexer
 		 * the first character of the term. In php, it would be expressed as
 		 * substr(md5(substr($token, 0, 1)), 0, 1)
 		 */
-		$db->setQuery(
-			'UPDATE `#__finder_tokens_aggregate`' .
-			' SET `map_suffix` = SUBSTR(MD5(SUBSTR(`term`, 1, 1)), 1, 1)'
-		);
+		$query->clear();
+		$query->update($db->quoteName('#__finder_tokens_aggregate'));
+		$query->set($db->quoteName('map_suffix'). ' = SUBSTR(MD5(SUBSTR(`term`, 1, 1)), 1, 1)');
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
@@ -675,11 +676,11 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterMapping') : null;
 
 		// Update the signature.
-		$db->setQuery(
-			'UPDATE `#__finder_links`'
-			. ' SET md5sum = '.$db->quote($curSig)
-			. ' WHERE link_id = '.(int)$linkId
-		);
+		$query->clear();
+		$query->update($db->quoteName('#__finder_links'));
+		$query->set($db->quoteName('md5sum'). ' = '.$db->quote($curSig));
+		$query->where($db->quoteName('link_id'). ' = '.(int)$linkId);
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
