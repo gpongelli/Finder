@@ -598,7 +598,7 @@ class FinderIndexer
 		 * and the aggregate table has the correct term ids, we need to update
 		 * the links counter for each term by one.
 		 */
-		$query->clear();
+		$query = $db->getQuery(true);
 		$query->update($db->quoteName('#__finder_terms').' AS t');
 		$query->join('INNER', $db->quoteName('#__finder_tokens_aggregate').' AS ta ON ta.term_id = t.term_id');
 		$query->set($db->quoteName('t.links'). ' = t.links + 1');
@@ -835,7 +835,7 @@ class FinderIndexer
 
 		// Delete all orphaned terms.
 		$query->delete();
-		$query->from($db->quoteName('#__finder_links_terms'));
+		$query->from($db->quoteName('#__finder_terms'));
 		$query->where($db->quoteName('links').' <= 0');
 		$db->setQuery($query);
 		$db->query();

@@ -26,7 +26,7 @@ class modFinderHelper
 	 *
 	 * @since   2.5
 	 */
-	private function _getGetFields($route = null)
+	public function getGetFields($route = null)
 	{
 		$fields = null;
 		$uri	= new JURI(JRoute::_($route));

@@ -145,7 +145,7 @@ JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, fa
 <div class="finder<?php echo $suffix; ?>">
 	<form id="<?php echo $formId; ?>" action="<?php echo JRoute::_($route); ?>" method="get">
 		<?php
-		echo modFinderHelper::_getGetFields($route);
+		echo modFinderHelper::getGetFields($route);
 
 		// Show the form fields.
 		echo $output;

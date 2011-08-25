@@ -79,9 +79,9 @@ class JHtmlFilter
 		$query->join('INNER', $db->quoteName('#__finder_taxonomy').' AS c ON c.parent_id = t.id');
 		$query->where($db->quoteName('t.parent_id').' = 1');
 		$query->where($db->quoteName('t.state').' = 1');
-		$query->where($this->db->quoteName('t.access').' IN ('.$groups.')');
+		$query->where($db->quoteName('t.access').' IN ('.$groups.')');
 		$query->where($db->quoteName('c.state').' = 1');
-		$query->where($this->db->quoteName('c.access').' IN ('.$groups.')');
+		$query->where($db->quoteName('c.access').' IN ('.$groups.')');
 		$query->group($db->quoteName('t.id'));
 		$query->order('t.ordering, t.title');
 
@@ -147,7 +147,7 @@ class JHtmlFilter
 			$query->from($db->quoteName('#__finder_taxonomy').' AS t');
 			$query->where($db->quoteName('t.parent_id').' = '.(int)$bk);
 			$query->where($db->quoteName('t.state').' = 1');
-			$query->where($this->db->quoteName('t.access').' IN ('.$groups.')');
+			$query->where($db->quoteName('t.access').' IN ('.$groups.')');
 			$query->order('t.ordering, t.title');
 
 			// Load the branches.
@@ -272,9 +272,9 @@ class JHtmlFilter
 		$sql->join('INNER', $db->quoteName('#__finder_taxonomy').' AS c ON c.parent_id = t.id');
 		$sql->where($db->quoteName('t.parent_id').' = 1');
 		$sql->where($db->quoteName('t.state').' = 1');
-		$sql->where($this->db->quoteName('t.access').' IN ('.$groups.')');
+		$sql->where($db->quoteName('t.access').' IN ('.$groups.')');
 		$sql->where($db->quoteName('c.state').' = 1');
-		$sql->where($this->db->quoteName('t.access').' IN ('.$groups.')');
+		$sql->where($db->quoteName('t.access').' IN ('.$groups.')');
 		$sql->group($db->quoteName('t.id'));
 		$sql->order('t.ordering, t.title');
 
@@ -323,7 +323,7 @@ class JHtmlFilter
 			$sql->from($db->quoteName('#__finder_taxonomy').' AS t');
 			$sql->where($db->quoteName('t.parent_id').' = '.(int)$bk);
 			$sql->where($db->quoteName('t.state').' = 1');
-			$sql->where($this->db->quoteName('t.access').' IN ('.$groups.')');
+			$sql->where($db->quoteName('t.access').' IN ('.$groups.')');
 			$sql->order('t.ordering, t.title');
 
 			// Limit the nodes to a predefined filter.

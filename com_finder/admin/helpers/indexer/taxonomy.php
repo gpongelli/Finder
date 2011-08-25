@@ -255,7 +255,7 @@ class FinderIndexerTaxonomy
 		$query->from($db->quoteName('#__finder_taxonomy'));
 		$query->where($db->quoteName('parent_id').' = 1');
 		$query->where($db->quoteName('state').' = 1');
-		$query->where($this->db->quoteName('access').' IN ('.$groups.')');
+		$query->where($db->quoteName('access').' IN ('.$groups.')');
 
 		// Get the branch titles.
 		$db->setQuery($query);
@@ -362,7 +362,7 @@ class FinderIndexerTaxonomy
 		$query = $db->getQuery(true);
 		$query->delete('t.*');
 		$query->from($db->quoteName('#__finder_taxonomy').' AS t');
-		$query->join('LEFT', $db->quoteName('#__finder_taxonomy').' AS m ON m.node_id = t.id');
+		$query->join('LEFT', $db->quoteName('#__finder_taxonomy_map').' AS m ON m.node_id = t.id');
 		$query->where($db->quoteName('t.parent_id').' > 1');
 		$query->where($db->quoteName('m.link_id').' IS NULL');
 		$db->setQuery($query);

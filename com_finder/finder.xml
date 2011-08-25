@@ -36,9 +36,9 @@
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
-	<!-- <languages folder="site/language">
+	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_finder.ini</language>
-	</languages>  -->
+	</languages>
 	<administration>
 		<files folder="admin">
 			<filename>access.xml</filename>
