@@ -1,5 +1,5 @@
 window.addEvent('domready', function () {
-	var a = $('jxplugin-enable');
+	var a = document.id('jxplugin-enable');
 	if (a) {
 		var href = a.getProperty('href');
 		a.addEvent('hide', function () {
@@ -15,8 +15,8 @@ window.addEvent('domready', function () {
 				linkId: this.getProperty('id'),
 				onComplete: function (response) {
 					if (response.error == false) {
-						$(this.options.linkId).fireEvent('hide');
-						$('system-message').fireEvent('check');
+						document.id(this.options.linkId).fireEvent('hide');
+						document.id('system-message').fireEvent('check');
 					} else {
 						alert(response.message);
 					}
@@ -26,7 +26,7 @@ window.addEvent('domready', function () {
 		}, a);
 		a.setProperty('href', 'javascript: void(0);');
 	}
-	sm = $('system-message');
+	sm = document.id('system-message');
 	if (sm) {
 		sm.addEvent('check', function () {
 			open = 0;
@@ -47,15 +47,15 @@ window.addEvent('domready', function () {
 			linkId: this.getProperty('id'),
 			onComplete: function (response) {
 				if (response.error == false) {
-					$(this.options.linkId).fireEvent('hide');
-					$('system-message').fireEvent('check');
+					document.id(this.options.linkId).fireEvent('hide');
+					document.id('system-message').fireEvent('check');
 				} else {
 					alert(response.message);
 				}
 			}
 		}).send();
 	}
-	$$('a.hide-warning').each(function (a) {
+	$document.id('a.hide-warning').each(function (a) {
 		a.setProperty('link', a.getProperty('href'));
 		a.setProperty('href', 'javascript: void(0);');
 		a.addEvent('hide', function () {

@@ -12,8 +12,8 @@ var FinderFilter = Fx.Elements.extend({
 	initialize: function (togglers, elements, container, frame) {
 		this.togglers = togglers || [];
 		this.elements = elements || [];
-		this.container = $(container);
-		this.frame = $(frame);
+		this.container = document.id(container);
+		this.frame = document.id(frame);
 		this.effects = {};
 		if (this.options.opacity) this.effects.opacity = 'fullOpacity';
 		if (this.options.width) this.effects.width = this.options.fixedWidth ? 'fullWidth' : 'offsetWidth';
@@ -23,7 +23,7 @@ var FinderFilter = Fx.Elements.extend({
 			element.setStyle('border-right', '1px solid #ccc');
 			element.setStyle('border-bottom', '1px solid #ccc');
 			element.setStyle('overflow', 'auto');
-			$(this.container).setStyle('width', $(this.container).getStyle('width').toInt() + element.fullWidth);
+			document.id(this.container).setStyle('width', document.id(this.container).getStyle('width').toInt() + element.fullWidth);
 			coord = element.getCoordinates([this.frame]);
 			scroller = new Fx.Scroll(this.frame);
 			scroller.scrollTo(coord.top, coord.left);
@@ -37,7 +37,7 @@ var FinderFilter = Fx.Elements.extend({
 		this.addEvent('onComplete', function () {
 			el = this.elements[this.active];
 			if (!el.getStyle('width').toInt()) {
-				$(this.container).setStyle('width', $(this.container).getStyle('width').toInt() - el.fullWidth);
+				document.id(this.container).setStyle('width', document.id(this.container).getStyle('width').toInt() - el.fullWidth);
 			}
 			this.active = null;
 		});
@@ -73,8 +73,8 @@ var FinderFilter = Fx.Elements.extend({
 		}, this);
 	},
 	addSection: function (toggler, element, pos) {
-		toggler = $(toggler);
-		element = $(element);
+		toggler = document.id(toggler);
+		element = document.id(element);
 		var test = this.togglers.contains(toggler);
 		var len = this.togglers.length;
 		this.togglers.include(toggler);
@@ -121,10 +121,10 @@ var FinderFilter = Fx.Elements.extend({
 	},
 });
 window.addEvent('domready', function () {
-	Filter = new FinderFilter($ES('input.toggler'), $ES('dl.checklist'), $('finder-filter-container'), $('finder-filter-window'));
-	$('tax-select-all').addEvent('change', function () {
-		if ($('tax-select-all').getProperty('checked')) {
-			$('finder-filter-window').getElements('input').each(function (input) {
+	Filter = new FinderFilter($ES('input.toggler'), $ES('dl.checklist'), document.id('finder-filter-container'), document.id('finder-filter-window'));
+	document.id('tax-select-all').addEvent('change', function () {
+		if (document.id('tax-select-all').getProperty('checked')) {
+			document.id('finder-filter-window').getElements('input').each(function (input) {
 				if (input.getProperty('id') != 'tax-select-all') {
 					input.removeProperty('checked');
 				}

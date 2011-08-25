@@ -80,7 +80,7 @@ var FinderIndexer = new Class({
 		this.offset = 0;
 		this.progress = 0;
 		this.pb = new FinderProgressBar({
-			container: $('finder-progress-container'),
+			container: document.id('finder-progress-container'),
 			startPercentage: 0,
 			speed: 600,
 			boxID: 'finder-progress-box',
@@ -88,7 +88,7 @@ var FinderIndexer = new Class({
 			displayID: 'finder-progress-status',
 			displayText: true
 		});
-		this.path = this.path + '&' + $('finder-indexer-token').get('name') + '=1';
+		this.path = this.path + '&' + document.id('finder-indexer-token').get('name') + '=1';
 		this.getRequest('indexer.start').send()
 	},
 	getRequest: function (task) {
@@ -118,18 +118,18 @@ var FinderIndexer = new Class({
 				this.getRequest('indexer.optimize').send();
 			}
 		} catch (error) {
-			if (this.pb) $(this.pb.options.container).dispose();
+			if (this.pb) document.id(this.pb.options.container).dispose();
 			try {
 				if (json.error) {
-					$('finder-progress-header').set('text', json.header).addClass('finder-error');
-					$('finder-progress-message').set('html', json.message).addClass('finder-error');
+					document.id('finder-progress-header').set('text', json.header).addClass('finder-error');
+					document.id('finder-progress-message').set('html', json.message).addClass('finder-error');
 				}
 			} catch (ignore) {
 				if (error == '') {
 					error = 'No error was returned. Make sure error reporting is enabled.';
 				}
-				$('finder-progress-header').set('text', 'An Error Has Occurred').addClass('finder-error');
-				$('finder-progress-message').set('html', error).addClass('finder-error');
+				document.id('finder-progress-header').set('text', 'An Error Has Occurred').addClass('finder-error');
+				document.id('finder-progress-message').set('html', error).addClass('finder-error');
 			}
 		}
 		return true;
@@ -137,23 +137,23 @@ var FinderIndexer = new Class({
 	handleFailure: function (xhr) {
 		json = (typeof xhr == 'object' && xhr.responseText) ? xhr.responseText : null;
 		json = json ? JSON.decode(json, true) : null;
-		if (this.pb) $(this.pb.options.container).dispose();
+		if (this.pb) document.id(this.pb.options.container).dispose();
 		if (json) {
 			json = json.responseText != null ? Json.evaluate(json.responseText, true) : json;
 		}
 		var header = json ? json.header : 'An Error Has Occurred';
 		var message = json ? json.message : 'The following message was returned by the server: <br />' + json
-		$('finder-progress-header').set('text', header).addClass('finder-error');
-		$('finder-progress-message').set('html', message).addClass('finder-error');
+		document.id('finder-progress-header').set('text', header).addClass('finder-error');
+		document.id('finder-progress-message').set('html', message).addClass('finder-error');
 	},
 	updateProgress: function (header, message) {
 		this.progress = (this.offset / this.totalItems) * 100;
-		$('finder-progress-header').set('text', header);
-		$('finder-progress-message').set('html', message);
+		document.id('finder-progress-header').set('text', header);
+		document.id('finder-progress-message').set('html', message);
 		if (this.pb && this.progress < 100) {
 			this.pb.set(this.progress);
 		} else if (this.pb) {
-			$(this.pb.options.container).dispose();
+			document.id(this.pb.options.container).dispose();
 			this.pb = false;
 		}
 	}

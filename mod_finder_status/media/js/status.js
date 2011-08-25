@@ -18,11 +18,11 @@ var FinderStatus = new Class({
 	handleResponse: function (json) {
 		if (json == null || json.error == true) {
 			var message = json ? json.message : 'The following message was returned by the server: <br />' + resp
-			$('finder-status-message').set('html', message).addClass('finder-error');
+			document.id('finder-status-message').set('html', message).addClass('finder-error');
 		} else {
 			if (json.setup) this.totalItems = json.totalItems;
 			this.offset += json.batchOffset;
-			$('finder-status-message').set('html', json.message);
+			document.id('finder-status-message').set('html', json.message);
 			if (!json.finished) {
 				this.getRequest().send();
 			}

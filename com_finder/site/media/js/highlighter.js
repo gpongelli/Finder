@@ -84,8 +84,8 @@ var Highlighter = new Class({
 });
 Highlighter.implement(new Options);
 window.addEvent('domready', function () {
-	var start = $('finder-highlighter-start');
-	var end = $('finder-highlighter-end');
+	var start = document.id('finder-highlighter-start');
+	var end = document.id('finder-highlighter-end');
 	if (!start || !end || !window.highlight) {
 		return true;
 	}

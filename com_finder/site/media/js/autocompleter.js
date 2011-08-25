@@ -5,7 +5,7 @@ var Observer = new Class({
 		delay: 1000
 	},
 	initialize: function (el, onFired, options) {
-		this.element = $(el) || $$(el);
+		this.element = document.id(el) || $document.id(el);
 		this.addEvent('onFired', onFired);
 		this.setOptions(options);
 		this.bound = this.changed.bind(this);
@@ -80,7 +80,7 @@ var Autocompleter = new Class({
 		relative: false
 	},
 	initialize: function (element, options) {
-		this.element = $(element);
+		this.element = document.id(element);
 		this.setOptions(options);
 		this.build();
 		this.observer = new Observer(this.element, this.prefetch.bind(this), Object.merge({}, {
@@ -94,7 +94,7 @@ var Autocompleter = new Class({
 		this.cached = [];
 	},
 	build: function () {
-		if ($(this.options.customChoices)) {
+		if (document.id(this.options.customChoices)) {
 			this.choices = this.options.customChoices;
 		} else {
 			this.choices = new Element('ul', {
@@ -353,7 +353,7 @@ var Autocompleter = new Class({
 var OverlayFix = new Class({
 	initialize: function (el) {
 		if (Browser.ie) {
-			this.element = $(el);
+			this.element = document.id(el);
 			this.relative = this.element.getOffsetParent();
 			this.fix = new Element('iframe', {
 				'frameborder': '0',
@@ -442,7 +442,7 @@ Autocompleter.Request = new Class({
 	query: function () {
 		var data = Array.clone(this.options.postData) || {};
 		data[this.options.postVar] = this.queryValue;
-		var indicator = $(this.options.indicator);
+		var indicator = document.id(this.options.indicator);
 		if (indicator) indicator.setStyle('display', '');
 		var cls = this.options.indicatorClass;
 		if (cls) this.element.addClass(cls);
@@ -452,7 +452,7 @@ Autocompleter.Request = new Class({
 		});
 	},
 	queryResponse: function () {
-		var indicator = $(this.options.indicator);
+		var indicator = document.id(this.options.indicator);
 		if (indicator) indicator.setStyle('display', 'none');
 		var cls = this.options.indicatorClass;
 		if (cls) this.element.removeClass(cls);
