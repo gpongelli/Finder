@@ -31,11 +31,6 @@
 			<file charset="utf8" driver="mysql">sql/uninstall.mysql.sql</file>
 		</sql>
 	</uninstall>
-	<update>
-		<schemas>
-			<schemapath type="mysql">sql/updates/mysql</schemapath>
-		</schemas>
-	</update>
 	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_finder.ini</language>
 	</languages>
