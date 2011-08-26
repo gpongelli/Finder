@@ -197,7 +197,9 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
-		$item->params = new JParameter($item->params);
+		$registry = new JRegistry;
+		$registry->loadString($item->params);
+		$item->params	= $registry;
 
 		// Build the necessary route and path information.
 		$item->url		= $this->getURL($item->id);

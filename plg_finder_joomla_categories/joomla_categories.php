@@ -159,7 +159,9 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
-		$item->params	= new JParameter($item->params);
+		$registry = new JRegistry;
+		$registry->loadString($item->params);
+		$item->params	= $registry;
 
 		// Trigger the onPrepareContent event.
 		$item->summary	= FinderIndexerHelper::prepareContent($item->summary, $item->params);

@@ -218,7 +218,9 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	protected function index(FinderIndexerResult $item)
 	{
 		// Initialize the item parameters.
-		$item->params = new JParameter($item->params);
+		$registry = new JRegistry;
+		$registry->loadString($item->params);
+		$item->params	= $registry;
 
 		// Let's do a little trick to get the Itemid.
 		$tmp = array('option' => 'com_contact', 'view' => 'contact', 'id' => $item->slug, 'catid' => $item->catslug);

@@ -61,14 +61,14 @@ class JHtmlQuery
 		// Process the start date.
 		if ($query->date1)
 		{
-			$date = JFactory::getDate($query->date1)->toFormat('%B %e, %Y');
+			$date = JFactory::getDate($query->date1)->format('%B %e, %Y');
 			$parts[] = '<span class="query-start-date">'.JText::sprintf('COM_FINDER_QUERY_START_DATE', $query->when1, $date).'</span>';
 		}
 
 		// Process the end date.
 		if ($query->date2)
 		{
-			$date = JFactory::getDate($query->date2)->toFormat('%B %e, %Y');
+			$date = JFactory::getDate($query->date2)->format('%B %e, %Y');
 			$parts[] = '<span class="query-end-date">'.JText::sprintf('COM_FINDER_QUERY_END_DATE', $query->when2, $date).'</span>';
 		}
 
