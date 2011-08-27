@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controller');
+jimport('joomla.log.log');
 
 // Register dependent classes.
 JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR.'/helpers/indexer/indexer.php');
@@ -32,6 +33,18 @@ class FinderControllerIndexer extends JController
 	 */
 	public function start()
 	{
+		static $log;
+
+		if ($log == null)
+		{
+			$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+			$options['text_file'] = 'indexer.php';
+			$log = JLog::addLogger($options);
+		}
+
+		// Log the start
+		JLog::add('Starting the indexer', JLog::INFO);
+
 		// We don't want this form to be cached.
 		header('Pragma: no-cache');
 		header('Cache-Control: no-cache');
@@ -78,6 +91,18 @@ class FinderControllerIndexer extends JController
 	 */
 	public function batch()
 	{
+		static $log;
+
+		if ($log == null)
+		{
+			$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+			$options['text_file'] = 'indexer.php';
+			$log = JLog::addLogger($options);
+		}
+
+		// Log the start
+		JLog::add('Starting the indexer batch process', JLog::INFO);
+
 		// We don't want this form to be cached.
 		header('Pragma: no-cache');
 		header('Cache-Control: no-cache');
@@ -229,11 +254,21 @@ class FinderControllerIndexer extends JController
 	 */
 	public function sendResponse($data = null)
 	{
+		static $log;
+
+		if ($log == null)
+		{
+			$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+			$options['text_file'] = 'indexer.php';
+			$log = JLog::addLogger($options);
+		}
+
 		$backtrace = null;
 
 		// Send the assigned error code if we are catching an exception.
-		if (JError::isError($data) || $data instanceof Exception)
+		if ($data instanceof Exception)
 		{
+			JLog::add($data->getMessage(), JLog::ERROR);
 			JResponse::setHeader('status', $data->getCode());
 			JResponse::sendHeaders();
 		}
@@ -272,12 +307,24 @@ class FinderIndexerResponse
 	 */
 	public function __construct($state)
 	{
+		static $log;
+
+		if ($log == null)
+		{
+			$options['format'] = '{DATE}\t{TIME}\t{LEVEL}\t{CODE}\t{MESSAGE}';
+			$options['text_file'] = 'indexer.php';
+			$log = JLog::addLogger($options);
+		}
+
 		// The old token is invalid so send a new one.
 		$this->token = JUtility::getToken();
 
 		// Check if we are dealing with an error.
-		if (JError::isError($state) || $state instanceof Exception)
+		if ($state instanceof Exception)
 		{
+			// Log the error
+			JLog::add($state->getMessage(), JLog::ERROR);
+
 			// Prepare the error response.
 			$this->error		= true;
 			$this->header		= JText::_('COM_FINDER_INDEXER_HEADER_ERROR');

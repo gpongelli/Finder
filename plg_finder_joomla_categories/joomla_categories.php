@@ -62,6 +62,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	public function onBeforeSaveJoomlaCategory($id)
 	{
+		JLog::add('plgFinderJoomla_Categories::onBeforeSaveJoomlaCategory', JLog::INFO);
+
 		// Queue the item to be reindexed.
 		FinderIndexerQueue::add($this->_context, $id, JFactory::getDate()->toMySQL());
 
@@ -81,6 +83,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	public function onChangeJoomlaCategory($ids, $property, $value)
 	{
+		JLog::add('plgFinderJoomla_Categories::onChangeJoomlaCategory', JLog::INFO);
+
 		// Check if we are changing the category state.
 		if ($property === 'published')
 		{
@@ -146,6 +150,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	public function onDeleteJoomlaCategory($ids)
 	{
+		JLog::add('plgFinderJoomla_Categories::onDeleteJoomlaCategory', JLog::INFO);
+
 		// Remove the items.
 		return $this->remove($ids);
 	}
@@ -158,6 +164,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	protected function index(FinderIndexerResult $item)
 	{
+		JLog::add('plgFinderJoomla_Categories::index', JLog::INFO);
+
 		// Initialize the item parameters.
 		$registry = new JRegistry;
 		$registry->loadString($item->params);
@@ -202,6 +210,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
+		JLog::add('plgFinderJoomla_Categories::setup', JLog::INFO);
+
 		// Load dependent classes.
 		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
 
@@ -216,6 +226,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		JLog::add('plgFinderJoomla_Categories::getListQuery', JLog::INFO);
+
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
@@ -237,6 +249,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	protected function getURL($id)
 	{
+		JLog::add('plgFinderJoomla_Categories::getURL', JLog::INFO);
+
 		return 'index.php?option=com_content&view=category&id='.$id;
 	}
 
@@ -249,6 +263,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	private function _translateState($category)
 	{
+		JLog::add('plgFinderJoomla_Categories::_translateState', JLog::INFO);
+
 		// Translate the state.
 		switch ($category)
 		{
@@ -271,6 +287,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
+		JLog::add('plgFinderJoomla_Categories::_getStateQuery', JLog::INFO);
+
 		$sql = $this->_db->getQuery(true);
 		$sql->select($db->quoteName('c.id'));
 		$sql->select($db->quoteName('c.published').' AS cat_state');

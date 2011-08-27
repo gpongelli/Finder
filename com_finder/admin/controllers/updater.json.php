@@ -149,7 +149,7 @@ class FinderControllerUpdater extends JController
 	public function sendResponse($data = null)
 	{
 		// Send the assigned error code if we are catching an exception.
-		if (JError::isError($data) || $data instanceof Exception)
+		if ($data instanceof Exception)
 		{
 			JResponse::setHeader('status', $data->getCode());
 			JResponse::sendHeaders();
@@ -187,7 +187,7 @@ class FinderUpdaterResponse
 	public function __construct($state)
 	{
 		// Check if we are dealing with an error.
-		if (JError::isError($state) || $state instanceof Exception)
+		if ($state instanceof Exception)
 		{
 			// Prepare the error response.
 			$this->error		= true;
