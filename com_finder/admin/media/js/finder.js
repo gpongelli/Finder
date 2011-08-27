@@ -1,31 +1,5 @@
 window.addEvent('domready', function () {
 	var a = document.id('jxplugin-enable');
-	if (a) {
-		var href = a.getProperty('href');
-		a.addEvent('hide', function () {
-			this.getParent().setProperty('hidden', 'hidden');
-			var mySlider = new Fx.Slide(this.getParent(), {
-				duration: 300
-			});
-			mySlider.slideOut();
-		});
-		a.addEvent('click', function () {
-			var action = href + '&tmpl=component&protocol=json';
-			new Json.Remote(action, {
-				linkId: this.getProperty('id'),
-				onComplete: function (response) {
-					if (response.error == false) {
-						document.id(this.options.linkId).fireEvent('hide');
-						document.id('system-message').fireEvent('check');
-					} else {
-						alert(response.message);
-					}
-				}
-			}).send();
-			return false;
-		}, a);
-		a.setProperty('href', 'javascript: void(0);');
-	}
 	sm = document.id('system-message');
 	if (sm) {
 		sm.addEvent('check', function () {
