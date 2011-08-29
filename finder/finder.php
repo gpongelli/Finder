@@ -49,9 +49,6 @@ JError::setErrorHandling(E_ALL, 'echo');
 // Initialize the application.
 $mainframe = &JFactory::getApplication('site');
 
-// Load the JXtended libraries.
-require_once(JPATH_PLUGINS . '/system/jx.php');
-
 /*
  * Handle the arguments
  */

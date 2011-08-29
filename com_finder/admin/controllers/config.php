@@ -116,7 +116,7 @@ class FinderControllerConfig extends ConfigControllerComponent
 		header('Content-type: application/force-download');
 		header('Content-Transfer-Encoding: Binary');
 		header('Content-length: '.strlen($string));
-		header('Content-disposition: attachment; filename="jxfinder.config.ini"');
+		header('Content-disposition: attachment; filename="finder.config.ini"');
 		header('Pragma: no-cache');
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Expires: 0');
