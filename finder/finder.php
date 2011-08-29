@@ -9,21 +9,20 @@ define('JPATH_BASE', implode(DS, $parts));
 define('JPATH_ROOT',			JPATH_BASE);
 define('JPATH_SITE',			JPATH_ROOT);
 define('JPATH_CONFIGURATION',	JPATH_ROOT);
-define('JPATH_THEMES',			JPATH_ROOT.DS.'templates');
-define('JPATH_LIBRARIES',		JPATH_ROOT.DS.'libraries');
-define('JPATH_PLUGINS',			JPATH_ROOT.DS.'plugins');
+define('JPATH_THEMES',			JPATH_ROOT . '/templates');
+define('JPATH_LIBRARIES',		JPATH_ROOT . '/libraries');
+define('JPATH_PLUGINS',			JPATH_ROOT . '/plugins');
 
 // Needed to deal with the JApplicationHelper::getClientInfo() hijack.
-define('JPATH_ADMINISTRATOR', 	JPATH_ROOT.DS.'administrator');
-define('JPATH_XMLRPC', 			JPATH_ROOT.DS.'xmlrpc');
-define('JPATH_INSTALLATION',	JPATH_ROOT.DS.'installation');
+define('JPATH_ADMINISTRATOR', 	JPATH_ROOT . '/administrator');
+define('JPATH_INSTALLATION',	JPATH_ROOT . '/installation');
 
 // System Checks
 @set_magic_quotes_runtime(0);
 @ini_set('zend.ze1_compatibility_mode', '0');
 
 // System includes
-require_once(JPATH_LIBRARIES.DS.'joomla'.DS.'import.php');
+require_once(JPATH_LIBRARIES . '/joomla/import.php');
 
 // Joomla! library imports
 jimport('joomla.application.menu');
@@ -51,7 +50,7 @@ JError::setErrorHandling(E_ALL, 'echo');
 $mainframe = &JFactory::getApplication('site');
 
 // Load the JXtended libraries.
-require_once(JPATH_PLUGINS.DS.'system'.DS.'jx.php');
+require_once(JPATH_PLUGINS . '/system/jx.php');
 
 /*
  * Handle the arguments
