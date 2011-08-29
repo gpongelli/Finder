@@ -29,7 +29,7 @@ window.addEvent('domready', function () {
 			}
 		}).send();
 	}
-	$document.id('a.hide-warning').each(function (a) {
+	document.id('a.hide-warning').each(function (a) {
 		a.setProperty('link', a.getProperty('href'));
 		a.setProperty('href', 'javascript: void(0);');
 		a.addEvent('hide', function () {
