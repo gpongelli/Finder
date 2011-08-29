@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 ?>
 
 <script type="text/javascript">
-//<![CDATA[
 	window.addEvent('domready', function() {
 <?php if ($this->params->get('show_advanced', 1)): ?>
 		/*
@@ -40,7 +39,7 @@ defined('_JEXEC') or die;
 				e = new Event(e);
 				e.stop();
 
-				if ($document.id('advanced-search') != null) {
+				if (document.id('advanced-search') != null) {
 					// Disable select boxes with no value selected.
 					document.id('advanced-search').getElements('select').each(function(s){
 						if (!s.getProperty('value')) {
@@ -62,7 +61,6 @@ defined('_JEXEC') or die;
 	var completer = new Autocompleter.Request.JSON(document.id('q'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});
-//]]>
 </script>
 
 <form id="finder-search" action="<?php echo JRoute::_($this->query->toURI()); ?>" method="get">
