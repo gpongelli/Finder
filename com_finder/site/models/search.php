@@ -1128,6 +1128,7 @@ class FinderModelSearch extends JModelList
 		$app	= JFactory::getApplication();
 		$params	= JComponentHelper::getParams('com_finder');
 		$user	= JFactory::getUser();
+		$filter = JFilterInput::getInstance();
 
 		// Setup the stemmer.
 		if ($params->get('stem', 1) && $params->get('stemmer', 'porter_en'))
@@ -1141,35 +1142,35 @@ class FinderModelSearch extends JModelList
 
 		// Get the query string.
 		$options['input'] = isset($request['q']) ? $request['q'] : $params->get('q');
-		$options['input'] = JFilterInput::clean($options['input'], 'string');
+		$options['input'] = $filter->clean($options['input'], 'string');
 
 		// Get the empty query setting.
 		$options['empty'] = $params->get('allow_empty_query', 0);
 
 		// Get the query language.
 		$options['language'] = isset($request['l']) ? $request['l'] : $params->get('l');
-		$options['language'] = JFilterInput::clean($options['language'], 'cmd');
+		$options['language'] = $filter->clean($options['language'], 'cmd');
 
 		// Get the static taxonomy filters.
 		$options['filter'] = isset($request['f']) ? $request['f'] : $params->get('f');
-		$options['filter'] = JFilterInput::clean($options['filter'], 'int');
+		$options['filter'] = $filter->clean($options['filter'], 'int');
 
 		// Get the dynamic taxonomy filters.
 		$options['filters'] = isset($request['t']) ? $request['t'] : array();
-		$options['filters'] = JFilterInput::clean($options['filters'], 'array');
+		$options['filters'] = $filter->clean($options['filters'], 'array');
 		JArrayHelper::toInteger($options['filters']);
 
 		// Get the start date and start date modifier filters.
 		$options['date1'] = isset($request['d1']) ? $request['d1'] : $params->get('d1');
-		$options['date1'] = JFilterInput::clean($options['date1'], 'string');
+		$options['date1'] = $filter->clean($options['date1'], 'string');
 		$options['when1'] = isset($request['w1']) ? $request['w1'] : $params->get('w1');
-		$options['when1'] = JFilterInput::clean($options['when1'], 'string');
+		$options['when1'] = $filter->clean($options['when1'], 'string');
 
 		// Get the end date and end date modifier filters.
 		$options['date2'] = isset($request['d2']) ? $request['d2'] : $params->get('d2');
-		$options['date2'] = JFilterInput::clean($options['date2'], 'string');
+		$options['date2'] = $filter->clean($options['date2'], 'string');
 		$options['when2'] = isset($request['w2']) ? $request['w2'] : $params->get('w2');
-		$options['when2'] = JFilterInput::clean($options['when2'], 'string');
+		$options['when2'] = $filter->clean($options['when2'], 'string');
 
 		// Load the query object.
 		$this->_query = new FinderIndexerQuery($options);
