@@ -94,9 +94,9 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResults');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store))
+		if ($this->retrieve($store))
 		{
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		// Get the row data.
@@ -145,10 +145,10 @@ class FinderModelSearch extends JModelList
 		$results = array_values($results);
 
 		// Push the results into cache.
-		$this->_store($store, $results);
+		$this->store($store, $results);
 
 		// Return the results.
-		return $this->_retrieve($store);
+		return $this->retrieve($store);
 	}
 
 	/**
@@ -174,22 +174,22 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Get the store id.
-		$store = $this->_getStoreId('getTotal');
+		$store = $this->getStoreId('getTotal');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store))
+		if ($this->retrieve($store))
 		{
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		// Get the results total.
 		$total = $this->getResultsTotal();
 
 		// Push the total into cache.
-		$this->_store($store, $total);
+		$this->store($store, $total);
 
 		// Return the total.
-		return $this->_retrieve($store);
+		return $this->retrieve($store);
 	}
 
 	/**
@@ -218,12 +218,12 @@ class FinderModelSearch extends JModelList
 	protected function getListQuery()
 	{
 		// Get the store id.
-		$store = $this->_getStoreId('_getListQuery');
+		$store = $this->getStoreId('_getListQuery');
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store, false))
+		if ($this->retrieve($store, false))
 		{
-			return clone($this->_retrieve($store, false));
+			return clone($this->retrieve($store, false));
 		}
 
 		// Set variables
@@ -310,10 +310,10 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Push the data into cache.
-		$this->_store($store, $query, false);
+		$this->store($store, $query, false);
 
 		// Return a copy of the query object.
-		return clone($this->_retrieve($store, false));
+		return clone($this->retrieve($store, false));
 	}
 
 	/**
@@ -330,9 +330,9 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResultsTotal', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store))
+		if ($this->retrieve($store))
 		{
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		// Get the base query and add the ordering information.
@@ -364,10 +364,10 @@ class FinderModelSearch extends JModelList
 			}
 
 			// Push the total into cache.
-			$this->_store($store, min($total, $limit));
+			$this->store($store, min($total, $limit));
 
 			// Return the total.
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		/*
@@ -419,12 +419,12 @@ class FinderModelSearch extends JModelList
 			foreach ($maps as $suffix => $ids)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('getResultsTotal:'.serialize(array_values($ids)).':'.$start.':'.$limit);
+				$setId = $this->getStoreId('getResultsTotal:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId))
+				if ($this->retrieve($setId))
 				{
-					$temp = $this->_retrieve($setId);
+					$temp = $this->retrieve($setId);
 				}
 				// Load the data from the database.
 				else
@@ -458,7 +458,7 @@ class FinderModelSearch extends JModelList
 					}
 
 					// Store this set in cache.
-					$this->_store($setId, $temp);
+					$this->store($setId, $temp);
 				}
 
 				// Merge the results.
@@ -505,10 +505,10 @@ class FinderModelSearch extends JModelList
 				}
 
 				// Push the total into cache.
-				$this->_store($store, min(count($sorted), $limit));
+				$this->store($store, min(count($sorted), $limit));
 
 				// Return the total.
-				return $this->_retrieve($store);
+				return $this->retrieve($store);
 			}
 
 			/*
@@ -522,12 +522,12 @@ class FinderModelSearch extends JModelList
 			foreach ($this->_requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('getResultsTotal:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
+				$setId = $this->getStoreId('getResultsTotal:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId))
+				if ($this->retrieve($setId))
 				{
-					$reqTemp = $this->_retrieve($setId);
+					$reqTemp = $this->retrieve($setId);
 				}
 				// Check if the token was matched.
 				else if (empty($required))
@@ -575,7 +575,7 @@ class FinderModelSearch extends JModelList
 					while ($reqMore == true);
 
 					// Store this set in cache.
-					$this->_store($setId, $reqTemp);
+					$this->store($setId, $reqTemp);
 				}
 
 				// Remove any items that do not match the required term.
@@ -610,10 +610,10 @@ class FinderModelSearch extends JModelList
 		$total = min($total, $limit);
 
 		// Push the total into cache.
-		$this->_store($store, $total);
+		$this->store($store, $total);
 
 		// Return the total.
-		return $this->_retrieve($store);
+		return $this->retrieve($store);
 	}
 
 	/**
@@ -630,9 +630,9 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getResultsData', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store))
+		if ($this->retrieve($store))
 		{
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		// Get the result ordering and direction.
@@ -664,10 +664,10 @@ class FinderModelSearch extends JModelList
 			$store = $this->getStoreId('getResultsData', true);
 
 			// Push the results into cache.
-			$this->_store($store, $return);
+			$this->store($store, $return);
 
 			// Return the results.
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		/*
@@ -720,12 +720,12 @@ class FinderModelSearch extends JModelList
 			foreach ($maps as $suffix => $ids)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('getResultsData:'.serialize(array_values($ids)).':'.$start.':'.$limit);
+				$setId = $this->getStoreId('getResultsData:'.serialize(array_values($ids)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId))
+				if ($this->retrieve($setId))
 				{
-					$temp = $this->_retrieve($setId);
+					$temp = $this->retrieve($setId);
 				}
 				// Load the data from the database.
 				else
@@ -746,7 +746,7 @@ class FinderModelSearch extends JModelList
 					}
 
 					// Store this set in cache.
-					$this->_store($setId, $temp);
+					$this->store($setId, $temp);
 
 					// The data is keyed by link_id to ease caching, we don't need it till later.
 					$temp = array_values($temp);
@@ -852,10 +852,10 @@ class FinderModelSearch extends JModelList
 				}
 
 				// Push the results into cache.
-				$this->_store($store, $sorted);
+				$this->store($store, $sorted);
 
 				// Return the requested set.
-				return array_slice($this->_retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
+				return array_slice($this->retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
 			}
 
 			/*
@@ -869,12 +869,12 @@ class FinderModelSearch extends JModelList
 			foreach ($this->_requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
-				$setId = $this->_getStoreId('getResultsData:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
+				$setId = $this->getStoreId('getResultsData:required:'.serialize(array_values($required)).':'.$start.':'.$limit);
 
 				// Use the cached data if possible.
-				if ($this->_retrieve($setId))
+				if ($this->retrieve($setId))
 				{
-					$reqTemp = $this->_retrieve($setId);
+					$reqTemp = $this->retrieve($setId);
 				}
 				// Check if the token was matched.
 				else if (empty($required))
@@ -922,7 +922,7 @@ class FinderModelSearch extends JModelList
 					while ($reqMore == true);
 
 					// Store this set in cache.
-					$this->_store($setId, $reqTemp);
+					$this->store($setId, $reqTemp);
 				}
 
 				// Remove any items that do not match the required term.
@@ -953,10 +953,10 @@ class FinderModelSearch extends JModelList
 		while ($more === true);
 
 		// Push the results into cache.
-		$this->_store($store, $items);
+		$this->store($store, $items);
 
 		// Return the requested set.
-		return array_slice($this->_retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
+		return array_slice($this->retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
 	}
 
 	/**
@@ -979,9 +979,9 @@ class FinderModelSearch extends JModelList
 		$store = $this->getStoreId('getExcludedLinkIds', false);
 
 		// Use the cached data if possible.
-		if ($this->_retrieve($store))
+		if ($this->retrieve($store))
 		{
-			return $this->_retrieve($store);
+			return $this->retrieve($store);
 		}
 
 		// Initialize containers.
@@ -1044,7 +1044,7 @@ class FinderModelSearch extends JModelList
 		JArrayHelper::toInteger($links);
 
 		// Push the link ids into cache.
-		$this->_store($store, $links);
+		$this->store($store, $links);
 
 		return $links;
 	}
@@ -1234,27 +1234,33 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to retrieve data from cache.
 	 *
-	 * @param	string		The cache store id.
-	 * @param	boolean		Flag to enable the use of external cache.
-	 * @return	mixed		The cached data if found, null otherwise.
+	 * @param   string   $id          The cache store id.
+	 * @param   boolean  $persistent  Flag to enable the use of external cache.
+	 *
+	 * @return  mixed  The cached data if found, null otherwise.
+	 *
+	 * @since   2.5
 	 */
-	protected function _retrieve($id, $persistent = true)
+	protected function retrieve($id, $persistent = true)
 	{
 		$data = null;
 
 		// Use the internal cache if possible.
-		if (isset($this->_cache[$id])) {
+		if (isset($this->_cache[$id]))
+		{
 			return $this->_cache[$id];
 		}
 
 		// Use the external cache if data is persistent.
-		if ($persistent) {
+		if ($persistent)
+		{
 			$data = JFactory::getCache($this->_context, 'output')->get($id);
 			$data = $data ? unserialize($data) : null;
 		}
 
 		// Store the data in internal cache.
-		if ($data) {
+		if ($data)
+		{
 			$this->_cache[$id] = $data;
 		}
 
@@ -1264,18 +1270,22 @@ class FinderModelSearch extends JModelList
 	/**
 	 * Method to store data in cache.
 	 *
-	 * @param	string		The cache store id.
-	 * @param	mixed		The data to cache.
-	 * @param	boolean		Flag to enable the use of external cache.
-	 * @return	boolean		True on success, false on failure.
+	 * @param   string   $id          The cache store id.
+	 * @param   mixed    $data        The data to cache.
+	 * @param   boolean  $persistent  Flag to enable the use of external cache.
+	 *
+	 * @return  boolean  True on success, false on failure.
+	 *
+	 * @since   2.5
 	 */
-	protected function _store($id, $data, $persistent = true)
+	protected function store($id, $data, $persistent = true)
 	{
 		// Store the data in internal cache.
 		$this->_cache[$id] = $data;
 
 		// Store the data in external cache if data is persistent.
-		if ($persistent) {
+		if ($persistent)
+		{
 			return JFactory::getCache($this->_context, 'output')->store(serialize($data), $id);
 		}
 
@@ -1289,11 +1299,13 @@ class FinderModelSearch extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param	string	An identifier string to generate the store id.
-	 * @return	string	A store id.
-	 * @since	2.0
+	 * @param   string  $id  An identifier string to generate the store id.
+	 *
+	 * @return  string  A store id.
+	 *
+	 * @since   2.5
 	 */
-	protected function _getStoreId($id = '')
+	protected function getStoreId($id = '')
 	{
 		// Add the list state to the store id.
 		$id	.= ':'.$this->getState('list.start');
