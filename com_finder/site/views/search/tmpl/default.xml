@@ -29,27 +29,27 @@
 				default=""
 				label="FINDER_CONFIG_SHOW_DATE_FILTERS"
 				description="FINDER_CONFIG_SHOW_DATE_FILTERS_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field name="show_advanced"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_ADVANCED_LABEL"
 				description="FINDER_CONFIG_SHOW_ADVANCED_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field name="expand_advanced"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_EXPAND_ADVANCED_LABEL"
 				description="FINDER_CONFIG_EXPAND_ADVANCED_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field type="spacer" />
 			<field name="show_description"
@@ -57,9 +57,9 @@
 				default=""
 				label="FINDER_CONFIG_SHOW_DESCRIPTION_LABEL"
 				description="FINDER_CONFIG_SHOW_DESCRIPTION_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field name="description_length"
 				type="text"
@@ -73,9 +73,9 @@
 				default=""
 				label="FINDER_CONFIG_SHOW_URL"
 				description="FINDER_CONFIG_SHOW_URL_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field type="spacer" />
 			<field name="show_labels"
@@ -83,9 +83,9 @@
 				default=""
 				label="FINDER_CONFIG_SHOW_RESULT_LABELS_LABEL"
 				description="FINDER_CONFIG_SHOW_RESULT_LABELS_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
-				<option value="">FINDER_PARAM_USE_GLOBAL</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
+				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 		</fieldset>
 		<fieldset name="advanced">
@@ -94,8 +94,8 @@
 				default="0"
 				label="Finder_Allow_Empty_Query_Label"
 				description="Finder_Allow_Empty_Query_Desc">
-				<option value="1">FINDER_PARAM_YES</option>
-				<option value="0">FINDER_PARAM_NO</option>
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
 			</field>
 			<field name="search_order"
 				type="list"
@@ -112,16 +112,16 @@
 				default="0"
 				label="FINDER_CONFIG_SHOW_FEED"
 				description="FINDER_CONFIG_SHOW_FEED_DESC">
-				<option value="1">FINDER_PARAM_SHOW</option>
-				<option value="0">FINDER_PARAM_HIDE</option>
+				<option value="1">JSHOW</option>
+				<option value="0">JHIDE</option>
 			</field>
 			<field name="show_feed_text"
 				type="radio"
 				default="0"
 				label="FINDER_CONFIG_SHOW_FEED_TEXT"
 				description="FINDER_CONFIG_SHOW_FEED_TEXT_DESC">
-				<option value="1">FINDER_PARAM_YES</option>
-				<option value="0">FINDER_PARAM_NO</option>
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
 			</field>
 		</fieldset>
 	</fields>
