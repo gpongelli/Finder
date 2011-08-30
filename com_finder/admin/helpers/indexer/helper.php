@@ -559,6 +559,7 @@ class FinderIndexerHelper
 			// Create an array of problematic plugins.
 			$conflicts 		= array();
 			$conflicts[]	= 'plgContentEmailCloak';
+			$conflicts[]	= 'plgContentLoadmodule';
 
 			// Check if we can access the observers.
 			if (isset($dispatcher->_observers))
