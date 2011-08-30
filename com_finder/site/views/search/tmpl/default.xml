@@ -23,7 +23,7 @@
 		</fieldset>
 	</fields>
 	<fields name="params" addpath="/administrator/components/com_finder/models/fields">
-		<fieldset name="params" label="COM_FINDER_BASIC_OPTIONS_FIELDSET_LABEL">
+		<fieldset name="basic">
 			<field name="show_date_filters"
 				type="radio"
 				default=""
