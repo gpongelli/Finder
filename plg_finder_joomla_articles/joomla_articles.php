@@ -63,6 +63,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	public function onChangeJoomlaArticle($ids, $property, $value)
 	{
+		JLog::add('plgFinderJoomla_Articles::onChangeJoomlaArticle', JLog::INFO);
 		// Check if we are changing the article state.
 		if ($property === 'state')
 		{
@@ -124,6 +125,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	public function onChangeJoomlaCategory($ids, $property, $value)
 	{
+		JLog::add('plgFinderJoomla_Articles::onChangeJoomlaCategory', JLog::INFO);
+
 		// Check if we are changing the category state.
 		if ($property === 'published')
 		{
@@ -189,6 +192,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	public function onDeleteJoomlaArticle($ids)
 	{
+		JLog::add('plgFinderJoomla_Articles::onDeleteJoomlaArticle', JLog::INFO);
+
 		// Remove the items.
 		return $this->remove($ids);
 	}
@@ -202,6 +207,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	public function onSaveJoomlaArticle($id)
 	{
+		JLog::add('plgFinderJoomla_Articles::onSaveJoomlaArticle', JLog::INFO);
+
 		// Run the setup method.
 		$this->setup();
 
@@ -225,6 +232,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	public function onTrashJoomlaArticle($ids)
 	{
+		JLog::add('plgFinderJoomla_Articles::onTrashJoomlaArticle', JLog::INFO);
+
 		// Update the items.
 		return $this->change($ids, 'state', -2);
 	}
@@ -237,6 +246,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	protected function index(FinderIndexerResult $item)
 	{
+		JLog::add('plgFinderJoomla_Articles::index', JLog::INFO);
+
 		// Initialize the item parameters.
 		$registry = new JRegistry;
 		$registry->loadString($item->params);
@@ -314,6 +325,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	protected function setup()
 	{
+		JLog::add('plgFinderJoomla_Articles::setup', JLog::INFO);
+
 		// Load dependent classes.
 		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
 
@@ -328,6 +341,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	protected function getListQuery($sql = null)
 	{
+		JLog::add('plgFinderJoomla_Articles::getListQuery', JLog::INFO);
+
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
@@ -356,6 +371,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	protected function getURL($id)
 	{
+		JLog::add('plgFinderJoomla_Articles::getURL', JLog::INFO);
+
 		return 'index.php?option=com_content&view=article&id='.$id;
 	}
 
@@ -369,6 +386,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	private function _translateState($article, $category)
 	{
+		JLog::add('plgFinderJoomla_Articles::_translateState', JLog::INFO);
+
 		// If category is present, factor in the state as well.
 		if ($category !== null) {
 			if ($category == 0) {
@@ -400,6 +419,8 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
+		JLog::add('plgFinderJoomla_Articles::_getStateQuery', JLog::INFO);
+
 		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.state, c.published AS cat_state');
