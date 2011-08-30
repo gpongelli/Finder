@@ -73,13 +73,13 @@ class FinderViewMaps extends JView
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::publish('maps.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('maps.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('maps.publish');
+			JToolBarHelper::unpublishList('maps.unpublish');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'maps.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'maps.delete');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.admin'))

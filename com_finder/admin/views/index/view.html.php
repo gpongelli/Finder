@@ -73,13 +73,13 @@ class FinderViewIndex extends JView
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::publish('index.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('index.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('index.publish');
+			JToolBarHelper::unpublishList('index.unpublish');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'index.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'index.delete');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.edit.state'))

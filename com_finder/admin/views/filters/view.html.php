@@ -77,13 +77,13 @@ class FinderViewFilters extends JView
 		}
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::publish('filters.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('filters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('filters.publish');
+			JToolBarHelper::unpublishList('filters.unpublish');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::deleteList('', 'filters.delete', 'JTOOLBAR_DELETE');
+			JToolBarHelper::deleteList('', 'filters.delete');
 			JToolBarHelper::divider();
 		}
 		if ($canDo->get('core.admin'))

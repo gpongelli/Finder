@@ -71,8 +71,8 @@ class FinderViewAdapters extends JView
 
 		if ($canDo->get('core.edit.state'))
 		{
-			JToolBarHelper::publish('adapters.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('adapters.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+			JToolBarHelper::publishList('adapters.publish');
+			JToolBarHelper::unpublishList('adapters.unpublish');
 			JToolBarHelper::divider();
 		}
 
