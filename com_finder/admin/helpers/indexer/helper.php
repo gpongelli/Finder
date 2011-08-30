@@ -550,6 +550,8 @@ class FinderIndexerHelper
 		// Get the dispatcher.
 		$dispatcher = &JDispatcher::getInstance();
 
+		
+		
 		// Load the content plugins if necessary and remove any problematic ones.
 		if (empty($loaded))
 		{
@@ -558,12 +560,7 @@ class FinderIndexerHelper
 
 			// Create an array of problematic plugins.
 			$conflicts 		= array();
-			$conflicts[]	= 'plgContentContentform';
-			$conflicts[]	= 'plgContentIitseventlistplugin';
-			$conflicts[]	= 'displayIgallery';
-			$conflicts[]	= 'plgSh404sefsimilarurls';
 			$conflicts[]	= 'plgContentEmailCloak';
-			$conflicts[]	= 'plgContentPhocaGallery';
 
 			// Check if we can access the observers.
 			if (isset($dispatcher->_observers))
