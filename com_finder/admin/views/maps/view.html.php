@@ -84,8 +84,9 @@ class FinderViewMaps extends JView
 		}
 		if ($canDo->get('core.admin'))
 		{
-			$toolbar->appendButton('Popup', 'options', 'JTOOLBAR_OPTIONS', 'index.php?option=com_finder&view=config&tmpl=component', 875, 550);
+			JToolBarHelper::preferences('com_finder');
 		}
-		$toolbar->appendButton('Popup', 'help', 'FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
+		JToolBarHelper::divider();
+		$toolbar->appendButton('Popup', 'help', 'COM_FINDER_ABOUT', 'index.php?option=com_finder&view=about&tmpl=component', 550, 500);
 	}
 }
