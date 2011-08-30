@@ -2,7 +2,7 @@
 <metadata>
 	<layout title="COM_FINDER_MENU_SEARCH_VIEW_DEFAULT_TITLE">
 		<message>
-			<![CDATA[FINDER_MENU_SEARCH_VIEW_DEFAULT_TEXT]]>
+			<![CDATA[COM_FINDER_MENU_SEARCH_VIEW_DEFAULT_TEXT]]>
 		</message>
 	</layout>
 
@@ -27,7 +27,7 @@
 			<field name="show_date_filters"
 				type="radio"
 				default=""
-				label="COM_FINDER_CONFIG_SHOW_DATE_FILTERS"
+				label="COM_FINDER_CONFIG_SHOW_DATE_FILTERS_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_DATE_FILTERS_DESC">
 				<option value="1">JSHOW</option>
 				<option value="0">JHIDE</option>
@@ -71,7 +71,7 @@
 			<field name="show_url"
 				type="radio"
 				default=""
-				label="COM_FINDER_CONFIG_SHOW_URL"
+				label="COM_FINDER_CONFIG_SHOW_URL_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_URL_DESC">
 				<option value="1">JSHOW</option>
 				<option value="0">JHIDE</option>
@@ -100,8 +100,8 @@
 			<field name="search_order"
 				type="list"
 				default=""
-				label="COM_FINDER_Search_Order_LABEL"
-				description="COM_FINDER_Search_Order_DESC">
+				label="COM_FINDER_SEARCH_ORDER_LABEL"
+				description="COM_FINDER_SEARCH_ORDER_DESC">
 				<option value="">COM_FINDER_OPTION_RELEVANCE</option>
 				<option value="d1">COM_FINDER_OPTION_START_DATE</option>
 				<option value="d2">COM_FINDER_OPTION_END_DATE</option>
@@ -110,7 +110,7 @@
 			<field name="show_feed"
 				type="radio"
 				default="0"
-				label="COM_FINDER_CONFIG_SHOW_FEED"
+				label="COM_FINDER_CONFIG_SHOW_FEED_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_FEED_DESC">
 				<option value="1">JSHOW</option>
 				<option value="0">JHIDE</option>
@@ -118,7 +118,7 @@
 			<field name="show_feed_text"
 				type="radio"
 				default="0"
-				label="COM_FINDER_CONFIG_SHOW_FEED_TEXT"
+				label="COM_FINDER_CONFIG_SHOW_FEED_TEXT_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_FEED_TEXT_DESC">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
