@@ -1230,4 +1230,77 @@ class FinderModelSearch extends JModelList
 		$this->setState('user.id', (int)$user->get('id'));
 		$this->setState('user.groups', $user->getAuthorisedViewLevels());
 	}
+
+	/**
+	 * Method to retrieve data from cache.
+	 *
+	 * @param	string		The cache store id.
+	 * @param	boolean		Flag to enable the use of external cache.
+	 * @return	mixed		The cached data if found, null otherwise.
+	 */
+	protected function _retrieve($id, $persistent = true)
+	{
+		$data = null;
+
+		// Use the internal cache if possible.
+		if (isset($this->_cache[$id])) {
+			return $this->_cache[$id];
+		}
+
+		// Use the external cache if data is persistent.
+		if ($persistent) {
+			$data = JFactory::getCache($this->_context, 'output')->get($id);
+			$data = $data ? unserialize($data) : null;
+		}
+
+		// Store the data in internal cache.
+		if ($data) {
+			$this->_cache[$id] = $data;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Method to store data in cache.
+	 *
+	 * @param	string		The cache store id.
+	 * @param	mixed		The data to cache.
+	 * @param	boolean		Flag to enable the use of external cache.
+	 * @return	boolean		True on success, false on failure.
+	 */
+	protected function _store($id, $data, $persistent = true)
+	{
+		// Store the data in internal cache.
+		$this->_cache[$id] = $data;
+
+		// Store the data in external cache if data is persistent.
+		if ($persistent) {
+			return JFactory::getCache($this->_context, 'output')->store(serialize($data), $id);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to get a store id based on the model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param	string	An identifier string to generate the store id.
+	 * @return	string	A store id.
+	 * @since	2.0
+	 */
+	protected function _getStoreId($id = '')
+	{
+		// Add the list state to the store id.
+		$id	.= ':'.$this->getState('list.start');
+		$id	.= ':'.$this->getState('list.limit');
+		$id	.= ':'.$this->getState('list.ordering');
+		$id	.= ':'.$this->getState('list.direction');
+
+		return md5($this->_context.':'.$id);
+	}
 }
