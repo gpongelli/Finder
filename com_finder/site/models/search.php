@@ -1027,7 +1027,7 @@ class FinderModelSearch extends JModelList
 
 			// Load the link ids from the database.
 			$db->setQuery($query);
-			$temp = $db->loadResultArray();
+			$temp = $db->loadColumn();
 
 			// Check for a database error.
 			if ($db->getErrorNum())

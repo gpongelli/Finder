@@ -397,7 +397,7 @@ class FinderIndexerHelper
 
 		// Load all of the common terms for the language.
 		$db->setQuery($query);
-		$results = $db->loadResultArray();
+		$results = $db->loadColumn();
 
 		// Check for a database error.
 		if ($db->getErrorNum())
@@ -482,7 +482,7 @@ class FinderIndexerHelper
 			// Get and configure the site router.
 			$config	= JFactory::getConfig();
 			$router = JRouter::getInstance('site');
-			$router->setMode($config->getValue('sef', 1));
+			$router->setMode($config->get('sef', 1));
 		}
 
 		// Build the relative route.
@@ -534,7 +534,7 @@ class FinderIndexerHelper
 	}
 
 	/**
-	 * Method to process content text using the onPrepareContent event trigger.
+	 * Method to process content text using the onContentPrepare event trigger.
 	 *
 	 * @param   string  $text    The content to process.
 	 * @param   object  $params  The parameters object.
@@ -550,8 +550,6 @@ class FinderIndexerHelper
 		// Get the dispatcher.
 		$dispatcher = &JDispatcher::getInstance();
 
-		
-		
 		// Load the content plugins if necessary and remove any problematic ones.
 		if (empty($loaded))
 		{
