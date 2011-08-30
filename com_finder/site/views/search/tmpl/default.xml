@@ -25,7 +25,7 @@
 	<fields name="params" addpath="/administrator/components/com_finder/models/fields">
 		<fieldset name="basic">
 			<field name="show_date_filters"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_SHOW_DATE_FILTERS_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_DATE_FILTERS_DESC">
@@ -34,7 +34,7 @@
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field name="show_advanced"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_SHOW_ADVANCED_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_ADVANCED_DESC">
@@ -43,7 +43,7 @@
 				<option value="">JGLOBAL_USE_GLOBAL</option>
 			</field>
 			<field name="expand_advanced"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_EXPAND_ADVANCED_LABEL"
 				description="COM_FINDER_CONFIG_EXPAND_ADVANCED_DESC">
@@ -53,7 +53,7 @@
 			</field>
 			<field type="spacer" />
 			<field name="show_description"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_SHOW_DESCRIPTION_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_DESCRIPTION_DESC">
@@ -69,7 +69,7 @@
 				size="5"
 			/>
 			<field name="show_url"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_SHOW_URL_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_URL_DESC">
@@ -79,7 +79,7 @@
 			</field>
 			<field type="spacer" />
 			<field name="show_labels"
-				type="radio"
+				type="list"
 				default=""
 				label="COM_FINDER_CONFIG_SHOW_RESULT_LABELS_LABEL"
 				description="COM_FINDER_CONFIG_SHOW_RESULT_LABELS_DESC">
