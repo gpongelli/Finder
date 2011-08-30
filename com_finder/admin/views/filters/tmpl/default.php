@@ -20,8 +20,11 @@ Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'filters.delete') {
 		if (confirm('<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'); ?>')) {
 			Joomla.submitform(pressbutton);
+		} else {
+			return false;
 		}
 	}
+	Joomla.submitform(pressbutton);
 }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=filters');?>" method="post" name="adminForm" id="adminForm">
