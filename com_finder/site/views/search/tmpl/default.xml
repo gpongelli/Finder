@@ -5,29 +5,26 @@
 			<![CDATA[FINDER_MENU_SEARCH_VIEW_DEFAULT_TEXT]]>
 		</message>
 	</layout>
-	<state>
-		<name>FINDER_MENU_SEARCH_VIEW_DEFAULT_TITLE</name>
-		<description>FINDER_MENU_SEARCH_VIEW_DEFAULT_TEXT</description>
-		<url addpath="/administrator/components/com_finder/models/fields">
-			<param
-				name="q"
+
+	<fields name="request" addpath="/administrator/components/com_finder/models/fields">
+		<fieldset name="request">
+			<field name="q"
 				type="text"
-				default=""
 				label="FINDER_SEARCH_SEARCH_QUERY_LABEL"
 				description="FINDER_SEARCH_SEARCH_QUERY_DESC"
 				size="30"
 			/>
-			<param
-				name="f"
+			<field name="f"
 				type="searchfilter"
 				default=""
 				label="FINDER_SEARCH_FILTER_SEARCH_LABEL"
 				description="FINDER_SEARCH_FILTER_SEARCH_DESC"
 			/>
-		</url>
-		<params addpath="/administrator/components/com_finder/models/elements">
-			<param
-				name="show_date_filters"
+		</fieldset>
+	</fields>
+	<fields name="params" addpath="/administrator/components/com_finder/models/fields">
+		<fieldset name="params" label="COM_FINDER_BASIC_OPTIONS_FIELDSET_LABEL">
+			<field name="show_date_filters"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_DATE_FILTERS"
@@ -35,9 +32,8 @@
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-			<param
-				name="show_advanced"
+			</field>
+			<field name="show_advanced"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_ADVANCED_LABEL"
@@ -45,20 +41,18 @@
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-			<param
-				name="expand_advanced"
+			</field>
+			<field name="expand_advanced"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_EXPAND_ADVANCED_LABEL"
 				description="FINDER_CONFIG_EXPAND_ADVANCED_DESC">
-				<option value="1">FINDER_PARAM_YES</option>
-				<option value="0">FINDER_PARAM_NO</option>
+				<option value="1">FINDER_PARAM_SHOW</option>
+				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-			<params type="spacer" />
-			<param
-				name="show_description"
+			</field>
+			<field type="spacer" />
+			<field name="show_description"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_DESCRIPTION_LABEL"
@@ -66,16 +60,15 @@
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-			<param
-				name="description_length"
+			</field>
+			<field name="description_length"
 				type="text"
-				size="5"
 				default="255"
 				label="FINDER_CONFIG_DESCRIPTION_LENGTH_LABEL"
-				description="FINDER_CONFIG_DESCRIPTION_LENGTH_DESC" />
-			<param
-				name="show_url"
+				description="FINDER_CONFIG_DESCRIPTION_LENGTH_DESC"
+				size="5"
+			/>
+			<field name="show_url"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_URL"
@@ -83,10 +76,9 @@
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-			<params type="spacer" />
-			<param
-				name="show_labels"
+			</field>
+			<field type="spacer" />
+			<field name="show_labels"
 				type="radio"
 				default=""
 				label="FINDER_CONFIG_SHOW_RESULT_LABELS_LABEL"
@@ -94,47 +86,43 @@
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
 				<option value="">FINDER_PARAM_USE_GLOBAL</option>
-			</param>
-		</params>
-		<advanced>
-			<param
-				name="allow_empty_query"
+			</field>
+		</fieldset>
+		<fieldset name="advanced">
+			<field name="allow_empty_query"
 				type="radio"
+				default="0"
 				label="Finder_Allow_Empty_Query_Label"
-				description="Finder_Allow_Empty_Query_Desc"
-				default="0">
+				description="Finder_Allow_Empty_Query_Desc">
 				<option value="1">FINDER_PARAM_YES</option>
 				<option value="0">FINDER_PARAM_NO</option>
-			</param>
-			<param
-				name="search_order"
+			</field>
+			<field name="search_order"
 				type="list"
+				default=""
 				label="Finder_Search_Order_Label"
-				description="Finder_Search_Order_Desc"
-				default="">
+				description="Finder_Search_Order_Desc">
 				<option value="">Finder_Option_Relevance</option>
 				<option value="d1">Finder_Option_Start_Date</option>
 				<option value="d2">Finder_Option_End_Date</option>
-			</param>
-			<params type="spacer" />
-			<param
-				name="show_feed"
+			</field>
+			<field type="spacer" />
+			<field name="show_feed"
 				type="radio"
+				default="0"
 				label="FINDER_CONFIG_SHOW_FEED"
-				description="FINDER_CONFIG_SHOW_FEED_DESC"
-				default="0">
+				description="FINDER_CONFIG_SHOW_FEED_DESC">
 				<option value="1">FINDER_PARAM_SHOW</option>
 				<option value="0">FINDER_PARAM_HIDE</option>
-			</param>
-			<param
-				name="show_feed_text"
+			</field>
+			<field name="show_feed_text"
 				type="radio"
+				default="0"
 				label="FINDER_CONFIG_SHOW_FEED_TEXT"
-				description="FINDER_CONFIG_SHOW_FEED_TEXT_DESC"
-				default="0">
+				description="FINDER_CONFIG_SHOW_FEED_TEXT_DESC">
 				<option value="1">FINDER_PARAM_YES</option>
 				<option value="0">FINDER_PARAM_NO</option>
-			</param>
-		</advanced>
-	</state>
+			</field>
+		</fieldset>
+	</fields>
 </metadata>
