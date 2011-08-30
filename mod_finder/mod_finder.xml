@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="1.6" client="site" method="upgrade">
+<extension type="module" version="1.7" client="site" method="upgrade">
 	<name>mod_finder</name>
 	<author>JXtended</author>
 	<creationDate>November 2010</creationDate>
@@ -21,7 +21,7 @@
 		<language tag="en-GB">language/en-GB/en-GB.mod_finder.sys.ini</language>
 	</languages>
 	<config>
-		<fields name="fields" addpath="/administrator/components/com_finder/models/fields">
+		<fields name="params" addpath="/administrator/components/com_finder/models/fields">
 			<fieldset name="basic">
 				<field
 					name="searchfilter"
@@ -56,7 +56,7 @@
 						value="0">JHIDE</option>
 				</field>
 			</fieldset>
-			<fieldset group="advanced">
+			<fieldset name="advanced">
 				<field
 					name="moduleclass_sfx"
 					type="text"

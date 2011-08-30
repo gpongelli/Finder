@@ -1291,28 +1291,4 @@ class FinderModelSearch extends JModelList
 
 		return true;
 	}
-
-	/**
-	 * Method to get a store id based on the model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param   string  $id  An identifier string to generate the store id.
-	 *
-	 * @return  string  A store id.
-	 *
-	 * @since   2.5
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Add the list state to the store id.
-		$id	.= ':'.$this->getState('list.start');
-		$id	.= ':'.$this->getState('list.limit');
-		$id	.= ':'.$this->getState('list.ordering');
-		$id	.= ':'.$this->getState('list.direction');
-
-		return md5($this->_context.':'.$id);
-	}
 }
