@@ -259,7 +259,7 @@ class FinderIndexerTaxonomy
 
 		// Get the branch titles.
 		$db->setQuery($query);
-		$results = $db->loadResultArray();
+		$results = $db->loadColumn();
 
 		// Check for a database error.
 		if ($db->getErrorNum())

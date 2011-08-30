@@ -84,7 +84,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 * @param   object  &$subject  The object to observe.
 	 * @param   array   $config    An array that holds the plugin configuration.
 	 *
-	 * @return  void
+	 * @return  FinderIndexerAdapter
 	 *
 	 * @since   2.5
 	 */
@@ -450,7 +450,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 		$query->from($this->db->quoteName('#__finder_links'));
 		$query->where($this->db->quoteName('url').' = IN ('.implode(',', $items).')');
 		$this->db->setQuery($query);
-		$items = $this->db->loadResultArray();
+		$items = $this->db->loadColumn();
 
 		// Check for a database error.
 		if ($this->db->getErrorNum())
