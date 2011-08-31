@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * Groups view class for Finder.
+ * Statistics view class for Finder.
  *
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  * @since       2.5
  */
-class FinderViewAbout extends JView
+class FinderViewStatistics extends JView
 {
 	/**
 	 * Method to display the view.

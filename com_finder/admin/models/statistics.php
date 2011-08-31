@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.model');
 
 /**
- * Filter model class for Finder.
+ * Statistics model class for Finder.
  *
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  * @since       2.5
  */
-class FinderModelAbout extends JModel
+class FinderModelStatistics extends JModel
 {
 	/**
 	 * Method to get the component statistics
