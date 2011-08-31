@@ -34,7 +34,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * @var		string		The type of content that the adapter indexes.
 	 */
-	protected $_type_title = 'Contact';
+	protected $type_title = 'Contact';
 
 	/**
 	 * Constructor

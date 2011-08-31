@@ -34,7 +34,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	/**
 	 * @var		string		The type of content that the adapter indexes.
 	 */
-	protected $_type_title = 'Category';
+	protected $type_title = 'Category';
 
 	/**
 	 * Constructor

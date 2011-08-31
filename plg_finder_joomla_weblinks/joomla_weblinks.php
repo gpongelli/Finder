@@ -34,7 +34,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	/**
 	 * @var		string		The type of content that the adapter indexes.
 	 */
-	protected $_type_title = 'Web Link';
+	protected $type_title = 'Web Link';
 
 	/**
 	 * Constructor

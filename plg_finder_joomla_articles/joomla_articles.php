@@ -33,7 +33,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * @var		string		The type of content that the adapter indexes.
 	 */
-	protected $_type_title = 'Article';
+	protected $type_title = 'Article';
 
 	/**
 	 * Constructor
