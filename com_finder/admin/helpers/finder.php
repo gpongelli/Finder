@@ -50,11 +50,6 @@ class FinderHelper
 			'index.php?option=com_finder&view=filters',
 			$vName == 'filters'
 		);
-		JSubMenuHelper::addEntry(
-			JText::_('COM_FINDER_SUBMENU_ADAPTERS'),
-			'index.php?option=com_finder&view=adapters',
-			$vName == 'adapters'
-		);
 	}
 
 	/**
