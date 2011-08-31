@@ -20,8 +20,11 @@ Joomla.submitbutton = function(pressbutton) {
 	if (pressbutton == 'filters.delete') {
 		if (confirm('<?php echo JText::_('COM_FINDER_INDEX_CONFIRM_DELETE_PROMPT'); ?>')) {
 			Joomla.submitform(pressbutton);
+		} else {
+			return false;
 		}
 	}
+	Joomla.submitform(pressbutton);
 }
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=filters');?>" method="post" name="adminForm" id="adminForm">
@@ -46,9 +49,6 @@ Joomla.submitbutton = function(pressbutton) {
 			<tr>
 				<th width="1%">
 					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
-				</th>
-				<th width="5%">
-					<?php echo JText::_('NUM'); ?>
 				</th>
 				<th class="nowrap">
 					<?php echo JHTML::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
@@ -101,9 +101,6 @@ Joomla.submitbutton = function(pressbutton) {
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center">
 					<?php echo JHtml::_('grid.id', $n, $filter->filter_id); ?>
-				</td>
-				<td>
-					<?php echo $n+1+$this->state->get('list.start'); ?>
 				</td>
 				<td>
 					<?php if ($filter->checked_out) {

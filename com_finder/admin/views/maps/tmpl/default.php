@@ -51,9 +51,6 @@ Joomla.submitbutton = function(pressbutton) {
 				<th width="1%">
 					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 				</th>
-				<th width="5%">
-					<?php echo JText::_('NUM'); ?>
-				</th>
 				<th class="nowrap">
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
@@ -86,9 +83,6 @@ Joomla.submitbutton = function(pressbutton) {
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center">
 					<?php echo JHtml::_('grid.id', $n, $row->id); ?>
-				</td>
-				<td>
-					<?php echo $n; ?>
 				</td>
 				<td>
 					<?php

@@ -36,9 +36,6 @@ $userId		= $user->get('id');
 				<th width="1%">
 					<input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
 				</th>
-				<th width="5%">
-					<?php echo JText::_('NUM'); ?>
-				</th>
 				<th class="nowrap">
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'p.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
@@ -71,9 +68,6 @@ $userId		= $user->get('id');
 			<tr class="row<?php echo $n % 2; ?>">
 				<td class="center">
 					<?php echo JHtml::_('grid.id', $n, $item->extension_id); ?>
-				</td>
-				<td>
-					<?php echo $n+1+$this->state->get('list.start'); ?>
 				</td>
 				<td>
 					<?php if ($item->checked_out) {
