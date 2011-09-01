@@ -181,7 +181,7 @@ class FinderViewSearch extends JView
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('COM_PODCASTMANAGER_DEFAULT_PAGE_TITLE'));
+			$this->params->def('page_heading', JText::_('COM_FINDER_DEFAULT_PAGE_TITLE'));
 		}
 
 		$id = (int) @$menu->query['id'];
