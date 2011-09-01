@@ -31,9 +31,11 @@ class FinderViewSearch extends JView
 	 */
 	public function display($tpl = null)
 	{
+		$app		= JFactory::getApplication();
+		$params		= $app->getParams();
+
 		// Get view data.
 		$state		= $this->get('State');
-		$params		= $state->get('params');
 		$query		= $this->get('Query');			JDEBUG ? $GLOBALS['_PROFILER']->mark('afterFinderQuery') : null;
 		$results	= $this->get('Results');		JDEBUG ? $GLOBALS['_PROFILER']->mark('afterFinderResults') : null;
 		$total		= $this->get('Total');			JDEBUG ? $GLOBALS['_PROFILER']->mark('afterFinderTotal') : null;
@@ -49,7 +51,7 @@ class FinderViewSearch extends JView
 		// Configure the pathway.
 		if (!empty($query->input))
 		{
-			JFactory::getApplication()->getPathWay()->addItem($this->escape($query->input));
+			$app->getPathWay()->addItem($this->escape($query->input));
 		}
 
 		// Push out the view data.
@@ -64,7 +66,7 @@ class FinderViewSearch extends JView
 		if (strpos($this->query->input, '"'))
 		{
 			// Get the application router.
-			$router =& JFactory::getApplication()->getRouter();
+			$router =& $app->getRouter();
 
 			// Fix the q variable in the URL.
 			if ($router->getVar('q') !== $this->query->input)
@@ -78,35 +80,19 @@ class FinderViewSearch extends JView
 		$this->assign('suggested',	JHtml::_('query.suggested', $query));
 		$this->assign('explained',	JHtml::_('query.explained', $query));
 
-		// Set the document title.
-		$this->document->setTitle($params->get('page_title'));
+		// Escape strings for HTML output
+		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
-		// Configure the document meta-description.
-		if (!empty($this->explained))
+		// Check for layout override only if this is not the active menu item
+		// If it is the active menu item, then the view and category id will match
+		$active	= $app->getMenu()->getActive();
+		if (isset($active->query['layout']))
 		{
-			$explained = $this->escape(html_entity_decode(strip_tags($this->explained), ENT_QUOTES, 'UTF-8'));
-			$this->document->setDescription($explained);
+			// We need to set the layout in case this is an alternative menu item (with an alternative layout)
+			$this->setLayout($active->query['layout']);
 		}
 
-		// Configure the document meta-keywords.
-		if (!empty($query->highlight))
-		{
-			$this->document->setMetadata('keywords', implode(', ', $query->highlight));
-		}
-
-		// Add feed link to the document head.
-		if ($params->get('show_feed', 0))
-		{
-			// Add the RSS link.
-			$props = array('type' => 'application/rss+xml', 'title' => 'RSS 2.0');
-			$route = JRoute::_($query->toURI().'&format=feed&type=rss');
-			$this->document->addHeadLink($route, 'alternate', 'rel', $props);
-
-			// Add the ATOM link.
-			$props = array('type' => 'application/atom+xml', 'title' => 'Atom 1.0');
-			$route = JRoute::_($query->toURI().'&format=feed&type=atom');
-			$this->document->addHeadLink($route, 'alternate', 'rel', $props);
-		}
+		$this->prepareDocument();
 
 		JDEBUG ? $GLOBALS['_PROFILER']->mark('beforeFinderLayout') : null;
 
@@ -123,7 +109,7 @@ class FinderViewSearch extends JView
 	 *
 	 * @since   2.5
 	 */
-	protected function _getGetFields()
+	protected function getFields()
 	{
 		$fields = null;
 
@@ -158,7 +144,7 @@ class FinderViewSearch extends JView
 	 *
 	 * @since   2.5
 	 */
-	protected function _getLayoutFile($layout = null)
+	protected function getLayoutFile($layout = null)
 	{
 		// Create and sanitize the file name.
 		$file = $this->_layout.'_'.preg_replace('/[^A-Z0-9_\.-]/i', '', $layout);
@@ -169,5 +155,84 @@ class FinderViewSearch extends JView
 		$exists = JPath::find($this->_path['template'], $filetofind);
 
 		return ($exists ? $layout : 'result');
+	}
+
+	/**
+	 * Prepares the document
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	protected function prepareDocument()
+	{
+		$app		= JFactory::getApplication();
+		$menus		= $app->getMenu();
+		$pathway	= $app->getPathway();
+		$title 		= null;
+
+		// Because the application sets a default page title,
+		// we need to get it from the menu item itself
+		$menu = $menus->getActive();
+
+		if ($menu)
+		{
+			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+		}
+		else
+		{
+			$this->params->def('page_heading', JText::_('COM_PODCASTMANAGER_DEFAULT_PAGE_TITLE'));
+		}
+
+		$id = (int) @$menu->query['id'];
+
+		$title = $this->params->get('page_title', '');
+
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		else if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		else if ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+
+		$this->document->setTitle($title);
+
+		// Configure the document meta-description.
+		if (!empty($this->explained))
+		{
+			$explained = $this->escape(html_entity_decode(strip_tags($this->explained), ENT_QUOTES, 'UTF-8'));
+			$this->document->setDescription($explained);
+		}
+
+		// Configure the document meta-keywords.
+		if (!empty($query->highlight))
+		{
+			$this->document->setMetadata('keywords', implode(', ', $query->highlight));
+		}
+
+		if ($this->params->get('robots'))
+		{
+			$this->document->setMetadata('robots', $this->params->get('robots'));
+		}
+
+		// Add feed link to the document head.
+		if ($this->params->get('show_feed_link', 1) == 1)
+		{
+			// Add the RSS link.
+			$props = array('type' => 'application/rss+xml', 'title' => 'RSS 2.0');
+			$route = JRoute::_($this->query->toURI().'&format=feed&type=rss');
+			$this->document->addHeadLink($route, 'alternate', 'rel', $props);
+
+			// Add the ATOM link.
+			$props = array('type' => 'application/atom+xml', 'title' => 'Atom 1.0');
+			$route = JRoute::_($this->query->toURI().'&format=feed&type=atom');
+			$this->document->addHeadLink($route, 'alternate', 'rel', $props);
+		}
 	}
 }

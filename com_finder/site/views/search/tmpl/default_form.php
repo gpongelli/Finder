@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id:default_form.php 80 2008-04-24 19:57:50Z rob.schley $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -64,7 +64,7 @@ defined('_JEXEC') or die;
 </script>
 
 <form id="finder-search" action="<?php echo JRoute::_($this->query->toURI()); ?>" method="get">
-	<?php echo $this->_getGetFields(); ?>
+	<?php echo $this->getFields(); ?>
 
 	<?php
 	/*

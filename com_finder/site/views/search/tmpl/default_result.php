@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: default_result.php 992 2010-06-24 04:21:05Z robs $
- * @package		JXtended.Finder
- * @subpackage	com_finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
@@ -51,7 +50,7 @@ endif;
 if ($this->params->get('show_url', 1)):
 ?>
 	<p class="url">
-		<?php echo $base.JRoute::_($this->result->route); ?><?php echo ($this->result->size) ? ' - '.JHtml::_('string.size', $this->result->size) : null; ?>
+		<?php echo $base.JRoute::_($this->result->route); ?><?php echo ($this->result->size) ? ' - '.JHtml::_('number.bytes', $this->result->size) : null; ?>
 	</p>
 <?php
 endif;

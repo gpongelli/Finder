@@ -46,7 +46,22 @@ class FinderViewSearch extends JView
 		$explained = JHtml::_('query.explained', $query);
 
 		// Set the document title.
-		$this->document->setTitle($params->get('page_title'));
+		$title = $this->params->get('page_title', '');
+
+		if (empty($title))
+		{
+			$title = $app->getCfg('sitename');
+		}
+		else if ($app->getCfg('sitename_pagetitles', 0) == 1)
+		{
+			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+		}
+		else if ($app->getCfg('sitename_pagetitles', 0) == 2)
+		{
+			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+		}
+
+		$this->document->setTitle($title);
 
 		// Configure the document description.
 		if (!empty($explained))

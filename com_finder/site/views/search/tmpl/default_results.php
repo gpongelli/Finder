@@ -1,16 +1,17 @@
 <?php
 /**
- * @version		$Id: default_results.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Site
+ * @subpackage  com_finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('_JEXEC') or die;
 
 // Activate the highlighter if enabled.
 if (!empty($this->query->highlight) && $this->params->get('highlight_content_search_terms', 1)) {
-	JHtml::_('string.highlighter', $this->query->highlight);
+	JHtml::_('finder.highlighter', $this->query->highlight);
 }
 
 // Display the suggested search if it is different from the current search.
@@ -61,7 +62,7 @@ else:
 		<?php
 		for ($i = 0, $n = count($this->results); $i < $n; $i++):
 			$this->result	= &$this->results[$i];
-			$layout			= $this->_getLayoutFile($this->result->layout);
+			$layout			= $this->getLayoutFile($this->result->layout);
 			$class			= 'search-result search-result-'.$layout;
 		?>
 		<li class="<?php echo $class; ?>">
