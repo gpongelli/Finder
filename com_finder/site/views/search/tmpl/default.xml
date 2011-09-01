@@ -10,14 +10,12 @@
 		<fieldset name="request">
 			<field name="q"
 				type="text"
-				required="true"
 				label="COM_FINDER_SEARCH_SEARCH_QUERY_LABEL"
 				description="COM_FINDER_SEARCH_SEARCH_QUERY_DESC"
 				size="30"
 			/>
 			<field name="f"
 				type="searchfilter"
-				required="true"
 				default=""
 				label="COM_FINDER_SEARCH_FILTER_SEARCH_LABEL"
 				description="COM_FINDER_SEARCH_FILTER_SEARCH_DESC"
