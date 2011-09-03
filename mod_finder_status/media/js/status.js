@@ -2,7 +2,7 @@ var FinderStatus = new Class({
 	totalItems: null,
 	batchSize: null,
 	offset: null,
-	path: 'index.php?option=com_finder&tmpl=component&format=json&protocol=json&task=updater.update',
+	path: 'index.php?option=com_finder&tmpl=component&format=json&task=updater.update',
 	ajax: null,
 	initialize: function () {
 		this.offset = 0;

@@ -135,7 +135,7 @@ JHtml::stylesheet('com_finder/finder.css', false, true, false);
 		 */
 <?php if ($params->get('show_autosuggest', 1)): ?>
 	<?php JHtml::script('com_finder/autocompleter.js', false, true); ?>
-	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
+	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&format=json&tmpl=component', false); ?>';
 	var ModCompleter = new Autocompleter.Request.JSON(document.id('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});

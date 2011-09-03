@@ -17,7 +17,7 @@ window.addEvent('domready', function () {
 	}
 
 	function hideWarning(e) {
-		new Json.Remote(this.getProperty('link') + '&protocol=json', {
+		new Json.Remote(this.getProperty('link') + '&format=json', {
 			linkId: this.getProperty('id'),
 			onComplete: function (response) {
 				if (response.error == false) {
