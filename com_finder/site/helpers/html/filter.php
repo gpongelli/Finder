@@ -110,8 +110,8 @@ class JHtmlFilter
 		// Load the CSS/JS resources.
 		if ($loadMedia)
 		{
-			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
-			JHtml::script('components/com_finder/media/js/sliderfilter.js', false, false);
+			JHtml::stylesheet('com_finder/sliderfilter.css', false, true, false);
+			JHtml::script('com_finder/sliderfilter.js', false, true);
 		}
 
 		// Start the widget.
@@ -233,7 +233,7 @@ class JHtmlFilter
 			// Load the CSS/JS resources.
 			if ($loadMedia)
 			{
-				JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
+				JHtml::stylesheet('com_finder/sliderfilter.css', false, true, false);
 			}
 
 			return $data;
@@ -303,7 +303,7 @@ class JHtmlFilter
 		// Load the CSS/JS resources.
 		if ($loadMedia)
 		{
-			JHtml::stylesheet('components/com_finder/media/css/sliderfilter.css', false, false, false);
+			JHtml::stylesheet('com_finder/sliderfilter.css', false, true, false);
 		}
 
 		// Add the dates if enabled.
@@ -411,7 +411,7 @@ class JHtmlFilter
 			// Load the CSS/JS resources.
 			if ($loadMedia)
 			{
-				JHtml::stylesheet('components/com_finder/media/css/dates.css', false, false, false);
+				JHtml::stylesheet('com_finder/dates.css', false, true, false);
 			}
 
 			// Open the widget.

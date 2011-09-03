@@ -36,7 +36,7 @@ class JHtmlFinder
 		if ($doc->getType() == 'html' && JRequest::getCmd('tmpl') !== 'component')
 		{
 			// Add the highlighter media.
-			JHtml::script('components/com_finder/media/js/highlighter.js', false, false);
+			JHtml::script('com_finder/highlighter.js', false, true);
 
 			// Add the terms to highlight.
 			$doc->addScriptDeclaration("window.highlight = [\"".implode('","', $terms)."\"];");
