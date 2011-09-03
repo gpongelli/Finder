@@ -26,7 +26,7 @@ $doc = &JFactory::getDocument();
 $doc->addStyleDeclaration(
 	'div#module-status { background: none; }' .
 	'#finder-status-message {' .
-	'	background: transparent url(components/com_finder/media/images/icon-16-jx.png) no-repeat scroll 2px 4px' .
+	'	background: transparent url(../media/com_finder/images/icon-16-jx.png) no-repeat scroll 2px 4px' .
 	'}'
 );
 ?>
