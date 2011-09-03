@@ -17,7 +17,8 @@ if (JRequest::getBool('hidemainmenu'))
 else
 {
 	$text = JText::_('MOD_FINDER_STATUS_WAITING');
-	JHtml::script('administrator/modules/mod_finder_status/media/js/status.js', false, false);
+	JHtml::_('behavior.framework');
+	JHtml::script('mod_finder_status/status.js', false, true);
 }
 
 // We need to add some CSS to fix the status bar display.
