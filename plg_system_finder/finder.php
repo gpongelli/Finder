@@ -55,7 +55,7 @@ class plgSystemFinder extends JPlugin
 		// Activate the highlighter.
 		JHtml::addIncludePath(JPATH_SITE.'/components/com_finder/helpers/html');
 		JHtml::stylesheet('plugins/system/finder/media/css/finder.css', false, false, false);
-		JHtml::_('string.highlighter', $terms);
+		JHtml::_('finder.highlighter', $terms);
 
 		// Adjust the component buffer.
 		$doc = JFactory::getDocument();
