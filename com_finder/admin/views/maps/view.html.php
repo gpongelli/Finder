@@ -48,7 +48,7 @@ class FinderViewMaps extends JView
 		}
 
 		// Prepare the view.
-		JHtml::stylesheet('administrator/components/com_finder/media/css/finder.css', false, false, false);
+		JHtml::stylesheet('com_finder/finderadmin.css', false, true, false);
 		$this->addToolbar();
 
 		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');

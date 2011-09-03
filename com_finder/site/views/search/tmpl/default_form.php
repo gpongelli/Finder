@@ -56,7 +56,7 @@ defined('_JEXEC') or die;
 		 * This segment of code sets up the autocompleter.
 		 */
 <?php if ($this->params->get('show_autosuggest', 1)): ?>
-	<?php JHtml::script('components/com_finder/media/js/autocompleter.js', false, false); ?>
+	<?php JHtml::script('com_finder/autocompleter.js', false, true); ?>
 	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
 	var completer = new Autocompleter.Request.JSON(document.id('q'), url, {'postVar': 'q'});
 <?php endif; ?>

@@ -11,11 +11,13 @@
 	<description>MOD_FINDER_STATUS_XML_DESCRIPTION</description>
 	<scriptfile>script.php</scriptfile>
 	<files>
-		<folder>media</folder>
 		<file>index.html</file>
 		<file module="mod_finder_status">mod_finder_status.php</file>
 		<file>mod_finder_status.xml</file>
 	</files>
+	<media destination="mod_finder_status" folder="media">
+		<folder>js</folder>
+	</media>
 	<languages>
 		<language tag="en-GB">language/en-GB/en-GB.mod_finder_status.ini</language>
 		<language tag="en-GB">language/en-GB/en-GB.mod_finder_status.sys.ini</language>

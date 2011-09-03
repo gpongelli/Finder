@@ -17,10 +17,15 @@
 		<filename>router.php</filename>
 		<folder>controllers</folder>
 		<folder>helpers</folder>
-		<folder>media</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
+	<media destination="com_finder" folder="media">
+		<folder>js</folder>
+		<folder>images</folder>
+		<folder>css</folder>
+		<filename>index.html</filename>
+	</media>
 	<install>
 		<sql>
 			<file charset="utf8" driver="mysql">sql/install.mysql.sql</file>
@@ -43,7 +48,6 @@
 			<filename>index.html</filename>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
-			<folder>media</folder>
 			<folder>models</folder>
 			<folder>sql</folder>
 			<folder>tables</folder>
@@ -53,6 +57,6 @@
 			<language tag="en-GB">en-GB/en-GB.com_finder.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_finder.sys.ini</language>
 		</languages>
-		<menu img="../administrator/components/com_finder/media/images/icon-16-jx.png" link="option=com_finder">COM_FINDER</menu>
+		<menu img="../media/com_finder/images/icon-16-jx.png" link="option=com_finder">COM_FINDER</menu>
 	</administration>
 </extension>

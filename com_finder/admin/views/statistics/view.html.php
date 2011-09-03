@@ -44,7 +44,7 @@ class FinderViewStatistics extends JView
 		}
 
 		// Prepare the view.
-		$this->document->addStyleSheet('components/com_finder/media/css/finder.css');
+		JHtml::stylesheet('com_finder/finderadmin.css', false, true, false);
 
 		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 

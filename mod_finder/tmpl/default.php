@@ -82,7 +82,7 @@ switch ($params->get('button_pos', 'right')):
 	    break;
 endswitch;
 
-JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, false);
+JHtml::stylesheet('com_finder/finder.css', false, true, false);
 ?>
 
 <script type="text/javascript">
@@ -134,7 +134,7 @@ JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, fa
 		 * This segment of code sets up the autocompleter.
 		 */
 <?php if ($params->get('show_autosuggest', 1)): ?>
-	<?php JHtml::script('components/com_finder/media/js/autocompleter.js', false, false); ?>
+	<?php JHtml::script('com_finder/autocompleter.js', false, true); ?>
 	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
 	var ModCompleter = new Autocompleter.Request.JSON(document.id('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
 <?php endif; ?>

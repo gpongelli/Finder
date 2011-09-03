@@ -11,7 +11,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.framework');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::stylesheet('components/com_finder/media/css/finder.css', false, false, false);
+JHtml::stylesheet('com_finder/finder.css', false, true, false);
 
 // Check if we need to show the page title.
 if ($this->params->get('show_page_title', 1)):
