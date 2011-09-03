@@ -75,7 +75,7 @@ var FinderIndexer = new Class({
 	offset: null,
 	progress: null,
 	optimized: false,
-	path: 'index.php?option=com_finder&tmpl=component&format=json&protocol=json',
+	path: 'index.php?option=com_finder&tmpl=component&format=json',
 	initialize: function () {
 		this.offset = 0;
 		this.progress = 0;

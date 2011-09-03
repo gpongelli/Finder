@@ -57,7 +57,7 @@ defined('_JEXEC') or die;
 		 */
 <?php if ($this->params->get('show_autosuggest', 1)): ?>
 	<?php JHtml::script('com_finder/autocompleter.js', false, true); ?>
-	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&protocol=json&tmpl=component', false); ?>';
+	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&format=json&tmpl=component', false); ?>';
 	var completer = new Autocompleter.Request.JSON(document.id('q'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});
