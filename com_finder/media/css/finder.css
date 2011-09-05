@@ -62,10 +62,9 @@
 	background:url(../images/mime/pdf.png) no-repeat;
 }
 
-#search-results .search-pagination, #search-results .search-pages-links, #search-results .search-pages-counter {
+#search-results .search-pagination, #search-results .pagination, #search-results .search-pages-counter {
 	clear:both;
 	margin:0 auto;
-	text-align:center;
 }
 
 #finder-highlighter-start, #finder-highlighter-end {

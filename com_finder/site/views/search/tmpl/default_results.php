@@ -74,7 +74,7 @@ else:
 	</ul>
 
 	<div class="search-pagination">
-		<div class="search-pages-links">
+		<div class="pagination">
 			<?php echo $this->pagination->getPagesLinks(); ?>
 		</div>
 		<div class="search-pages-counter">
