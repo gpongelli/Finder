@@ -174,7 +174,7 @@ class FinderModelMaps extends JModelList
 		$query->group('a.id');
 
 		// If the model is set to check item state, add to the query.
-		if ($this->getState('filter.state'))
+		if (is_numeric($this->getState('filter.state')))
 		{
 			$query->where($db->quoteName('a.state').' = '.(int)$this->getState('filter.state'));
 		}
