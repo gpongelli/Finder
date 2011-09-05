@@ -174,7 +174,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Check for state filter.
-		if ($this->getState('filter.state'))
+		if (is_numeric($this->getState('filter.state')))
 		{
 			$query->where($db->quoteName('l.state').' = '.(int)$this->getState('filter.state'));
 		}
