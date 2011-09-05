@@ -308,6 +308,7 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.catid, a.name AS title, a.alias, a.link AS link');
 		$sql->select('a.published AS state, a.ordering, a.publish_up AS start_date, a.params');
+		$sql->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date');
 		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
 		$sql->select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as catslug');
