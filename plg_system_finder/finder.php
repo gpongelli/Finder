@@ -1,10 +1,10 @@
 <?php
 /**
- * @version		$Id: finder.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @subpackage	plgSystemFinder
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License
+ * @package     Joomla.Plugin
+ * @subpackage  System.Finder
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_BASE') or die;
@@ -12,8 +12,9 @@ defined('JPATH_BASE') or die;
 /**
  * System plugin class for Finder.
  *
- * @package		JXtended.Finder
- * @subpackage	plgSystemFinder
+ * @package     Joomla.Plugin
+ * @subpackage  System.Finder
+ * @since       2.5
  */
 class plgSystemFinder extends JPlugin
 {
@@ -24,22 +25,27 @@ class plgSystemFinder extends JPlugin
 	 * search results. The highlighting is done with JavaScript so we just
 	 * need to check a few parameters and the JHtml behavior will do the rest.
 	 *
-	 * @return	boolean		True on success.
+	 * @return  boolean  True on success
+	 *
+	 * @since   2.5
 	 */
 	public function onAfterDispatch()
 	{
 		// Check that we are in the site application.
-		if (JFactory::getApplication()->isAdmin()) {
-			return true;
-		}
-
-		// Check if the highlighter should be activated in this environment.
-		if (JFactory::getDocument()->getType() !== 'html' || JRequest::getCmd('tmpl') === 'component') {
+		if (JFactory::getApplication()->isAdmin())
+		{
 			return true;
 		}
 
 		// Check if the highlighter is enabled.
-		if (!JComponentHelper::getParams('com_finder')->get('highlight_content_search_terms', 1)) {
+		if (!JComponentHelper::getParams('com_finder')->get('highlight_content_search_terms', 1))
+		{
+			return true;
+		}
+
+		// Check if the highlighter should be activated in this environment.
+		if (JFactory::getDocument()->getType() !== 'html' || JRequest::getCmd('tmpl') === 'component')
+		{
 			return true;
 		}
 
@@ -48,7 +54,8 @@ class plgSystemFinder extends JPlugin
 		$terms = $terms ? @unserialize(@base64_decode($terms)) : null;
 
 		// Check the terms.
-		if (empty($terms)) {
+		if (empty($terms))
+		{
 			return true;
 		}
 
