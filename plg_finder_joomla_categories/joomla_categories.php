@@ -24,7 +24,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	/**
 	 * @var		string		The plugin identifier.
 	 */
-	protected $_context = 'Joomla_Categories';
+	protected $context = 'Joomla_Categories';
 
 	/**
 	 * @var		string		The sublayout to use when rendering the results.
@@ -65,7 +65,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		JLog::add('plgFinderJoomla_Categories::onBeforeSaveJoomlaCategory', JLog::INFO);
 
 		// Queue the item to be reindexed.
-		FinderIndexerQueue::add($this->_context, $id, JFactory::getDate()->toMySQL());
+		FinderIndexerQueue::add($this->context, $id, JFactory::getDate()->toMySQL());
 
 		return true;
 	}

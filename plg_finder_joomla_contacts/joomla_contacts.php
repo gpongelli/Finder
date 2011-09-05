@@ -24,7 +24,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * @var		string		The plugin identifier.
 	 */
-	protected $_context = 'Joomla_Contacts';
+	protected $context = 'Joomla_Contacts';
 
 	/**
 	 * @var		string		The sublayout to use when rendering the results.
@@ -63,7 +63,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	public function onBeforeSaveJoomlaContact($id)
 	{
 		// Queue the item to be reindexed.
-		FinderIndexerQueue::add($this->_context, $id, JFactory::getDate()->toMySQL());
+		FinderIndexerQueue::add($this->context, $id, JFactory::getDate()->toMySQL());
 
 		return true;
 	}

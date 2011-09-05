@@ -23,7 +23,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * @var		string		The plugin identifier.
 	 */
-	protected $_context = 'Joomla_Articles';
+	protected $context = 'Joomla_Articles';
 
 	/**
 	 * @var		string		The sublayout to use when rendering the results.
