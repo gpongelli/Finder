@@ -1,10 +1,10 @@
 <?php
 /**
- * @package		JXtended.Finder
- * @subpackage	plgFinderJoomla_Articles
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Plugin
+ * @subpackage  Finder.Joomla_articles
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_BASE') or die;
@@ -15,34 +15,45 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
 /**
  * Finder adapter for Joomla Articles.
  *
- * @package		JXtended.Finder
- * @subpackage	plgFinderJoomla_Articles
+ * @package     Joomla.Plugin
+ * @subpackage  Finder.Joomla_articles
+ * @since       2.5
  */
 class plgFinderJoomla_Articles extends FinderIndexerAdapter
 {
 	/**
-	 * @var		string		The plugin identifier.
+	 * The plugin identifier.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $context = 'Joomla_Articles';
 
 	/**
-	 * @var		string		The sublayout to use when rendering the results.
+	 * The sublayout to use when rendering the results.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
-	protected $_layout = 'article';
+	protected $layout = 'article';
 
 	/**
-	 * @var		string		The type of content that the adapter indexes.
+	 * The type of content that the adapter indexes.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $type_title = 'Article';
 
 	/**
 	 * Constructor
 	 *
-	 * @param	object	$subject	The object to observe
-	 * @param	array	$config		An array that holds the plugin configuration
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return	void
-	 * @since	1.8
+	 * @return  plgFinderJoomla_Articles
+	 *
+	 * @since   2.5
 	 */
 	public function __construct(&$subject, $config)
 	{
@@ -55,15 +66,17 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param	array		An array of item ids.
-	 * @param	string		The property that is being changed.
-	 * @param	integer		The new value of that property.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array    $ids       An array of item ids.
+	 * @param   string   $property  The property that is being changed.
+	 * @param   integer  $value     The new value of that property.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onChangeJoomlaArticle($ids, $property, $value)
 	{
-		JLog::add('plgFinderJoomla_Articles::onChangeJoomlaArticle', JLog::INFO);
 		// Check if we are changing the article state.
 		if ($property === 'state')
 		{
@@ -87,7 +100,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the article access level.
-		elseif ($property === 'access')
+		else if ($property === 'access')
 		{
 			// The article access state is tied to the category
 			// access state so we need to look up all access states
@@ -117,16 +130,17 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * changed. This is fired when the item category is published, unpublished,
 	 * or an access level is changed.
 	 *
-	 * @param	array		An array of item ids.
-	 * @param	string		The property that is being changed.
-	 * @param	integer		The new value of that property.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array    $ids       An array of item ids.
+	 * @param   string   $property  The property that is being changed.
+	 * @param   integer  $value     The new value of that property.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onChangeJoomlaCategory($ids, $property, $value)
 	{
-		JLog::add('plgFinderJoomla_Articles::onChangeJoomlaCategory', JLog::INFO);
-
 		// Check if we are changing the category state.
 		if ($property === 'published')
 		{
@@ -154,7 +168,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the category access level.
-		elseif ($property === 'access')
+		else if ($property === 'access')
 		{
 			// The article access state is tied to the category
 			// access state so we need to look up all access states
@@ -186,14 +200,15 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param	array		An array of item ids.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array  $ids  An array of item ids.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onDeleteJoomlaArticle($ids)
 	{
-		JLog::add('plgFinderJoomla_Articles::onDeleteJoomlaArticle', JLog::INFO);
-
 		// Remove the items.
 		return $this->remove($ids);
 	}
@@ -201,14 +216,15 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * Method to reindex the link information for an item that has been saved.
 	 *
-	 * @param	integer		The id of the item.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   integer  $id  The id of the item.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onSaveJoomlaArticle($id)
 	{
-		JLog::add('plgFinderJoomla_Articles::onSaveJoomlaArticle', JLog::INFO);
-
 		// Run the setup method.
 		$this->setup();
 
@@ -226,14 +242,15 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * We want to keep the item in the index for now but prevent it from being
 	 * displayed in search results.
 	 *
-	 * @param	array		An array of item ids.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array  $ids  An array of item ids.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onTrashJoomlaArticle($ids)
 	{
-		JLog::add('plgFinderJoomla_Articles::onTrashJoomlaArticle', JLog::INFO);
-
 		// Update the items.
 		return $this->change($ids, 'state', -2);
 	}
@@ -241,13 +258,15 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param	object		The item to index as an FinderIndexerResult object.
-	 * @throws	Exception on database error.
+	 * @param   FinderIndexerResult  $item  The item to index as an FinderIndexerResult object.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected function index(FinderIndexerResult $item)
 	{
-		JLog::add('plgFinderJoomla_Articles::index', JLog::INFO);
-
 		// Initialize the item parameters.
 		$registry = new JRegistry;
 		$registry->loadString($item->params);
@@ -321,14 +340,14 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * Method to setup the indexer to be run.
 	 *
-	 * @return	boolean		True on success.
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
 	 */
 	protected function setup()
 	{
-		JLog::add('plgFinderJoomla_Articles::setup', JLog::INFO);
-
 		// Load dependent classes.
-		require_once JPATH_SITE.'/components/com_content/helpers/route.php';
+		include_once JPATH_SITE.'/components/com_content/helpers/route.php';
 
 		return true;
 	}
@@ -336,13 +355,14 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param	mixed		A JDatabaseQuery object or null.
-	 * @return	object		A JDatabaseQuery object.
+	 * @param   mixed  $sql  A JDatabaseQuery object or null.
+	 *
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	protected function getListQuery($sql = null)
 	{
-		JLog::add('plgFinderJoomla_Articles::getListQuery', JLog::INFO);
-
 		$db = JFactory::getDbo();
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
@@ -366,13 +386,14 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * Method to get the URL for the item. The URL is how we look up the link
 	 * in the Finder index.
 	 *
-	 * @param	mixed		The id of the item.
-	 * @return	string		The URL of the item.
+	 * @param   mixed  $id  The id of the item.
+	 *
+	 * @return  string  The URL of the item.
+	 *
+	 * @since   2.5
 	 */
 	protected function getURL($id)
 	{
-		JLog::add('plgFinderJoomla_Articles::getURL', JLog::INFO);
-
 		return 'index.php?option=com_content&view=article&id='.$id;
 	}
 
@@ -380,17 +401,20 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * Method to translate the native content states into states that the
 	 * indexer can use.
 	 *
-	 * @param	integer		The article state.
-	 * @param	integer		The category state.
-	 * @return	integer		The translated indexer state.
+	 * @param   integer  $article   The article state.
+	 * @param   integer  $category  The category state.
+	 *
+	 * @return  integer  The translated indexer state.
+	 *
+	 * @since   2.5
 	 */
 	private function _translateState($article, $category)
 	{
-		JLog::add('plgFinderJoomla_Articles::_translateState', JLog::INFO);
-
 		// If category is present, factor in the state as well.
-		if ($category !== null) {
-			if ($category == 0) {
+		if ($category !== null)
+		{
+			if ($category == 0)
+			{
 				$article = 0;
 			}
 		}
@@ -415,12 +439,12 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * Method to get a SQL query to load the published and access states for
 	 * an article and category.
 	 *
-	 * @return	object		A JDatabaseQuery object.
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	private function _getStateQuery()
 	{
-		JLog::add('plgFinderJoomla_Articles::_getStateQuery', JLog::INFO);
-
 		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.state, c.published AS cat_state');
