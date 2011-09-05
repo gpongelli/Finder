@@ -138,6 +138,22 @@
 					<option
 						value="bottom">MOD_FINDER_CONFIG_OPTION_BOTTOM</option>
 				</field>
+				<field
+					name="opensearch"
+					type="radio"
+					label="MOD_FINDER_FIELD_OPENSEARCH_LABEL"
+					description="MOD_FINDER_FIELD_OPENSEARCH_DESCRIPTION"
+					default="1">
+					<option
+						value="0">JNO</option>
+					<option
+						value="1">JYES</option>
+				</field>
+				<field
+					name="opensearch_title"
+					type="text"
+					label="MOD_FINDER_FIELD_OPENSEARCH_TEXT_LABEL"
+					description="MOD_FINDER_FIELD_OPENSEARCH_TEXT_DESCRIPTION" />
 			</fieldset>
 		</fields>
 	</config>
