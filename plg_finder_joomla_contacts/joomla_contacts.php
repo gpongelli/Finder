@@ -1,11 +1,10 @@
 <?php
 /**
- * @version		$Id: joomla_contacts.php 981 2010-06-15 18:38:02Z robs $
- * @package		JXtended.Finder
- * @subpackage	plgFinderJoomla_Contacts
- * @copyright	Copyright (C) 2007 - 2010 JXtended, LLC. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
- * @link		http://jxtended.com
+ * @package     Joomla.Plugin
+ * @subpackage  Finder.Joomla_contacts
+ *
+ * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_BASE') or die;
@@ -16,36 +15,47 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
 /**
  * Finder adapter for Joomla Contacts.
  *
- * @package		JXtended.Finder
- * @subpackage	plgFinderJoomla_Contacts
+ * @package     Joomla.Plugin
+ * @subpackage  Finder.Joomla_contacts
+ * @since       2.5
  */
 class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 {
 	/**
-	 * @var		string		The plugin identifier.
+	 * The plugin identifier.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $context = 'Joomla_Contacts';
 
 	/**
-	 * @var		string		The sublayout to use when rendering the results.
+	 * The sublayout to use when rendering the results.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
-	protected $_layout = 'contact';
+	protected $layout = 'contact';
 
 	/**
-	 * @var		string		The type of content that the adapter indexes.
+	 * The type of content that the adapter indexes.
+	 *
+	 * @var    string
+	 * @since  2.5
 	 */
 	protected $type_title = 'Contact';
 
 	/**
 	 * Constructor
 	 *
-	 * @param	object	$subject	The object to observe
-	 * @param	array	$config		An array that holds the plugin configuration
+	 * @param   object  &$subject  The object to observe
+	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return	void
-	 * @since	1.8
+	 * @return  plgFinderJoomla_Contacts
+	 *
+	 * @since   2.5
 	 */
-	public function __construct(&$subject, $config)
+		public function __construct(&$subject, $config)
 	{
 		parent::__construct($subject, $config);
 		$this->loadLanguage();
@@ -56,9 +66,12 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param	integer		The id of the item.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   integer  $id  The id of the item.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onBeforeSaveJoomlaContact($id)
 	{
@@ -73,11 +86,14 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * from outside the edit screen. This is fired when the item is published,
 	 * unpublished, archived, or unarchived from the list view.
 	 *
-	 * @param	array		An array of item ids.
-	 * @param	string		The property that is being changed.
-	 * @param	integer		The new value of that property.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array    $ids       An array of item ids.
+	 * @param   string   $property  The property that is being changed.
+	 * @param   integer  $value     The new value of that property.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onChangeJoomlaContact($ids, $property, $value)
 	{
@@ -104,7 +120,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the contact access level.
-		elseif ($property === 'access')
+		else if ($property === 'access')
 		{
 			// The contact access state is tied to the category access state so
 			// we need to look up all access states before we change anything.
@@ -133,11 +149,14 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * changed. This is fired when the item category is published, unpublished,
 	 * or an access level is changed.
 	 *
-	 * @param	array		An array of item ids.
-	 * @param	string		The property that is being changed.
-	 * @param	integer		The new value of that property.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array    $ids       An array of item ids.
+	 * @param   string   $property  The property that is being changed.
+	 * @param   integer  $value     The new value of that property.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onChangeJoomlaCategory($ids, $property, $value)
 	{
@@ -168,7 +187,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the category access level.
-		elseif ($property === 'access')
+		else if ($property === 'access')
 		{
 			// The contact access state is tied to the category access state so
 			// we need to look up all access states before we change anything.
@@ -199,9 +218,12 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param	array		An array of item ids.
-	 * @return	boolean		True on success.
-	 * @throws	Exception on database error.
+	 * @param   array  $ids  An array of item ids.
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	public function onDeleteJoomlaContact($ids)
 	{
@@ -212,8 +234,12 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param	object		The item to index as an FinderIndexerResult object.
-	 * @throws	Exception on database error.
+	 * @param   FinderIndexerResult  $item  The item to index as an FinderIndexerResult object.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
 	 */
 	protected function index(FinderIndexerResult $item)
 	{
@@ -236,7 +262,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		$title = $this->getItemMenuTitle($item->url);
 
 		// Adjust the title if necessary.
-		if (!empty($title) && $this->params->get('use_menu_title', true)) {
+		if (!empty($title) && $this->params->get('use_menu_title', true))
+		{
 			$item->title = $title;
 		}
 
@@ -245,57 +272,68 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		 * configuration parameters.
 		 */
 		// Handle the contact position.
-		if ($item->params->get('show_position', true)) {
+		if ($item->params->get('show_position', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'position');
 		}
 
 		// Handle the contact street address.
-		if ($item->params->get('show_street_address', true)) {
+		if ($item->params->get('show_street_address', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'address');
 		}
 
 		// Handle the contact city.
-		if ($item->params->get('show_suburb', true)) {
+		if ($item->params->get('show_suburb', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'city');
 		}
 
 		// Handle the contact region.
-		if ($item->params->get('show_state', true)) {
+		if ($item->params->get('show_state', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'region');
 		}
 
 		// Handle the contact country.
-		if ($item->params->get('show_country', true)) {
+		if ($item->params->get('show_country', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'country');
 		}
 
 		// Handle the contact zip code.
-		if ($item->params->get('show_postcode', true)) {
+		if ($item->params->get('show_postcode', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'zip');
 		}
 
 		// Handle the contact telephone number.
-		if ($item->params->get('show_telephone', true)) {
+		if ($item->params->get('show_telephone', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'telephone');
 		}
 
 		// Handle the contact fax number.
-		if ($item->params->get('show_fax', true)) {
+		if ($item->params->get('show_fax', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'fax');
 		}
 
 		// Handle the contact e-mail address.
-		if ($item->params->get('show_email', true)) {
+		if ($item->params->get('show_email', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'email');
 		}
 
 		// Handle the contact mobile number.
-		if ($item->params->get('show_mobile', true)) {
+		if ($item->params->get('show_mobile', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'mobile');
 		}
 
 		// Handle the contact webpage.
-		if ($item->params->get('show_webpage', true)) {
+		if ($item->params->get('show_webpage', true))
+		{
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'webpage');
 		}
 
@@ -309,17 +347,20 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		$item->addTaxonomy('Type', 'Contact');
 
 		// Add the category taxonomy data.
-		if (!empty($item->category)) {
+		if (!empty($item->category))
+		{
 			$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
 		}
 
 		// Add the region taxonomy data.
-		if (!empty($item->region) && $this->params->get('tax_add_region', true)) {
+		if (!empty($item->region) && $this->params->get('tax_add_region', true))
+		{
 			$item->addTaxonomy('Region', $item->region);
 		}
 
 		// Add the country taxonomy data.
-		if (!empty($item->country) && $this->params->get('tax_add_country', true)) {
+		if (!empty($item->country) && $this->params->get('tax_add_country', true))
+		{
 			$item->addTaxonomy('Country', $item->country);
 		}
 
@@ -333,7 +374,9 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to setup the indexer to be run.
 	 *
-	 * @return	boolean		True on success.
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
 	 */
 	protected function setup()
 	{
@@ -349,8 +392,11 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to get the SQL query used to retrieve the list of content items.
 	 *
-	 * @param	mixed		A JDatabaseQuery object or null.
-	 * @return	object		A JDatabaseQuery object.
+	 * @param   mixed  $sql  A JDatabaseQuery object or null.
+	 *
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	protected function getListQuery($sql = null)
 	{
@@ -375,8 +421,11 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to get the query clause for getting items to update by time.
 	 *
-	 * @param	string		The modified timestamp.
-	 * @return	object		A JDatabaseQuery object.
+	 * @param   string  $time  The modified timestamp.
+	 *
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	protected function getUpdateQueryByTime($time)
 	{
@@ -395,8 +444,11 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * Method to get the URL for the item. The URL is how we look up the link
 	 * in the Finder index.
 	 *
-	 * @param	string		The id of the item.
-	 * @return	string		The URL of the item.
+	 * @param   mixed  $id  The id of the item.
+	 *
+	 * @return  string  The URL of the item.
+	 *
+	 * @since   2.5
 	 */
 	protected function getURL($id)
 	{
@@ -407,15 +459,20 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * Method to translate the native content states into states that the
 	 * indexer can use.
 	 *
-	 * @param	integer		The article state.
-	 * @param	mixed		The category state, if known.
-	 * @return	integer		The translated indexer state.
+	 * @param   integer  $contact   The contact state.
+	 * @param   integer  $category  The category state.
+	 *
+	 * @return  integer  The translated indexer state.
+	 *
+	 * @since   2.5
 	 */
 	private function _translateState($contact, $category)
 	{
 		// If category is present, factor in its states as well.
-		if ($category !== null) {
-			if ($category == 0) {
+		if ($category !== null)
+		{
+			if ($category == 0)
+			{
 				$contact = 0;
 			}
 		}
@@ -438,7 +495,9 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 * Method to get a SQL query to load the published and access states for
 	 * an article and category.
 	 *
-	 * @return	object		A JDatabaseQuery object.
+	 * @return  object  A JDatabaseQuery object.
+	 *
+	 * @since   2.5
 	 */
 	private function _getStateQuery()
 	{
