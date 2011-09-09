@@ -32,7 +32,7 @@ if (!empty($this->query->highlight) && empty($this->result->mime) && $this->para
 if (intval($this->result->start_date) && $this->params->get('show_date_filters', 0)):
 ?>
 	<span class="start-date">
-		<?php echo JHtml::date($this->result->start_date, $this->params->get('date_format', '%A %d %B %Y')); ?>
+		<?php echo JHtml::date($this->result->start_date, $this->params->get('date_format', 'd-M-Y')); ?>
 	</span>
 <?php
 endif;
