@@ -351,7 +351,7 @@ class FinderModelSearch extends JModelList
 			// Adjust the query to join on the appropriate mapping table.
 			$sql = clone($base);
 			$sql->clear('select');
-			$sql->select('COUNT(l.link_id)');
+			$sql->select('COUNT(DISTINCT l.link_id)');
 
 			// Get the total from the database.
 			$this->_db->setQuery($sql);
