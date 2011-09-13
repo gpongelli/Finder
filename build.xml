@@ -38,7 +38,6 @@
 		<zip destfile="packages/com_finder.zip" basedir="com_finder" />
 		<zip destfile="packages/files_finder_hathor.zip" basedir="files_finder_hathor" />
 		<zip destfile="packages/mod_finder.zip" basedir="mod_finder" />
-		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
 		<zip destfile="packages/plg_finder_joomla_articles.zip" basedir="plg_finder_joomla_articles" />
 		<zip destfile="packages/plg_finder_joomla_categories.zip" basedir="plg_finder_joomla_categories" />
 		<zip destfile="packages/plg_finder_joomla_contacts.zip" basedir="plg_finder_joomla_contacts" />
