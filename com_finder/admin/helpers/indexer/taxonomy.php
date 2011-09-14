@@ -46,7 +46,7 @@ class FinderIndexerTaxonomy
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	public static function addBranch($title, $state = 1, $access = 0)
+	public static function addBranch($title, $state = 1, $access = 1)
 	{
 		// Check to see if the branch is in the cache.
 		if (isset(self::$branches[$title]))
@@ -128,7 +128,7 @@ class FinderIndexerTaxonomy
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	public static function addNode($branch, $title, $state = 1, $access = 0)
+	public static function addNode($branch, $title, $state = 1, $access = 1)
 	{
 		// Check to see if the node is in the cache.
 		if (isset(self::$nodes[$branch][$title]))

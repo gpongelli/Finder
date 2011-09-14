@@ -397,7 +397,7 @@ class FinderIndexerResult
 	 *
 	 * @since   2.5
 	 */
-	public function addTaxonomy($branch, $title, $state = 1, $access = 0)
+	public function addTaxonomy($branch, $title, $state = 1, $access = 1)
 	{
 		// Filter the input.
 		if (JX_FINDER_UNICODE)

@@ -307,7 +307,7 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 		// Check if we can use the supplied SQL query.
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.catid, a.name AS title, a.alias, a.link AS link');
-		$sql->select('a.published AS state, a.ordering, a.created AS start_date, a.params');
+		$sql->select('a.published AS state, a.ordering, a.created AS start_date, a.params, a.access');
 		$sql->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date');
 		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
@@ -382,7 +382,7 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.published AS state, c.published AS cat_state');
-		$sql->select('0 AS access, c.access AS cat_access');
+		$sql->select('a.access AS access, c.access AS cat_access');
 		$sql->from('#__newsfeeds AS a');
 		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
 

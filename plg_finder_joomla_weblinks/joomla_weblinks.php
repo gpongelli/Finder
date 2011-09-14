@@ -286,7 +286,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 		$sql = is_a($sql, 'JDatabaseQuery') ? $sql : $db->getQuery(true);
 		$sql->select('a.id, a.catid, a.title, a.alias, a.url AS link, a.description AS summary');
 		$sql->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date');
-		$sql->select('a.state AS state, a.ordering, a.approved, a.created AS start_date, a.params');
+		$sql->select('a.state AS state, a.ordering, a.access, a.approved, a.created AS start_date, a.params');
 		$sql->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
 		$sql->select('CASE WHEN CHAR_LENGTH(a.alias) THEN CONCAT_WS(":", a.id, a.alias) ELSE a.id END as slug');
 		$sql->select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as catslug');
@@ -379,7 +379,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 		$sql = $this->_db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.state AS state, c.published AS cat_state');
-		$sql->select('0 AS access, c.access AS cat_access');
+		$sql->select('a.access AS access, c.access AS cat_access');
 		$sql->from('#__weblinks AS a');
 		$sql->join('LEFT', '#__categories AS c ON c.id = a.catid');
 
