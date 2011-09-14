@@ -759,6 +759,7 @@ class FinderIndexerQuery
 		$input	= JString::strtolower($input);
 		$input	= preg_replace('#\s+#mi', ' ', $input);
 		$input	= JString::trim($input);
+        $debug  = JFactory::getConfig()->get('debug_lang');
 
 		/*
 		 * First, we need to handle string based modifiers. String based
@@ -807,6 +808,11 @@ class FinderIndexerQuery
 		foreach ($patterns as $modifier => $pattern)
 		{
 			$matches = array();
+            
+            if ($debug)
+            {
+                $pattern = substr($pattern, 2, -2);
+            }
 
 			// Check if the filter pattern is in the input string.
 			if (preg_match('#'.$pattern.'\s*:\s*'.$suffix.'#mi', $input, $matches))
