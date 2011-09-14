@@ -44,7 +44,7 @@ class FinderModelFilter extends JModelAdmin
 	*
 	* @return  void
 	*
-	* @since   1.7
+	* @since   2.5
 	*/
 	function cleanCache($group = 'com_finder', $client_id = 1)
 	{
