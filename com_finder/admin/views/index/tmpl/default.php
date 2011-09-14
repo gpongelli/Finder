@@ -87,8 +87,7 @@ Joomla.submitbutton = function(pressbutton) {
 				<td align="center" colspan="7">
 					<?php
 					if ($this->total == 0) {
-						echo JText::_('COM_FINDER_INDEX_NO_DATA');
-						echo JText::_('COM_FINDER_INDEX_TIP');
+						echo JText::_('COM_FINDER_INDEX_NO_DATA').'  '.JText::_('COM_FINDER_INDEX_TIP');
 					} else {
 						echo JText::_('COM_FINDER_INDEX_NO_CONTENT');
 					}
