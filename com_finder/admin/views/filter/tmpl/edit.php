@@ -16,20 +16,32 @@ JHtml::_('behavior.keepalive');
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_finder&view=filter&layout=edit&filter_id='.(int) $this->item->filter_id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
-	<div class="width-60 fltlft">
+	<div class="width-100 fltlft">
 		<fieldset class="adminform">
 			<legend><?php echo JText::_('Need a label!'); ?></legend>
 			<ul class="adminformlist">
-				<li><?php echo $this->form->getLabel('title'); ?>
+				<li class="fltlft"><?php echo $this->form->getLabel('title'); ?>
 				<?php echo $this->form->getInput('title'); ?></li>
 
-				<li><?php echo $this->form->getLabel('alias'); ?>
+				<li class="fltlft"><?php echo $this->form->getLabel('alias'); ?>
 				<?php echo $this->form->getInput('alias'); ?></li>
+
+				<li class="fltlft"><?php echo $this->form->getLabel('state'); ?>
+				<?php echo $this->form->getInput('state'); ?></li>
+
+				<li class="fltlft"><?php echo $this->form->getLabel('map_count'); ?>
+				<?php echo $this->form->getInput('map_count'); ?></li>
 			</ul>
 		</fieldset>
 	</div>
 
-	<div class="width-40 fltrt">
+	<div class="clr"></div>
+
+	<div id="finder-filter-window">
+		<?php echo JHtml::_('filter.slider', array('selected_nodes' => $this->filter->data)); ?>
+	</div>
+
+	<div class="width-40 fltlft">
 		<?php echo JHtml::_('sliders.start', 'filter-sliders-'.$this->item->filter_id, array('useCookie'=>1)); ?>
 			<?php echo JHtml::_('sliders.panel', JText::_('COM_FINDER_FILTER_FIELDSET_DETAILS'), 'filter-details'); ?>
 			<?php $details = $this->form->getGroup('details'); ?>
@@ -45,12 +57,6 @@ JHtml::_('behavior.keepalive');
 					<li><?php echo $this->form->getLabel('modified'); ?>
 					<?php echo $this->form->getInput('modified'); ?></li>
 					<?php endif; ?>
-
-					<li><?php echo $this->form->getLabel('state'); ?>
-					<?php echo $this->form->getInput('state'); ?></li>
-
-					<li><?php echo $this->form->getLabel('map_count'); ?>
-					<?php echo $this->form->getInput('map_count'); ?></li>
 				</ul>
 			</fieldset>
 

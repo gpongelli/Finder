@@ -20,10 +20,6 @@ jimport('joomla.application.component.view');
  */
 class FinderViewFilter extends JView
 {
-	protected $form;
-	protected $item;
-	protected $state;
-
 	/**
 	 * Method to display the view.
 	 *
@@ -36,6 +32,7 @@ class FinderViewFilter extends JView
 	function display($tpl = null)
 	{
 		// Load the view data.
+		$this->filter	= $this->get('Filter');
 		$this->item		= $this->get('Item');
 		$this->form		= $this->get('Form');
 		$this->state	= $this->get('State');

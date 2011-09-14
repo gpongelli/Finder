@@ -52,6 +52,51 @@ class FinderModelFilter extends JModelAdmin
 	}
 
 	/**
+	 * Method to get the filter data
+	 *
+	 * @return  mixed  The filter data
+	 *
+	 * @since   2.5
+	 */
+	function getFilter()
+	{
+		$filter_id	= (int)$this->getState('filter.id');
+		$false		= false;
+
+		// Get a FinderTableFilter instance.
+		$filter = $this->getTable();
+
+		// Attempt to load the row.
+		$return = $filter->load($filter_id);
+
+		// Check for a database error.
+		if ($return === false && $filter->getError())
+		{
+			$this->serError($filter->getError());
+			return $false;
+		}
+
+		// Process the filter data.
+		if (!empty($filter->data))
+		{
+			$filter->data = explode(',', $filter->data);
+		}
+		else if (empty($filter->data))
+		{
+			$filter->data = array();
+		}
+
+		// Check for a database error.
+		if ($this->_db->getErrorNum())
+		{
+			$this->setError($this->_db->getErrorMsg());
+			return $false;
+		}
+
+		return $filter;
+	}
+
+	/**
 	 * Method to get the record form.
 	 *
 	 * @param   array    $data      Data for the form.
