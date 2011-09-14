@@ -121,7 +121,7 @@ var FinderFilter = Fx.Elements.extend({
 	},
 });
 window.addEvent('domready', function () {
-	Filter = new FinderFilter($ES('input.toggler'), $ES('dl.checklist'), document.id('finder-filter-container'), document.id('finder-filter-window'));
+	Filter = new FinderFilter(document.getElements('input.toggler'), document.getElements('dl.checklist'), document.id('finder-filter-container'), document.id('finder-filter-window'));
 	document.id('tax-select-all').addEvent('change', function () {
 		if (document.id('tax-select-all').getProperty('checked')) {
 			document.id('finder-filter-window').getElements('input').each(function (input) {
