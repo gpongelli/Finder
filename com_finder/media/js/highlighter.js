@@ -56,10 +56,10 @@ var Highlighter = new Class({
 				var wordClone = wordNode.cloneNode(true);
 				highlight.appendChild(wordClone);
 				wordNode.parentNode.replaceChild(highlight, wordNode);
-				highlight.setProperty('rel', highlight.getText());
-				var comparer = highlight.getText();
+				highlight.setProperty('rel', highlight.get('text'));
+				var comparer = highlight.get('text');
 				if (!this.options.caseSensitive) {
-					comparer = highlight.getText().toUpperCase();
+					comparer = highlight.get('text').toUpperCase();
 				}
 				if (!this.words[comparer]) {
 					this.words[comparer] = [];
@@ -95,6 +95,6 @@ window.addEvent('domready', function () {
 		autoUnhighlight: true,
 		onlyWords: false
 	}).highlight(window.highlight);
-	start.remove();
-	end.remove();
+	start.dispose();
+	end.dispose();
 });
