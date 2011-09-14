@@ -35,6 +35,28 @@ class FinderTableFilter extends JTable
 	}
 
 	/**
+	 * Overloaded bind function
+	 *
+	 * @param   array  $array   Named array
+	 * @param   mixed  $ignore  An optional array or space separated list of properties
+	 *                          to ignore while binding.
+	 *
+	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error string
+	 *
+	 * @since   2.5
+	 */
+	public function bind($array, $ignore = '')
+	{
+		if (isset($array['params']) && is_array($array['params'])) {
+			$registry = new JRegistry;
+			$registry->loadArray($array['params']);
+			$array['params'] = (string)$registry;
+		}
+
+		return parent::bind($array, $ignore);
+	}
+
+	/**
 	 * Method to perform sanity checks on the JTable instance properties to ensure
 	 * they are safe to store in the database.  Child classes should override this
 	 * method to make sure the data they are storing in the database is safe and
