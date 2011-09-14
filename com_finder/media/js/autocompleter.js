@@ -448,7 +448,7 @@ Autocompleter.Request = new Class({
 		if (cls) this.element.addClass(cls);
 		this.fireEvent('onRequest', [this.element, this.request, data, this.queryValue]);
 		this.request.send({
-			'data': data
+			'data': data.q
 		});
 	},
 	queryResponse: function () {
