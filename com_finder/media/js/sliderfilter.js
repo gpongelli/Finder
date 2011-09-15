@@ -7,7 +7,7 @@ var FinderFilter = Fx.Elements.extend({
 		opacity: true,
 		fixedHeight: false,
 		fixedWidth: 220,
-		wait: true,
+		wait: true
 	},
 	initialize: function (togglers, elements, container, frame) {
 		this.togglers = togglers || [];
@@ -17,13 +17,17 @@ var FinderFilter = Fx.Elements.extend({
 		this.effects = {};
 		if (this.options.opacity) this.effects.opacity = 'fullOpacity';
 		if (this.options.width) this.effects.width = this.options.fixedWidth ? 'fullWidth' : 'offsetWidth';
-		this.container.setStyle('width', '230px');
+		this.container.set('styles', {'width': '230px'});
 		this.addEvent('onActive', function (toggler, element) {
-			element.setStyle('border-top', '1px solid #ccc');
-			element.setStyle('border-right', '1px solid #ccc');
-			element.setStyle('border-bottom', '1px solid #ccc');
-			element.setStyle('overflow', 'auto');
-			document.id(this.container).setStyle('width', document.id(this.container).getStyle('width').toInt() + element.fullWidth);
+			element.set('styles', {
+				'border-top': '1px solid #ccc',
+				'border-right': '1px solid #ccc',
+				'border-bottom': '1px solid #ccc',
+				'overflow': 'auto'
+			});
+			document.id(this.container).set('styles', {
+				width: document.id(this.container).get('width').toInt() + element.fullWidth
+			});
 			coord = element.getCoordinates([this.frame]);
 			scroller = new Fx.Scroll(this.frame);
 			scroller.scrollTo(coord.top, coord.left);
@@ -36,8 +40,10 @@ var FinderFilter = Fx.Elements.extend({
 		});
 		this.addEvent('onComplete', function () {
 			el = this.elements[this.active];
-			if (!el.getStyle('width').toInt()) {
-				document.id(this.container).setStyle('width', document.id(this.container).getStyle('width').toInt() - el.fullWidth);
+			if (!el.get('width').toInt()) {
+				document.id(this.container).set('styles', {
+					'width': document.id(this.container).get('width').toInt() - el.fullWidth
+				});
 			}
 			this.active = null;
 		});
@@ -81,15 +87,15 @@ var FinderFilter = Fx.Elements.extend({
 		this.elements.include(element);
 		if (len && (!test || pos)) {
 			pos = Array.pick(pos, len - 1);
-			toggler.injectBefore(this.togglers[pos]);
-			element.inject(toggler, after);
+			toggler.inject(this.togglers[pos], 'before');
+			element.inject(toggler, 'after');
 		} else if (this.container && !test) {
 			toggler.inject(this.container);
 			element.inject(this.container);
 		}
 		var idx = this.togglers.indexOf(toggler);
 		toggler.addEvent('click', this.toggle.bind(this, idx));
-		if (this.options.width) element.setStyles({
+		if (this.options.width) element.set('styles', {
 			'padding-left': 0,
 			'border-left': 'none',
 			'padding-right': 0,
@@ -98,7 +104,7 @@ var FinderFilter = Fx.Elements.extend({
 		element.fullOpacity = 1;
 		if (this.options.fixedWidth) element.fullWidth = this.options.fixedWidth;
 		if (this.options.fixedHeight) element.fullHeight = this.options.fixedHeight;
-		element.setStyle('overflow', 'hidden');
+		element.set('styles', {'overflow': 'hidden'});
 		return this;
 	},
 	toggle: function (index) {
@@ -118,7 +124,7 @@ var FinderFilter = Fx.Elements.extend({
 			this.fireEvent('onBackground', [this.togglers[index], el]);
 		}
 		return this;
-	},
+	}
 });
 window.addEvent('domready', function () {
 	Filter = new FinderFilter(document.getElements('input.toggler'), document.getElements('dl.checklist'), document.id('finder-filter-container'), document.id('finder-filter-window'));
