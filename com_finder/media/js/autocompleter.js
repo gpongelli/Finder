@@ -440,7 +440,7 @@ Autocompleter.Request = new Class({
 		postVar: 'value'
 	},
 	query: function () {
-		var data = Array.clone(this.options.postData) || {};
+		var data = this.options.postData.unlink || {};
 		data[this.options.postVar] = this.queryValue;
 		var indicator = document.id(this.options.indicator);
 		if (indicator) indicator.setStyle('display', '');
@@ -448,7 +448,7 @@ Autocompleter.Request = new Class({
 		if (cls) this.element.addClass(cls);
 		this.fireEvent('onRequest', [this.element, this.request, data, this.queryValue]);
 		this.request.send({
-			'data': data.q
+			'data': data
 		});
 	},
 	queryResponse: function () {
