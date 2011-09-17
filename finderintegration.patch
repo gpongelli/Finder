@@ -1,6 +1,18 @@
+Index: libraries/joomla/application/component/modeladmin.php
+===================================================================
+--- libraries/joomla/application/component/modeladmin.php	(revision 22087)
++++ libraries/joomla/application/component/modeladmin.php	(working copy)
+@@ -512,6 +512,7 @@
+ 
+ 		// Include the content and finder plugins for the on delete events.
+ 		JPluginHelper::importPlugin('content');
++		JPluginHelper::importPlugin('finder');
+ 
+ 		// Iterate the items to delete each one.
+ 		foreach ($pks as $i => $pk) {
 Index: plugins/content/emailcloak/emailcloak.php
 ===================================================================
---- plugins/content/emailcloak/emailcloak.php	(revision 22031)
+--- plugins/content/emailcloak/emailcloak.php	(revision 22087)
 +++ plugins/content/emailcloak/emailcloak.php	(working copy)
 @@ -29,6 +29,11 @@
  	 */
@@ -16,7 +28,7 @@ Index: plugins/content/emailcloak/emailcloak.php
  		}
 Index: plugins/content/loadmodule/loadmodule.php
 ===================================================================
---- plugins/content/loadmodule/loadmodule.php	(revision 22031)
+--- plugins/content/loadmodule/loadmodule.php	(revision 22087)
 +++ plugins/content/loadmodule/loadmodule.php	(working copy)
 @@ -26,6 +26,11 @@
  	 */

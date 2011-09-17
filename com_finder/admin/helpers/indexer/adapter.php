@@ -421,34 +421,25 @@ abstract class FinderIndexerAdapter extends JPlugin
 	/**
 	 * Method to remove an item from the index.
 	 *
-	 * @param   array  $ids  An array of item ids.
+	 * @param   string  $id  The ID of the item to remove.
 	 *
 	 * @return  boolean  True on success.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	protected function remove($ids)
+	protected function remove($id)
 	{
 		JLog::add('FinderIndexerAdapter::remove', JLog::INFO);
 
-		// Check the ids.
-		if (empty($ids))
-		{
-			return true;
-		}
-
-		// Get the url for the content id.
-		foreach ($ids as $id)
-		{
-			$items[] = $this->db->quote($this->_getUrl($id));
-		}
+		// Get the item's URL
+		$url = $this->db->quote($this->getUrl($id));
 
 		// Get the link ids for the content items.
 		$query	= $this->db->getQuery(true);
 		$query->select($this->db->quoteName('link_id'));
 		$query->from($this->db->quoteName('#__finder_links'));
-		$query->where($this->db->quoteName('url').' = IN ('.implode(',', $items).')');
+		$query->where($this->db->quoteName('url').' = '.$url);
 		$this->db->setQuery($query);
 		$items = $this->db->loadColumn();
 

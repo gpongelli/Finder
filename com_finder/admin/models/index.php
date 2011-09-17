@@ -21,11 +21,27 @@ jimport('joomla.application.component.modellist');
 class FinderModelIndex extends JModelList
 {
 	/**
+	 * The event to trigger after deleting the data.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	protected $event_after_delete = 'onContentAfterDelete';
+
+	/**
+	 * The event to trigger before deleting the data.
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
+	protected $event_before_delete = 'onContentBeforeDelete';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @return  void
+	 * @return  FinderModelIndex
 	 *
 	 * @since   2.5
 	 * @see     JController
@@ -93,8 +109,9 @@ class FinderModelIndex extends JModelList
 		$pks		= (array) $pks;
 		$table		= $this->getTable();
 
-		// Include the content plugins for the on delete events.
+		// Include the content and finder plugins for the on delete events.
 		JPluginHelper::importPlugin('content');
+		JPluginHelper::importPlugin('finder');
 
 		// Iterate the items to delete each one.
 		foreach ($pks as $i => $pk)

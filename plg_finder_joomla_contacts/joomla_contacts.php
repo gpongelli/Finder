@@ -218,17 +218,18 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
-	 * @param   array  $ids  An array of item ids.
+	 * @param   string  $context  The context of the action being performed.
+	 * @param   JTable  $table    A JTable object containing the record to be deleted
 	 *
 	 * @return  boolean  True on success.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	public function onDeleteJoomlaContact($ids)
+	public function onContentAfterDelete($context, $table)
 	{
 		// Remove the items.
-		return $this->remove($ids);
+		return $this->remove($table->link_id);
 	}
 
 	/**
