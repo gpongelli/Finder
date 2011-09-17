@@ -228,24 +228,22 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 
 	/**
 	 * Method to reindex the link information for an item that has been saved.
+	 * This event is fired before the data is actually saved so we are going
+	 * to queue the item to be indexed later.
 	 *
-	 * @param   integer  $id  The id of the item.
+	 * @param	string   $context  The context of the content passed to the plugin.
+	 * @param	JTable   &$row     A JTable object
+	 * @param	boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */
-	public function onSaveJoomlaArticle($id)
+	public function onContentBeforeSave($context, &$row, $isNew)
 	{
-		// Run the setup method.
-		$this->setup();
-
-		// Get the item.
-		$item = $this->getItem($id);
-
-		// Index the item.
-		$this->index($item);
+		// Queue the item to be reindexed.
+		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 
 		return true;
 	}

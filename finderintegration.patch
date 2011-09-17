@@ -10,6 +10,17 @@ Index: libraries/joomla/application/component/modeladmin.php
  
  		// Iterate the items to delete each one.
  		foreach ($pks as $i => $pk) {
+@@ -819,8 +820,9 @@
+ 		$pk			= (!empty($data[$key])) ? $data[$key] : (int)$this->getState($this->getName().'.id');
+ 		$isNew		= true;
+ 
+-		// Include the content plugins for the on save events.
++		// Include the content and finder plugins for the on save events.
+ 		JPluginHelper::importPlugin('content');
++		JPluginHelper::importPlugin('finder');
+ 
+ 		// Allow an exception to be thrown.
+ 		try
 Index: plugins/content/emailcloak/emailcloak.php
 ===================================================================
 --- plugins/content/emailcloak/emailcloak.php	(revision 22087)
