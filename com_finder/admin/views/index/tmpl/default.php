@@ -11,8 +11,8 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
 
-$listOrder	= $this->escape('list.order');
-$listDirn	= $this->escape('list.direction');
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 
 $lang = &JFactory::getLanguage();
 JText::script('COM_FINDER_INDEX_CONFIRM_PURGE_PROMPT');
