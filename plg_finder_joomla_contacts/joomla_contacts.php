@@ -218,6 +218,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
+	 * This event will fire when contacts are deleted and when an indexed item is deleted.
+	 *
 	 * @param   string  $context  The context of the action being performed.
 	 * @param   JTable  $table    A JTable object containing the record to be deleted
 	 *
@@ -228,8 +230,20 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 */
 	public function onContentAfterDelete($context, $table)
 	{
+		if ($context == 'com_contact.contact')
+		{
+			$id = $table->id;
+		}
+		else if ($context == 'com_finder.index')
+		{
+			$id = $table->link_id;
+		}
+		else
+		{
+			return;
+		}
 		// Remove the items.
-		return $this->remove($table->link_id);
+		return $this->remove($id);
 	}
 
 	/**
