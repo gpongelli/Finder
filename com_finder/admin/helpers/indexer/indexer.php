@@ -746,11 +746,17 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Update the link counts for the terms.
-			$query->update($db->quoteName('#__finder_terms').' AS t');
-			$query->join('INNER', $db->quoteName('#__finder_links_terms'.dechex($i)).' AS m ON m.term_id = t.term_id');
-			$query->set($db->quoteName('t.links').' = '.$db->quoteName('t.links').' - 1');
-			$query->where($db->quoteName('m.link_id').' = '.(int)$linkId);
-			$db->setQuery($query);
+			// TODO: The join clause isn't setting the join properly for some reason, debug later
+			//$query->clear();
+			//$query->update($db->quoteName('#__finder_terms').' AS t');
+			//$query->join('INNER', $db->quoteName('#__finder_links_terms'.dechex($i)).' AS m ON m.term_id = t.term_id');
+			//$query->set($db->quoteName('t.links').' = '.$db->quoteName('t.links').' - 1');
+			//$query->where($db->quoteName('m.link_id').' = '.(int)$linkId);
+			$sql = 'UPDATE '.$db->quoteName('#__finder_terms').' AS t'.
+					 ' INNER JOIN '.$db->quoteName('#__finder_links_terms'.dechex($i)).' AS m ON m.term_id = t.term_id'.
+					 ' SET '.$db->quoteName('t.links').' = '.$db->quoteName('t.links').' - 1'.
+					 ' WHERE '.$db->quoteName('m.link_id').' = 168';
+			$db->setQuery($sql);
 			$db->query();
 
 			// Check for a database error.
@@ -779,7 +785,7 @@ class FinderIndexer
 		// Delete all orphaned terms.
 		$query->clear();
 		$query->delete();
-		$query->from($db->quoteName('#__finder_links_terms'));
+		$query->from($db->quoteName('#__finder_terms'));
 		$query->where($db->quoteName('links').' <= 0');
 		$db->setQuery($query);
 		$db->query();
