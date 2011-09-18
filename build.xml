@@ -44,7 +44,7 @@
 		<zip destfile="packages/plg_finder_contacts.zip" basedir="plg_finder_contacts" />
 		<zip destfile="packages/plg_finder_content.zip" basedir="plg_finder_content" />
 		<zip destfile="packages/plg_finder_newsfeeds.zip" basedir="plg_finder_newsfeeds" />
-		<zip destfile="packages/plg_finder_joomla_weblinks.zip" basedir="plg_finder_joomla_weblinks" />
+		<zip destfile="packages/plg_finder_weblinks.zip" basedir="plg_finder_weblinks" />
 		<zip destfile="packages/plg_system_finder.zip" basedir="plg_system_finder" />
 	</target>
 </project>

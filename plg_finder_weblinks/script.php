@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_weblinks
+ * @subpackage  Finder.Weblinks
  *
  * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -11,10 +11,10 @@
  * Installation class to perform additional changes during install/uninstall/update
  *
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_weblinks
+ * @subpackage  Finder.Weblinks
  * @since       2.5
  */
-class plgFinderJoomla_WeblinksInstallerScript
+class plgFinderWeblinksInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
@@ -43,11 +43,11 @@ class plgFinderJoomla_WeblinksInstallerScript
 		$query	= $db->getQuery(true);
 		$query->update($db->quoteName('#__extensions'));
 		$query->set($db->quoteName('enabled').' = 1');
-		$query->where($db->quoteName('name').' = '.$db->quote('plg_finder_joomla_weblinks'));
+		$query->where($db->quoteName('name').' = '.$db->quote('plg_finder_weblinks'));
 		$db->setQuery($query);
 		if (!$db->query())
 		{
-			JError::raiseNotice(1, JText::_('PLG_FINDER_JOOMLA_WEBLINKS_ERROR_ACTIVATING_PLUGIN'));
+			JError::raiseNotice(1, JText::_('PLG_FINDER_WEBLINKS_ERROR_ACTIVATING_PLUGIN'));
 		}
 	}
 }

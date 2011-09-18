@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_weblinks
+ * @subpackage  Finder.Weblinks
  *
  * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -16,10 +16,10 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
  * Finder adapter for Joomla Weblinks.
  *
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_weblinks
+ * @subpackage  Finder.Weblinks
  * @since       2.5
  */
-class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
+class plgFinderWeblinks extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -27,7 +27,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @var    string
 	 * @since  2.5
 	 */
-	protected $context = 'Joomla_Weblinks';
+	protected $context = 'Weblinks';
 
 	/**
 	 * The sublayout to use when rendering the results.
@@ -51,7 +51,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return  plgFinderJoomla_Weblinks
+	 * @return  plgFinderWeblinks
 	 *
 	 * @since   2.5
 	 */
