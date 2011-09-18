@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_articles
+ * @subpackage  Finder.Content
  *
  * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -13,13 +13,13 @@ defined('JPATH_BASE') or die;
 require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter.php';
 
 /**
- * Finder adapter for Joomla Articles.
+ * Finder adapter for com_content.
  *
  * @package     Joomla.Plugin
- * @subpackage  Finder.Joomla_articles
+ * @subpackage  Finder.Content
  * @since       2.5
  */
-class plgFinderJoomla_Articles extends FinderIndexerAdapter
+class plgFinderContent extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -27,7 +27,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * @var    string
 	 * @since  2.5
 	 */
-	protected $context = 'Joomla_Articles';
+	protected $context = 'Content';
 
 	/**
 	 * The sublayout to use when rendering the results.
@@ -51,7 +51,7 @@ class plgFinderJoomla_Articles extends FinderIndexerAdapter
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return  plgFinderJoomla_Articles
+	 * @return  plgFinderContent
 	 *
 	 * @since   2.5
 	 */

@@ -31,7 +31,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 * The context is somewhat arbitrary but it must be unique or there will be
 	 * conflicts when managing plugin/indexer state. A good best practice is to
 	 * use the plugin name suffix as the context. For example, if the plugin is
-	 * named 'plgFinderJoomla_Articles', the context could be 'Joomla_Articles'.
+	 * named 'plgFinderContent', the context could be 'Content'.
 	 *
 	 * @var    string
 	 * @since  2.5
