@@ -23,7 +23,7 @@
 		<file type="plugin" id="categories" group="finder">plg_finder_categories.zip</file>
 		<file type="plugin" id="contacts" group="finder">plg_finder_contacts.zip</file>
 		<file type="plugin" id="content" group="finder">plg_finder_content.zip</file>
-		<file type="plugin" id="joomla_newsfeeds" group="finder">plg_finder_joomla_newsfeeds.zip</file>
+		<file type="plugin" id="newsfeeds" group="finder">plg_finder_newsfeeds.zip</file>
 		<file type="plugin" id="joomla_weblinks" group="finder">plg_finder_joomla_weblinks.zip</file>
 		<file type="plugin" id="finder" group="system">plg_system_finder.zip</file>
 	</files>
