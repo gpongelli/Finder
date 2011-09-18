@@ -72,8 +72,9 @@ class plgFinderContent extends FinderIndexerAdapter
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
+	 * @since       2.5
+	 * @deprecated  Use onContentChangeState instead
+	 * @throws      Exception on database error.
 	 */
 	public function onChangeJoomlaArticle($ids, $property, $value)
 	{
@@ -242,10 +243,57 @@ class plgFinderContent extends FinderIndexerAdapter
 	 */
 	public function onContentBeforeSave($context, &$row, $isNew)
 	{
+		// We only want to handle articles here
+		if ($context != 'com_content.article')
+		{
+			return;
+		}
+
 		// Queue the item to be reindexed.
 		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 
 		return true;
+	}
+
+	/**
+	 * Method to update the link information for items that have been changed
+	 * from outside the edit screen. This is fired when the item is published,
+	 * unpublished, archived, or unarchived from the list view.
+	 *
+	 * @param   string   $context  The context for the content passed to the plugin.
+	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function onContentChangeState($context, $pks, $value)
+	{
+		// We only want to handle articles here
+		if ($context != 'com_content.article')
+		{
+			return;
+		}
+
+		// The article published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
+		foreach ($pks as $pk)
+		{
+			$sql = clone($this->_getStateQuery());
+			$sql->where('a.id = '.(int)$pk);
+
+			// Get the published states.
+			$this->db->setQuery($sql);
+			$item = $this->db->loadObject();
+
+			// Translate the state.
+			$temp = $this->_translateState($value, $item->cat_state);
+
+			// Update the item.
+			$this->change($pk, 'state', $temp);
+		}
 	}
 
 	/**
@@ -456,7 +504,7 @@ class plgFinderContent extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = $this->_db->getQuery(true);
+		$sql = $this->db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.state, c.published AS cat_state');
 		$sql->select('a.access, c.access AS cat_access');

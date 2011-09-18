@@ -350,7 +350,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 * table. This is used to synchronize published and access states that
 	 * are changed when not editing an item directly.
 	 *
-	 * @param   mixed    $ids       An array of item ids or a single integer id.
+	 * @param   string   $id        The ID of the item to change.
 	 * @param   string   $property  The property that is being changed.
 	 * @param   integer  $value     The new value of that property.
 	 *
@@ -359,7 +359,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 * @since   2.5
 	 * @throws	Exception on database error.
 	 */
-	protected function change($ids, $property, $value)
+	protected function change($id, $property, $value)
 	{
 		JLog::add('FinderIndexerAdapter::change', JLog::INFO);
 
@@ -369,30 +369,14 @@ abstract class FinderIndexerAdapter extends JPlugin
 			return true;
 		}
 
-		// Check the ids.
-		if (empty($ids))
-		{
-			return true;
-		}
-
-		// Convert to array.
-		if (!is_array($ids))
-		{
-			$ids = array($ids);
-		}
-
 		// Get the url for the content id.
-		$items = array();
-		foreach ($ids as $id)
-		{
-			$items[] = $this->db->quote($this->_getUrl($id));
-		}
+		$item = $this->db->quote($this->getUrl($id));
 
 		// Update the content items.
 		$query	= $this->db->getQuery(true);
 		$query->update($this->db->quoteName('#__finder_links'));
 		$query->set($this->db->quoteName($property).' = '.(int)$value);
-		$query->where($this->db->quoteName('url').' = IN ('.implode(',', $items).')');
+		$query->where($this->db->quoteName('url').' = '.$item);
 		$this->db->setQuery($query);
 		$this->db->query();
 
