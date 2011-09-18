@@ -2,15 +2,29 @@ Index: libraries/joomla/application/component/modeladmin.php
 ===================================================================
 --- libraries/joomla/application/component/modeladmin.php	(revision 22087)
 +++ libraries/joomla/application/component/modeladmin.php	(working copy)
-@@ -512,6 +512,7 @@
+@@ -510,8 +510,9 @@
+ 		$pks		= (array) $pks;
+ 		$table		= $this->getTable();
  
- 		// Include the content and finder plugins for the on delete events.
+-		// Include the content plugins for the on delete events.
++		// Include the content and finder plugins for the on delete events.
  		JPluginHelper::importPlugin('content');
 +		JPluginHelper::importPlugin('finder');
  
  		// Iterate the items to delete each one.
  		foreach ($pks as $i => $pk) {
-@@ -819,8 +820,9 @@
+@@ -698,8 +699,9 @@
+ 		$table		= $this->getTable();
+ 		$pks		= (array) $pks;
+ 
+-		// Include the content plugins for the change of state event.
++		// Include the content and finder plugins for the change of state event.
+ 		JPluginHelper::importPlugin('content');
++		JPluginHelper::importPlugin('finder');
+ 
+ 		// Access checks.
+ 		foreach ($pks as $i => $pk) {
+@@ -819,8 +821,9 @@
  		$pk			= (!empty($data[$key])) ? $data[$key] : (int)$this->getState($this->getName().'.id');
  		$isNew		= true;
  
