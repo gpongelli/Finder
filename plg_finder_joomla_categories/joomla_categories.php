@@ -62,34 +62,6 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	}
 
 	/**
-	 * Method to reindex the link information for an item that has been saved.
-	 * This event is fired before the data is actually saved so we are going
-	 * to queue the item to be indexed later.
-	 *
-	 * @param	string   $context  The context of the content passed to the plugin.
-	 * @param	JTable   &$row     A JTable object
-	 * @param	boolean  $isNew    If the content is just about to be created
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	public function onContentBeforeSave($context, &$row, $isNew)
-	{
-		// We only want to handle categories here
-		if ($context != 'com_categories.category')
-		{
-			return;
-		}
-
-		// Queue the item to be reindexed.
-		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
-
-		return true;
-	}
-
-	/**
 	 * Method to update the item link information when the item category is
 	 * changed. This is fired when the item category is published, unpublished,
 	 * or an access level is changed.
@@ -188,6 +160,75 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 		}
 		// Remove the items.
 		return $this->remove($id);
+	}
+
+	/**
+	 * Method to reindex the link information for an item that has been saved.
+	 * This event is fired before the data is actually saved so we are going
+	 * to queue the item to be indexed later.
+	 *
+	 * @param	string   $context  The context of the content passed to the plugin.
+	 * @param	JTable   &$row     A JTable object
+	 * @param	boolean  $isNew    If the content is just about to be created
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	public function onContentBeforeSave($context, &$row, $isNew)
+	{
+		// We only want to handle categories here
+		if ($context != 'com_categories.category')
+		{
+			return;
+		}
+
+		// Queue the item to be reindexed.
+		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
+
+		return true;
+	}
+
+	/**
+	 * Method to update the link information for items that have been changed
+	 * from outside the edit screen. This is fired when the item is published,
+	 * unpublished, archived, or unarchived from the list view.
+	 *
+	 * @param   string   $context  The context for the content passed to the plugin.
+	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function onContentChangeState($context, $pks, $value)
+	{
+		// We only want to handle categories here
+		if ($context != 'com_categories.category')
+		{
+			return;
+		}
+
+		// The article published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
+		foreach ($pks as $pk)
+		{
+			$sql = clone($this->_getStateQuery());
+			$sql->where('a.id = '.(int)$pk);
+
+			// Get the published states.
+			$this->db->setQuery($sql);
+			$item = $this->db->loadObject();
+
+			// Translate the state.
+			$temp = $this->_translateState($value);
+
+			// Update the item.
+			$this->change($pk, 'state', $temp);
+		}
 	}
 
 	/**

@@ -62,6 +62,35 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 	}
 
 	/**
+	 * Method to remove the link information for items that have been deleted.
+	 *
+	 * @param   string  $context  The context of the action being performed.
+	 * @param   JTable  $table    A JTable object containing the record to be deleted
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   2.5
+	 * @throws  Exception on database error.
+	 */
+	public function onContentAfterDelete($context, $table)
+	{
+		if ($context == 'com_newsfeeds.newsfeed')
+		{
+			$id = $table->id;
+		}
+		else if ($context == 'com_finder.index')
+		{
+			$id = $table->link_id;
+		}
+		else
+		{
+			return;
+		}
+		// Remove the items.
+		return $this->remove($id);
+	}
+
+	/**
 	 * Method to reindex the link information for an item that has been saved.
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
@@ -87,6 +116,47 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 
 		return true;
+	}
+
+	/**
+	 * Method to update the link information for items that have been changed
+	 * from outside the edit screen. This is fired when the item is published,
+	 * unpublished, archived, or unarchived from the list view.
+	 *
+	 * @param   string   $context  The context for the content passed to the plugin.
+	 * @param   array    $pks      A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value    The value of the state that the content has been changed to.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function onContentChangeState($context, $pks, $value)
+	{
+		// We only want to handle newsfeeds here
+		if ($context != 'com_newsfeeds.newsfeed')
+		{
+			return;
+		}
+
+		// The article published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
+		foreach ($pks as $pk)
+		{
+			$sql = clone($this->_getStateQuery());
+			$sql->where('a.id = '.(int)$pk);
+
+			// Get the published states.
+			$this->db->setQuery($sql);
+			$item = $this->db->loadObject();
+
+			// Translate the state.
+			$temp = $this->_translateState($value, $item->cat_state);
+
+			// Update the item.
+			$this->change($pk, 'state', $temp);
+		}
 	}
 
 	/**
@@ -222,35 +292,6 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 		}
 
 		return true;
-	}
-
-	/**
-	 * Method to remove the link information for items that have been deleted.
-	 *
-	 * @param   string  $context  The context of the action being performed.
-	 * @param   JTable  $table    A JTable object containing the record to be deleted
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	public function onContentAfterDelete($context, $table)
-	{
-		if ($context == 'com_newsfeeds.newsfeed')
-		{
-			$id = $table->id;
-		}
-		else if ($context == 'com_finder.index')
-		{
-			$id = $table->link_id;
-		}
-		else
-		{
-			return;
-		}
-		// Remove the items.
-		return $this->remove($id);
 	}
 
 	/**
