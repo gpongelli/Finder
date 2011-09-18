@@ -27,7 +27,7 @@ class plgSystemFinderInstallerScript
 	 */
 	function install($parent)
 	{
-		$this->activateButton();
+		//$this->activateButton();
 	}
 
 	/**
