@@ -77,6 +77,12 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 */
 	public function onContentBeforeSave($context, &$row, $isNew)
 	{
+		// We only want to handle contacts here
+		if ($context != 'com_contact.contact')
+		{
+			return;
+		}
+
 		// Queue the item to be reindexed.
 		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 

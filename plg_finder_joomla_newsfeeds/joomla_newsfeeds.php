@@ -77,6 +77,12 @@ class plgFinderJoomla_Newsfeeds extends FinderIndexerAdapter
 	 */
 	public function onContentBeforeSave($context, &$row, $isNew)
 	{
+		// We only want to handle newsfeeds here
+		if ($context != 'com_newsfeeds.newsfeed')
+		{
+			return;
+		}
+
 		// Queue the item to be reindexed.
 		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 

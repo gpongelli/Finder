@@ -77,6 +77,12 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 */
 	public function onContentBeforeSave($context, &$row, $isNew)
 	{
+		// We only want to handle weblinks here
+		if ($context != 'com_weblinks.weblink')
+		{
+			return;
+		}
+
 		// Queue the item to be reindexed.
 		FinderIndexerQueue::add($context, $row->id, JFactory::getDate()->toMySQL());
 
