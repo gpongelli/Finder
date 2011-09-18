@@ -10,7 +10,7 @@
 defined('_JEXEC') or die;
 
 // Activate the highlighter if enabled.
-if (!empty($this->query->highlight) && $this->params->get('highlight_content_search_terms', 1)) {
+if (!empty($this->query->highlight) && $this->params->get('highlight_terms', 1)) {
 	JHtml::_('finder.highlighter', $this->query->highlight);
 }
 
@@ -57,7 +57,7 @@ else:
 	$limit	= (int)($limit > $total ? $total : $limit);
 	$pages	= JText::sprintf('COM_FINDER_SEARCH_RESULTS_OF', $start, $limit, $total);
 ?>
-	<br id="finder-highlighter-start" />
+	<br id="highlight-start" />
 	<ul class="search-results-list">
 		<?php
 		for ($i = 0, $n = count($this->results); $i < $n; $i++):
@@ -81,7 +81,7 @@ else:
 			<?php echo $pages; ?>
 		</div>
 	</div>
-	<br id="finder-highlighter-end" />
+	<br id="highlight-end" />
 <?php
 endif;
 ?>

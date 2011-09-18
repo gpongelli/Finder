@@ -67,7 +67,7 @@
 	margin:0 auto;
 }
 
-#finder-highlighter-start, #finder-highlighter-end {
+#highlight-start, #highlight-end {
 	display:none;
 	height:0px;
 	opacity:0;

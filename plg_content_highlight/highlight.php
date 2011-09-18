@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Plugin
- * @subpackage  System.Finder
+ * @subpackage  Content.Highlight
  *
  * @copyright   Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
@@ -10,13 +10,13 @@
 defined('JPATH_BASE') or die;
 
 /**
- * System plugin class for Finder.
+ * Content plugin to highlight terms.
  *
  * @package     Joomla.Plugin
- * @subpackage  System.Finder
+ * @subpackage  Content.Highlight
  * @since       2.5
  */
-class plgSystemFinder extends JPlugin
+class plgContentHighlight extends JPlugin
 {
 	/**
 	 * Method to catch the onAfterDispatch event.
@@ -25,11 +25,16 @@ class plgSystemFinder extends JPlugin
 	 * search results. The highlighting is done with JavaScript so we just
 	 * need to check a few parameters and the JHtml behavior will do the rest.
 	 *
+	 * @param   string   $context   The context of the content being passed to the plugin.
+	 * @param   object   &$article  The article object.  Note $article->text is also available
+	 * @param   object   &$params   The article params
+	 * @param   integer  $page      The 'page' number
+	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   2.5
+	 * @since   1.6
 	 */
-	public function onAfterDispatch()
+	public function onContentPrepare($context, &$article, &$params, $page = 0)
 	{
 		// Check that we are in the site application.
 		if (JFactory::getApplication()->isAdmin())
@@ -38,7 +43,8 @@ class plgSystemFinder extends JPlugin
 		}
 
 		// Check if the highlighter is enabled.
-		if (!JComponentHelper::getParams('com_finder')->get('highlight_content_search_terms', 1))
+		//TODO: Set this to be reusable
+		if (!JComponentHelper::getParams('com_finder')->get('highlight_terms', 1))
 		{
 			return true;
 		}
@@ -50,7 +56,7 @@ class plgSystemFinder extends JPlugin
 		}
 
 		// Get the terms to highlight from the request.
-		$terms = JRequest::getVar('qh', null, 'request', 'base64');
+		$terms = JRequest::getVar('highlight', null, 'request', 'base64');
 		$terms = $terms ? @unserialize(@base64_decode($terms)) : null;
 
 		// Check the terms.
@@ -61,13 +67,13 @@ class plgSystemFinder extends JPlugin
 
 		// Activate the highlighter.
 		JHtml::addIncludePath(JPATH_SITE.'/components/com_finder/helpers/html');
-		JHtml::stylesheet('plugins/system/finder/media/css/finder.css', false, false, false);
+		JHtml::stylesheet('plugins/system/finder/media/css/highlight.css', false, false, false);
 		JHtml::_('finder.highlighter', $terms);
 
 		// Adjust the component buffer.
 		$doc = JFactory::getDocument();
 		$buf = $doc->getBuffer('component');
-		$buf = '<br id="finder-highlighter-start" />'.$buf.'<br id="finder-highlighter-end" />';
+		$buf = '<br id="highlight-start" />'.$buf.'<br id="highlight-end" />';
 		$doc->setBuffer($buf, 'component');
 
 		return true;
