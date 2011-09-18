@@ -40,8 +40,8 @@
 		<zip destfile="packages/mod_finder.zip" basedir="mod_finder" />
 		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
 		<zip destfile="packages/plg_content_highlight.zip" basedir="plg_content_highlight" />
+		<zip destfile="packages/plg_finder_categories.zip" basedir="plg_finder_categories" />
 		<zip destfile="packages/plg_finder_content.zip" basedir="plg_finder_content" />
-		<zip destfile="packages/plg_finder_joomla_categories.zip" basedir="plg_finder_joomla_categories" />
 		<zip destfile="packages/plg_finder_joomla_contacts.zip" basedir="plg_finder_joomla_contacts" />
 		<zip destfile="packages/plg_finder_joomla_newsfeeds.zip" basedir="plg_finder_joomla_newsfeeds" />
 		<zip destfile="packages/plg_finder_joomla_weblinks.zip" basedir="plg_finder_joomla_weblinks" />
