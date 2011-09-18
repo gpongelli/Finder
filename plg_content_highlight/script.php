@@ -14,7 +14,7 @@
  * @subpackage  Content.Highlight
  * @since       2.5
  */
-class plgSystemFinderInstallerScript
+class plgContentHighlightInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
