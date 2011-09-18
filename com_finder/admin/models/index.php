@@ -51,7 +51,7 @@ class FinderModelIndex extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'state', 'l.state',
+				'published', 'l.published',
 				'title', 'l.title',
 				'type_id', 'l.type_id',
 				'url', 'l.url',
