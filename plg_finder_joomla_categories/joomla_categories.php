@@ -111,8 +111,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -137,8 +137,8 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -323,7 +323,7 @@ class plgFinderJoomla_Categories extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = $this->_db->getQuery(true);
+		$sql = $this->db->getQuery(true);
 		$sql->select($db->quoteName('c.id'));
 		$sql->select($db->quoteName('c.published').' AS cat_state');
 		$sql->select($db->quoteName('c.access').' AS cat_access');

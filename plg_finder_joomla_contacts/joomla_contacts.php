@@ -111,8 +111,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$sql->where('a.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$item = $this->_db->loadObject();
+				$this->db->setQuery($sql);
+				$item = $this->db->loadObject();
 
 				// Translate the state.
 				$temp = $this->_translateState($value, $item->cat_state);
@@ -132,8 +132,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$sql->where('a.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$item = $this->_db->loadObject();
+				$this->db->setQuery($sql);
+				$item = $this->db->loadObject();
 
 				// Translate the state.
 				$temp = max($value, $item->cat_access);
@@ -174,8 +174,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -199,8 +199,8 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -452,7 +452,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 		 * so we need to use a different method for find new items. Our best
 		 * bet is to order by the primary key putting the new items first.
 		 */
-		$sql = $this->_db->getQuery(true);
+		$sql = $this->db->getQuery(true);
 		$sql->order('a.id DESC');
 
 		return $sql;
@@ -519,7 +519,7 @@ class plgFinderJoomla_Contacts extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = $this->_db->getQuery(true);
+		$sql = $this->db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.published AS state, c.published AS cat_state');
 		$sql->select('a.access, c.access AS cat_access');

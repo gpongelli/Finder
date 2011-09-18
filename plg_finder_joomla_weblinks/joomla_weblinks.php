@@ -111,8 +111,8 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 				$sql->where('a.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$item = $this->_db->loadObject();
+				$this->db->setQuery($sql);
+				$item = $this->db->loadObject();
 
 				// Translate the state.
 				$temp = $this->_translateState($value, $item->cat_state);
@@ -153,8 +153,8 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -178,8 +178,8 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -324,8 +324,8 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	protected function getUpdateQueryByTime($time)
 	{
 		// Build an SQL query based on the modified time.
-		$sql = $this->_db->getQuery(true);
-		$sql->where('a.date >= '.$this->_db->quote($time));
+		$sql = $this->db->getQuery(true);
+		$sql->where('a.date >= '.$this->db->quote($time));
 
 		return $sql;
 	}
@@ -391,7 +391,7 @@ class plgFinderJoomla_Weblinks extends FinderIndexerAdapter
 	 */
 	private function _getStateQuery()
 	{
-		$sql = $this->_db->getQuery(true);
+		$sql = $this->db->getQuery(true);
 		$sql->select('a.id');
 		$sql->select('a.state AS state, c.published AS cat_state');
 		$sql->select('a.access AS access, c.access AS cat_access');

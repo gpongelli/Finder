@@ -90,8 +90,8 @@ class plgFinderContent extends FinderIndexerAdapter
 				$sql->where('a.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$item = $this->_db->loadObject();
+				$this->db->setQuery($sql);
+				$item = $this->db->loadObject();
 
 				// Translate the state.
 				$temp = $this->_translateState($value, $item->cat_state);
@@ -112,8 +112,8 @@ class plgFinderContent extends FinderIndexerAdapter
 				$sql->where('a.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$item = $this->_db->loadObject();
+				$this->db->setQuery($sql);
+				$item = $this->db->loadObject();
 
 				// Translate the state.
 				$temp = max($value, $item->cat_access);
@@ -154,8 +154,8 @@ class plgFinderContent extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
@@ -180,8 +180,8 @@ class plgFinderContent extends FinderIndexerAdapter
 				$sql->where('c.id = '.(int)$id);
 
 				// Get the published states.
-				$this->_db->setQuery($sql);
-				$items = $this->_db->loadObjectList();
+				$this->db->setQuery($sql);
+				$items = $this->db->loadObjectList();
 
 				// Adjust the state for each item within the category.
 				foreach ($items as $item)
