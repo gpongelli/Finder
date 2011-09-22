@@ -196,6 +196,51 @@ class plgFinderContacts extends FinderIndexerAdapter
 	}
 
 	/**
+	 * Method to update the item link information when the item category is
+	 * changed. This is fired when the item category is published or unpublished
+	 * from the list view.
+	 *
+	 * @param   string   $extension  The extension whose category has been updated.
+	 * @param   array    $pks        A list of primary key ids of the content that has changed state.
+	 * @param   integer  $value      The value of the state that the content has been changed to.
+	 *
+	 * @return  void
+	 *
+	 * @since   2.5
+	 */
+	public function onCategoryChangeState($extension, $pks, $value)
+	{
+		// Make sure we're handling com_contact categories
+		if ($extension != 'com_contact')
+		{
+			return;
+		}
+
+		// The contact published state is tied to the category
+		// published state so we need to look up all published states
+		// before we change anything.
+		foreach ($ids as $id)
+		{
+			$sql = clone($this->_getStateQuery());
+			$sql->where('c.id = '.(int)$id);
+
+			// Get the published states.
+			$this->db->setQuery($sql);
+			$items = $this->db->loadObjectList();
+
+			// Adjust the state for each item within the category.
+			foreach ($items as $item)
+			{
+				// Translate the state.
+				$temp = $this->_translateState($item->state, $value);
+
+				// Update the item.
+				$this->change($item->id, 'state', $temp);
+			}
+		}
+	}
+
+	/**
 	 * Method to remove the link information for items that have been deleted.
 	 *
 	 * This event will fire when contacts are deleted and when an indexed item is deleted.

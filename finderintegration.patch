@@ -13,7 +13,7 @@ Index: administrator/components/com_categories/models/category.php
  
  		// Load the row if saving an existing category.
  		if ($pk > 0) {
-@@ -405,6 +406,32 @@
+@@ -405,6 +406,33 @@
  	}
  
  	/**
@@ -32,13 +32,14 @@ Index: administrator/components/com_categories/models/category.php
 +		{
 +			// Initialise variables.
 +			$dispatcher	= JDispatcher::getInstance();
++			$extension	= JRequest::getCmd('option');
 +
 +			// Include the content and finder plugins for the change of category state event.
 +			JPluginHelper::importPlugin('content');
 +			JPluginHelper::importPlugin('finder');
 +
 +			// Trigger the onCategoryChangeState event.
-+			$dispatcher->trigger('onCategoryChangeState', array($this->option.'.'.$this->name, $pks, $value));
++			$dispatcher->trigger('onCategoryChangeState', array($extension, $pks, $value));
 +		}
 +	}
 +
