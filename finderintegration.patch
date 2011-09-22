@@ -1,6 +1,21 @@
+Index: administrator/components/com_categories/models/category.php
+===================================================================
+--- administrator/components/com_categories/models/category.php	(revision 22133)
++++ administrator/components/com_categories/models/category.php	(working copy)
+@@ -329,8 +329,9 @@
+ 		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
+ 		$isNew		= true;
+ 
+-		// Include the content plugins for the on save events.
++		// Include the content and finder plugins for the on save events.
+ 		JPluginHelper::importPlugin('content');
++		JPluginHelper::importPlugin('finder');
+ 
+ 		// Load the row if saving an existing category.
+ 		if ($pk > 0) {
 Index: libraries/joomla/application/component/modeladmin.php
 ===================================================================
---- libraries/joomla/application/component/modeladmin.php	(revision 22087)
+--- libraries/joomla/application/component/modeladmin.php	(revision 22133)
 +++ libraries/joomla/application/component/modeladmin.php	(working copy)
 @@ -510,8 +510,9 @@
  		$pks		= (array) $pks;
@@ -37,7 +52,7 @@ Index: libraries/joomla/application/component/modeladmin.php
  		try
 Index: plugins/content/emailcloak/emailcloak.php
 ===================================================================
---- plugins/content/emailcloak/emailcloak.php	(revision 22087)
+--- plugins/content/emailcloak/emailcloak.php	(revision 22133)
 +++ plugins/content/emailcloak/emailcloak.php	(working copy)
 @@ -29,6 +29,11 @@
  	 */
@@ -53,7 +68,7 @@ Index: plugins/content/emailcloak/emailcloak.php
  		}
 Index: plugins/content/loadmodule/loadmodule.php
 ===================================================================
---- plugins/content/loadmodule/loadmodule.php	(revision 22087)
+--- plugins/content/loadmodule/loadmodule.php	(revision 22133)
 +++ plugins/content/loadmodule/loadmodule.php	(working copy)
 @@ -26,6 +26,11 @@
  	 */
