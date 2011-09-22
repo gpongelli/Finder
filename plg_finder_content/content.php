@@ -297,24 +297,6 @@ class plgFinderContent extends FinderIndexerAdapter
 	}
 
 	/**
-	 * Method to update the link information for items that have been trashed.
-	 * We want to keep the item in the index for now but prevent it from being
-	 * displayed in search results.
-	 *
-	 * @param   array  $ids  An array of item ids.
-	 *
-	 * @return  boolean  True on success.
-	 *
-	 * @since   2.5
-	 * @throws  Exception on database error.
-	 */
-	public function onTrashJoomlaArticle($ids)
-	{
-		// Update the items.
-		return $this->change($ids, 'state', -2);
-	}
-
-	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
 	 * @param   FinderIndexerResult  $item  The item to index as an FinderIndexerResult object.
