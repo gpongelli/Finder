@@ -371,10 +371,10 @@ class plgFinderCategories extends FinderIndexerAdapter
 	private function _getStateQuery()
 	{
 		$sql = $this->db->getQuery(true);
-		$sql->select($db->quoteName('c.id'));
-		$sql->select($db->quoteName('c.published').' AS cat_state');
-		$sql->select($db->quoteName('c.access').' AS cat_access');
-		$sql->from($db->quoteName('#__categories').' AS c');
+		$sql->select($this->db->quoteName('c.id'));
+		$sql->select($this->db->quoteName('c.published').' AS cat_state');
+		$sql->select($this->db->quoteName('c.access').' AS cat_access');
+		$sql->from($this->db->quoteName('#__categories').' AS c');
 
 		return $sql;
 	}
