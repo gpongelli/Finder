@@ -96,7 +96,7 @@ class plgFinderCategories extends FinderIndexerAdapter
 				foreach ($items as $item)
 				{
 					// Translate the state.
-					$temp = $this->_translateState($value);
+					$temp = $this->translateState($value);
 
 					// Update the item.
 					$this->change($item->id, 'state', $temp);
@@ -224,7 +224,7 @@ class plgFinderCategories extends FinderIndexerAdapter
 			$item = $this->db->loadObject();
 
 			// Translate the state.
-			$temp = $this->_translateState($value);
+			$temp = $this->translateState($value);
 
 			// Update the item.
 			$this->change($pk, 'state', $temp);
@@ -266,7 +266,7 @@ class plgFinderCategories extends FinderIndexerAdapter
 		}
 
 		// Translate the state. Categories should only be published if the section is published.
-		$item->state = $this->_translateState($item->state);
+		$item->state = $this->translateState($item->state);
 
 		// Set the language.
 		$item->language	= $item->params->get('language', FinderIndexerHelper::getDefaultLanguage());
@@ -332,32 +332,6 @@ class plgFinderCategories extends FinderIndexerAdapter
 	protected function getURL($id)
 	{
 		return 'index.php?option=com_content&view=category&id='.$id;
-	}
-
-	/**
-	 * Method to translate the native content states into states that the
-	 * indexer can use.
-	 *
-	 * @param   integer  $category  The category state.
-	 *
-	 * @return  integer  The translated indexer state.
-	 *
-	 * @since   2.5
-	 */
-	private function _translateState($category)
-	{
-		// Translate the state.
-		switch ($category)
-		{
-			// Unpublished.
-			case 0:
-				return 0;
-
-			// Published.
-			default:
-			case 1:
-				return 1;
-		}
 	}
 
 	/**

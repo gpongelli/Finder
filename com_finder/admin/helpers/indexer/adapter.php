@@ -755,4 +755,40 @@ abstract class FinderIndexerAdapter extends JPlugin
 
 		return $return;
 	}
+
+	/**
+	 * Method to translate the native content states into states that the
+	 * indexer can use.
+	 *
+	 * @param   integer  $item      The item state.
+	 * @param   integer  $category  The category state if supplied.
+	 *
+	 * @return  integer  The translated indexer state.
+	 *
+	 * @since   2.5
+	 */
+	protected function translateState($item, $category = null)
+	{
+		// If category is present, factor in its states as well
+		if ($category !== null)
+		{
+			if ($category == 0)
+			{
+				$item = 0;
+			}
+		}
+
+		// Translate the state
+		switch ($item)
+		{
+			// Unpublished
+			case 0:
+				return 0;
+
+			// Published
+			default:
+			case 1:
+				return 1;
+		}
+	}
 }

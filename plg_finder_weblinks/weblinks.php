@@ -98,7 +98,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 			foreach ($items as $item)
 			{
 				// Translate the state.
-				$temp = $this->_translateState($item->state, $value);
+				$temp = $this->translateState($item->state, $value);
 
 				// Update the item.
 				$this->change($item->id, 'state', $temp);
@@ -197,7 +197,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 			$item = $this->db->loadObject();
 
 			// Translate the state.
-			$temp = $this->_translateState($value, $item->cat_state);
+			$temp = $this->translateState($value, $item->cat_state);
 
 			// Update the item.
 			$this->change($pk, 'state', $temp);
@@ -236,7 +236,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 				$item = $this->db->loadObject();
 
 				// Translate the state.
-				$temp = $this->_translateState($value, $item->cat_state);
+				$temp = $this->translateState($value, $item->cat_state);
 
 				// Update the item.
 				$this->change($id, 'state', $temp);
@@ -281,7 +281,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 				foreach ($items as $item)
 				{
 					// Translate the state.
-					$temp = $this->_translateState($item->state, $value);
+					$temp = $this->translateState($item->state, $value);
 
 					// Update the item.
 					$this->change($item->id, 'state', $temp);
@@ -435,42 +435,6 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 	protected function getURL($id)
 	{
 		return 'index.php?option=com_weblinks&view=weblink&id='.$id;
-	}
-
-	/**
-	 * Method to translate the native content states into states that the
-	 * indexer can use.
-	 *
-	 * @param   integer  $weblink   The weblink state.
-	 * @param   integer  $category  The category state.
-	 *
-	 * @return  integer  The translated indexer state.
-	 *
-	 * @since   2.5
-	 */
-	private function _translateState($weblink, $category)
-	{
-		// If category is present, factor in its states as well.
-		if ($category !== null)
-		{
-			if ($category == 0)
-			{
-				$weblink = 0;
-			}
-		}
-
-		// Translate the state.
-		switch ($weblink)
-		{
-			// Unpublished.
-			case 0:
-				return 0;
-
-			// Published.
-			default:
-			case 1:
-				return 1;
-		}
 	}
 
 	/**

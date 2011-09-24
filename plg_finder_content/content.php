@@ -94,7 +94,7 @@ class plgFinderContent extends FinderIndexerAdapter
 				$item = $this->db->loadObject();
 
 				// Translate the state.
-				$temp = $this->_translateState($value, $item->cat_state);
+				$temp = $this->translateState($value, $item->cat_state);
 
 				// Update the item.
 				$this->change($id, $property, $temp);
@@ -161,7 +161,7 @@ class plgFinderContent extends FinderIndexerAdapter
 				foreach ($items as $item)
 				{
 					// Translate the state.
-					$temp = $this->_translateState($item->state, $value);
+					$temp = $this->translateState($item->state, $value);
 
 					// Update the item.
 					$this->change($item->id, 'state', $temp);
@@ -235,7 +235,7 @@ class plgFinderContent extends FinderIndexerAdapter
 			foreach ($items as $item)
 			{
 				// Translate the state.
-				$temp = $this->_translateState($item->state, $value);
+				$temp = $this->translateState($item->state, $value);
 
 				// Update the item.
 				$this->change($item->id, 'state', $temp);
@@ -334,7 +334,7 @@ class plgFinderContent extends FinderIndexerAdapter
 			$item = $this->db->loadObject();
 
 			// Translate the state.
-			$temp = $this->_translateState($value, $item->cat_state);
+			$temp = $this->translateState($value, $item->cat_state);
 
 			// Update the item.
 			$this->change($pk, 'state', $temp);
@@ -392,7 +392,7 @@ class plgFinderContent extends FinderIndexerAdapter
 		$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
 
 		// Translate the state. Articles should only be published if the category is published.
-		$item->state = $this->_translateState($item->state, $item->cat_state);
+		$item->state = $this->translateState($item->state, $item->cat_state);
 
 		// Set the language.
 		$item->language	= $item->params->get('language', FinderIndexerHelper::getDefaultLanguage());
@@ -481,44 +481,6 @@ class plgFinderContent extends FinderIndexerAdapter
 	protected function getURL($id)
 	{
 		return 'index.php?option=com_content&view=article&id='.$id;
-	}
-
-	/**
-	 * Method to translate the native content states into states that the
-	 * indexer can use.
-	 *
-	 * @param   integer  $article   The article state.
-	 * @param   integer  $category  The category state.
-	 *
-	 * @return  integer  The translated indexer state.
-	 *
-	 * @since   2.5
-	 */
-	private function _translateState($article, $category)
-	{
-		// If category is present, factor in the state as well.
-		if ($category !== null)
-		{
-			if ($category == 0)
-			{
-				$article = 0;
-			}
-		}
-
-		// Translate the state.
-		switch ($article)
-		{
-			// Unpublished or trashed.
-			case 0:
-			case -2:
-				return 0;
-
-			// Published or archived.
-			default:
-			case 1:
-			case -1:
-				return 1;
-		}
 	}
 
 	/**
