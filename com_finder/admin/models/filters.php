@@ -21,22 +21,6 @@ jimport('joomla.application.component.modellist');
 class FinderModelFilters extends JModelList
 {
 	/**
-	 * The number of visible filters.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	private $_filter_count = null;
-
-	/**
-	 * The total number of filters.
-	 *
-	 * @var    integer
-	 * @since  2.5
-	 */
-	private $_filter_total = null;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -64,42 +48,13 @@ class FinderModelFilters extends JModelList
 	}
 
 	/**
-	 * Method to get the relevant number of filters.
-	 *
-	 * @return  mixed  False on failure, integer on success.
-	 *
-	 * @since   2.5
-	 */
-	function getCount()
-	{
-		if (!empty($this->_filter_count))
-		{
-			return $this->_filter_count;
-		}
-
-		// Load the filter count data.
-		$return = $this->_getListCount($this->getListQuery());
-
-		// Check for a database error.
-		if ($this->_db->getErrorNum())
-		{
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-
-		$this->_filter_count = (int)$return;
-
-		return $this->_filter_count;
-	}
-
-	/**
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery  A JDatabaseQuery object
 	 *
 	 * @since   2.5
 	 */
-	function getListQuery()
+	protected function getListQuery()
 	{
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
@@ -154,35 +109,6 @@ class FinderModelFilters extends JModelList
 		$id.= ':' . $this->getState('filter.state');
 
 		return parent::getStoreId($id);
-	}
-
-	/**
-	 * Method to get the total number of items for the data set.
-	 *
-	 * @return  integer  The total number of items available in the data set.
-	 *
-	 * @since   2.5
-	 */
-	function getTotal()
-	{
-		// Assemble the query.
-		$db		= $this->getDbo();
-		$query	= $db->getQuery(true);
-		$query->select('count(a.filter_id)');
-		$query->from($db->quoteName('#__finder_filters').' AS a');
-		$db->setQuery($query);
-		$return = $db->loadResult();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
-		{
-			$this->setError($db->getErrorMsg());
-			return false;
-		}
-
-		$this->_filter_total = (int)$return;
-
-		return $this->_filter_total;
 	}
 
 	/**
