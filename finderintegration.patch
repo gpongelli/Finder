@@ -1,6 +1,6 @@
 Index: administrator/components/com_categories/models/category.php
 ===================================================================
---- administrator/components/com_categories/models/category.php	(revision 22133)
+--- administrator/components/com_categories/models/category.php	(revision 22142)
 +++ administrator/components/com_categories/models/category.php	(working copy)
 @@ -329,8 +329,9 @@
  		$pk			= (!empty($data['id'])) ? $data['id'] : (int)$this->getState($this->getName().'.id');
@@ -13,7 +13,7 @@ Index: administrator/components/com_categories/models/category.php
  
  		// Load the row if saving an existing category.
  		if ($pk > 0) {
-@@ -405,6 +406,33 @@
+@@ -405,6 +406,34 @@
  	}
  
  	/**
@@ -28,11 +28,10 @@ Index: administrator/components/com_categories/models/category.php
 +	 */
 +	function publish(&$pks, $value = 1)
 +	{
-+		if (parent::publish($pks, $value))
-+		{
++		if (parent::publish($pks, $value)) {
 +			// Initialise variables.
 +			$dispatcher	= JDispatcher::getInstance();
-+			$extension	= JRequest::getCmd('option');
++			$extension	= JRequest::getCmd('extension');
 +
 +			// Include the content and finder plugins for the change of category state event.
 +			JPluginHelper::importPlugin('content');
@@ -40,6 +39,8 @@ Index: administrator/components/com_categories/models/category.php
 +
 +			// Trigger the onCategoryChangeState event.
 +			$dispatcher->trigger('onCategoryChangeState', array($extension, $pks, $value));
++
++			return true;
 +		}
 +	}
 +
@@ -49,9 +50,9 @@ Index: administrator/components/com_categories/models/category.php
  	 * @return	boolean	False on failure or error, true otherwise.
 Index: libraries/joomla/application/component/modeladmin.php
 ===================================================================
---- libraries/joomla/application/component/modeladmin.php	(revision 22133)
+--- libraries/joomla/application/component/modeladmin.php	(revision 22142)
 +++ libraries/joomla/application/component/modeladmin.php	(working copy)
-@@ -510,8 +510,9 @@
+@@ -531,8 +531,9 @@
  		$pks		= (array) $pks;
  		$table		= $this->getTable();
  
@@ -62,7 +63,7 @@ Index: libraries/joomla/application/component/modeladmin.php
  
  		// Iterate the items to delete each one.
  		foreach ($pks as $i => $pk) {
-@@ -698,8 +699,9 @@
+@@ -719,8 +720,9 @@
  		$table		= $this->getTable();
  		$pks		= (array) $pks;
  
@@ -73,7 +74,7 @@ Index: libraries/joomla/application/component/modeladmin.php
  
  		// Access checks.
  		foreach ($pks as $i => $pk) {
-@@ -819,8 +821,9 @@
+@@ -840,8 +842,9 @@
  		$pk			= (!empty($data[$key])) ? $data[$key] : (int)$this->getState($this->getName().'.id');
  		$isNew		= true;
  
@@ -86,7 +87,7 @@ Index: libraries/joomla/application/component/modeladmin.php
  		try
 Index: plugins/content/emailcloak/emailcloak.php
 ===================================================================
---- plugins/content/emailcloak/emailcloak.php	(revision 22133)
+--- plugins/content/emailcloak/emailcloak.php	(revision 22142)
 +++ plugins/content/emailcloak/emailcloak.php	(working copy)
 @@ -29,6 +29,11 @@
  	 */
@@ -102,7 +103,7 @@ Index: plugins/content/emailcloak/emailcloak.php
  		}
 Index: plugins/content/loadmodule/loadmodule.php
 ===================================================================
---- plugins/content/loadmodule/loadmodule.php	(revision 22133)
+--- plugins/content/loadmodule/loadmodule.php	(revision 22142)
 +++ plugins/content/loadmodule/loadmodule.php	(working copy)
 @@ -26,6 +26,11 @@
  	 */
