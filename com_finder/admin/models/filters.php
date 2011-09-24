@@ -78,7 +78,7 @@ class FinderModelFilters extends JModelList
 		}
 
 		// Load the filter count data.
-		$return = $this->_getListCount($this->_getListQuery());
+		$return = $this->_getListCount($this->getListQuery());
 
 		// Check for a database error.
 		if ($this->_db->getErrorNum())

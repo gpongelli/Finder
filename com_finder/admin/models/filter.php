@@ -61,7 +61,6 @@ class FinderModelFilter extends JModelAdmin
 	function getFilter()
 	{
 		$filter_id	= (int)$this->getState('filter.id');
-		$false		= false;
 
 		// Get a FinderTableFilter instance.
 		$filter = $this->getTable();
@@ -73,7 +72,7 @@ class FinderModelFilter extends JModelAdmin
 		if ($return === false && $filter->getError())
 		{
 			$this->serError($filter->getError());
-			return $false;
+			return false;
 		}
 
 		// Process the filter data.
@@ -90,7 +89,7 @@ class FinderModelFilter extends JModelAdmin
 		if ($this->_db->getErrorNum())
 		{
 			$this->setError($this->_db->getErrorMsg());
-			return $false;
+			return false;
 		}
 
 		return $filter;
