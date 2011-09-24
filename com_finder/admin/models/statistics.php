@@ -65,6 +65,7 @@ class FinderModelStatistics extends JModel
 		$query->from($db->quoteName('#__finder_links').' AS a');
 		$query->join('INNER', $db->quoteName('#__finder_types').' AS t ON t.id = a.type_id');
 		$query->group($db->quoteName('a.type_id'));
+		$query->order($db->quoteName('type_title'), 'ASC');
 		$db->setQuery($query);
 		$data->type_list = $db->loadObjectList();
 
