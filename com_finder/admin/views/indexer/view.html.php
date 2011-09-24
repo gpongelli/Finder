@@ -31,19 +31,6 @@ class FinderViewIndexer extends JView
 	 */
 	function display($tpl = null)
 	{
-		// Load the view data.
-		$this->data			= $this->get('Data');
-		$this->total		= $this->get('Total');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-
 		JHtml::_('behavior.framework');
 		JHtml::stylesheet('com_finder/indexer.css', false, true, false);
 		JHtml::script('com_finder/indexer.js', false, true);
