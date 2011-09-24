@@ -33,8 +33,6 @@ class FinderViewStatistics extends JView
 	{
 		// Load the view data.
 		$this->data		= $this->get('Data');
-		$this->state	= $this->get('State');
-		$this->upgrades	= $this->get('Upgrades');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -42,11 +40,6 @@ class FinderViewStatistics extends JView
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-
-		// Prepare the view.
-		JHtml::stylesheet('com_finder/finderadmin.css', false, true, false);
-
-		JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 		parent::display($tpl);
 	}
