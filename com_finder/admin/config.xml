@@ -58,15 +58,6 @@
 			<option value="0">JHIDE</option>
 		</field>
 		<field
-			name="show_labels"
-			type="radio"
-			default="1"
-			label="COM_FINDER_CONFIG_SHOW_RESULT_LABELS_LABEL"
-			description="COM_FINDER_CONFIG_SHOW_RESULT_LABELS_DESCRIPTION">
-			<option value="1">JSHOW</option>
-			<option value="0">JHIDE</option>
-		</field>
-		<field
 			name="highlight_content_search_terms"
 			type="radio"
 			default="1"
