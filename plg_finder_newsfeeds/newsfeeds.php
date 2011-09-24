@@ -85,10 +85,10 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 		// The newsfeed published state is tied to the category
 		// published state so we need to look up all published states
 		// before we change anything.
-		foreach ($ids as $id)
+		foreach ($pks as $pk)
 		{
 			$sql = clone($this->_getStateQuery());
-			$sql->where('c.id = '.(int)$id);
+			$sql->where('c.id = '.(int)$pk);
 
 			// Get the published states.
 			$this->db->setQuery($sql);
