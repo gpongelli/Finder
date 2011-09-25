@@ -1,5 +1,4 @@
 window.addEvent('domready', function () {
-	var a = document.id('jxplugin-enable');
 	sm = document.id('system-message');
 	if (sm) {
 		sm.addEvent('check', function () {
