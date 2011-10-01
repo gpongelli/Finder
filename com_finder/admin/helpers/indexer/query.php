@@ -9,11 +9,6 @@
 
 defined('_JEXEC') or die;
 
-// Detect if we have full UTF-8 and unicode support.
-if (!defined('JX_FINDER_UNICODE'))
-{
-	define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
-}
 
 // Register dependent classes.
 JLoader::register('FinderIndexerHelper', dirname(__FILE__).'/helper.php');
@@ -790,15 +785,8 @@ class FinderIndexerQuery
 		 * filter input string. Single words can be input directly, multi-word
 		 * values have to be wrapped in double quotes.
 		 */
-		if (JX_FINDER_UNICODE)
-		{
-			$suffix = '(([\pL\pM\pN\p{Pi}\p{Pf}\'-]+)|\"([\pL\pM\pNp{Pi}\p{Pf}\s\'-]+)\")';
-		}
-		else
-		{
 			$quotes = html_entity_decode('&#8216;&#8217;&#39;', ENT_QUOTES, 'UTF-8');
 			$suffix = '(([\w\d'.$quotes.'-]+)|\"([\w\d\s'.$quotes.'-]+)\")';
-		}
 
 		/*
 		 * Iterate through the possible filter patterns and search for matches.

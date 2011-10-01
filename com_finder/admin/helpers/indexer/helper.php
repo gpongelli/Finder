@@ -90,8 +90,6 @@ class FinderIndexerHelper
 		 *  7. Replace the assorted single quoation marks with the ASCII standard single quotation.
 		 *	8. Remove multiple space chracters and replaces with a single space.
 		 */
-		if (JX_FINDER_UNICODE)
-		{
 			$input	= JString::strtolower($input);
 			$input	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $input);
 			$input	= preg_replace('#(^|\s)[+-.,]+([\pL\pM]+)#mui', ' $1', $input);
@@ -102,20 +100,6 @@ class FinderIndexerHelper
 			$input	= preg_replace('#['.$quotes.']+#mui', '\'', $input);
 			$input	= preg_replace('#\s+#mui', ' ', $input);
 			$input	= JString::trim($input);
-		}
-		else
-		{
-			$input	= JString::strtolower($input);
-			$input	= preg_replace('#[^\w\d'.$quotes.'+-.,]+#mi', ' ', $input);
-			$input	= preg_replace('#(^|\s)[+-.,]+([\w]+)#mi', ' $1', $input);
-			$input	= preg_replace('#([\w\d]+)[+-.,]+(\s|$)#mi', '$1 ', $input);
-			$input	= preg_replace('#([^\d]+)[+.,]+([^\d]+)#miU', '$1 $2', $input); // Ungreedy
-			$input	= preg_replace('#(^|\s)[\'+-.,]+(\s|$)#mi', ' ', $input);
-			$input	= preg_replace('#(^|\s)['.$quotes.']+(\s|$)#mi', ' ', $input);
-			$input	= preg_replace('#['.$quotes.']+#mi', '\'', $input);
-			$input	= preg_replace('#\s+#mi', ' ', $input);
-			$input	= JString::trim($input);
-		}
 
 		// Explode the normalized string to get the terms.
 		$terms = explode(' ', $input);
@@ -126,7 +110,7 @@ class FinderIndexerHelper
 		 * between the "words". So, we have to test if the words belong to the Chinese
 		 * character set and if so, explode them into single glyphs or "words".
 		 */
-		if ($lang === 'zh' && JX_FINDER_UNICODE)
+		if ($lang === 'zh' )
 		{
 			// Iterate through the terms and test if they contain Chinese.
 			for ($i = 0, $n = count($terms); $i < $n; $i++)

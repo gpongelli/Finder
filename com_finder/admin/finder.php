@@ -11,8 +11,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controller');
 
-// Detect if we have full UTF-8 and unicode support.
-define('JX_FINDER_UNICODE', (bool)@preg_match('/\pL/u', 'a'));
 
 // Execute the task.
 $controller	= JController::getInstance('Finder');

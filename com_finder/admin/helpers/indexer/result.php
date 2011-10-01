@@ -369,15 +369,7 @@ class FinderIndexerResult
 		if ($branch !== null && isset($this->taxonomy[$branch]))
 		{
 			// Filter the input.
-			if (JX_FINDER_UNICODE)
-			{
 				$branch	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
-			}
-			else
-			{
-				$quotes = html_entity_decode('&#8216;&#8217;&#39;', ENT_QUOTES, 'UTF-8');
-				$branch	= preg_replace('#[^\w\d'.$quotes.'+-.,]+#mi', ' ', $branch);
-			}
 
 			return $this->taxonomy[$branch];
 		}
@@ -400,17 +392,7 @@ class FinderIndexerResult
 	public function addTaxonomy($branch, $title, $state = 1, $access = 1)
 	{
 		// Filter the input.
-		if (JX_FINDER_UNICODE)
-		{
 			$branch	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
-			$title	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $title);
-		}
-		else
-		{
-			$quotes = html_entity_decode('&#8216;&#8217;&#39;', ENT_QUOTES, 'UTF-8');
-			$branch	= preg_replace('#[^\w\d'.$quotes.'+-.,]+#mi', ' ', $branch);
-			$title	= preg_replace('#[^\w\d'.$quotes.'+-.,]+#mi', ' ', $title);
-		}
 
 		// Create the taxonomy node.
 		$node = new JObject();
