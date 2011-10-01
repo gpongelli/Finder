@@ -999,7 +999,12 @@ class FinderIndexerQuery
 			'OR'	=> JString::strtolower(JText::_('COM_FINDER_QUERY_OPERATOR_OR')),
 			'NOT'	=> JString::strtolower(JText::_('COM_FINDER_QUERY_OPERATOR_NOT')),
 		);
-
+		// If language debugging is enabled you need to ignore the debug strings in matching.
+		if  (JDEBUG)
+		{
+			$debugStrings = array ('**','??');
+			$operators = str_replace($debugStrings,'',$operators);
+		}
 		/*
 		 * Iterate through the terms and perform any sorting that needs to be
 		 * done based on boolean search operators. Terms that are before an
