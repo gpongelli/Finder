@@ -36,6 +36,7 @@
 		<echo msg="Creating extension packages" />
 		<mkdir dir="packages" />
 		<zip destfile="packages/com_finder.zip" basedir="com_finder" />
+		<zip destfile="packages/files_finder_cli.zip" basedir="cli" />
 		<zip destfile="packages/files_finder_hathor.zip" basedir="files_finder_hathor" />
 		<zip destfile="packages/mod_finder.zip" basedir="mod_finder" />
 		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
