@@ -8,10 +8,15 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
-/* Finder Cron Job Bootstrap */
+/**
+ * Finder CLI Bootstrap
+ *
+ * Run the framework bootstrap with a couple of mods based on the script's needs
+ */
 
 // We are a valid entry point.
 define('_JEXEC', 1);
+define('DS', DIRECTORY_SEPARATOR);
 
 // Setup the base path related constant.
 define('JPATH_BASE', dirname(dirname(dirname(__FILE__))));
@@ -19,16 +24,23 @@ define('JPATH_BASE', dirname(dirname(dirname(__FILE__))));
 // Grab the site defines
 require JPATH_BASE.'/includes/defines.php';
 
-// Import the libraries.
+// Import the cms version library if necessary.
+if (!class_exists('JVersion')) {
+    require JPATH_ROOT.'/includes/version.php';
+}
+
+// Get the framework.
 require JPATH_BASE.'/libraries/import.php';
 jimport('joomla.application.menu');
 jimport('joomla.user.user');
 jimport('joomla.environment.uri');
+jimport('joomla.environment.request');
 jimport('joomla.html.html');
 jimport('joomla.utilities.utility');
 jimport('joomla.event.event');
 jimport('joomla.event.dispatcher');
 jimport('joomla.language.language');
+jimport('joomla.log.log');
 jimport('joomla.utilities.string');
 jimport('joomla.plugin.helper');
 jimport('joomla.utilities.date');
@@ -37,6 +49,12 @@ jimport('joomla.registry.registry');
 
 // Import the JCli class from the platform.
 jimport('joomla.application.cli');
+
+// Import the configuration.
+require_once JPATH_CONFIGURATION.'/configuration.php';
+
+// System configuration.
+$config = new JConfig();
 
 // Configure error reporting.
 error_reporting(E_ALL);
