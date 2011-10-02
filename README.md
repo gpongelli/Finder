@@ -21,3 +21,7 @@ Contributing
 ===============
 * If you've found issues or have feature requests, add them to the issue tracker @ https://github.com/Finder-Integration/Finder/issues
 * If you have code to contribute fixing any issues, fork the repo, make your changes, and issue a pull request
+
+Known Issues
+===============
+A list of known issues can be found on the Issues Tracker.  Additionally, when running the CLI script, it appears that the port must be specified with your database host info in your site configuration.
