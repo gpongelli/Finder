@@ -75,16 +75,28 @@ $app = JFactory::getApplication('site');
  */
 class FinderCli extends JCli
 {
-	private $_log = null;
+	/**
+	 * Start time for the index process
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
 	private $_time = null;
+
+	/**
+	 * Start time for each batch
+	 *
+	 * @var    string
+	 * @since  2.5
+	 */
 	private $_qtime = null;
 
 	/**
-	 * Execute the application.
+	 * Entry point for Finder CLI script
 	 *
 	 * @return  void
 	 *
-	 * @since   11.3
+	 * @since   2.5
 	 */
 	public function execute()
 	{
@@ -102,7 +114,9 @@ class FinderCli extends JCli
 	/**
 	 * Run the indexer
 	 *
-	 * @return void
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
 	private function _index()
 	{
@@ -148,7 +162,7 @@ class FinderCli extends JCli
 		JDispatcher::getInstance()->trigger('onBeforeIndex');
 
 		// Startup reporting.
-		$this->out('Setup {$state->totalItems} items in '.round(microtime(true) - $this->_time, 3).' seconds.\n\n', true);
+		$this->out('Setup '.$state->totalItems.' items in '.round(microtime(true) - $this->_time, 3).' seconds.', true);
 
 		// Get the number of batches.
 		$t = (int)$state->totalItems;
@@ -172,7 +186,7 @@ class FinderCli extends JCli
 		}
 
 		// Total reporting.
-		$this->out('Total Processing Time: '.round(microtime(true) - $this->_time, 3).' seconds.\n', true);
+		$this->out('Total Processing Time: '.round(microtime(true) - $this->_time, 3).' seconds.', true);
 
 		// Reset the indexer state.
 		FinderIndexer::resetState();
