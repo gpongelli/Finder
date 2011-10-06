@@ -15,5 +15,8 @@
 			<file>index.html</file>
 			<file>run.php</file>
 		</files>
+		<files folder="language" target="language/en-GB">
+			<file>en-GB.finder_cli.ini</file>
+		</files>
 	</fileset>
 </extension>
