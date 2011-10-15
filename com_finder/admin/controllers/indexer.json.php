@@ -299,9 +299,9 @@ class FinderIndexerResponse
 	/**
 	 * Class Constructor
 	 *
-	 * @param   int  $state  The processing state for the indexer
+	 * @param   mixed  $state  The processing state for the indexer
 	 *
-	 * @return  void
+	 * @return  FinderIndexerResponse
 	 *
 	 * @since   2.5
 	 */

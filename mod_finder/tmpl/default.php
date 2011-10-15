@@ -21,66 +21,65 @@ JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER.'/query.php');
 // Instantiate a query object.
 $query = new FinderIndexerQuery(array('filter' => $params->get('f')));
 
-$formId	= 'mod-finder-'.$module->id;
-$fldId	= 'mod_finder_q'.$module->id;
+$formId	= 'mod-finder-searchform';
 $suffix = $params->get('moduleclass_sfx');
-$output = '<input type="text" name="q" id="'.$fldId.'" class="inputbox" size="'.$params->get('field_size', 20).'" value="'.htmlspecialchars(JRequest::getVar('q')).'" />';
+$output = '<input type="text" name="q" id="mod-finder-searchword" class="inputbox" size="'.$params->get('field_size', 20).'" value="'.htmlspecialchars(JFactory::getApplication()->input->get('q')).'" />';
 $button = '';
 $label	= '';
 
 if ($params->get('show_label', 1))
 {
-	$label	= '<label for="'.$fldId.'" class="finder'.$suffix.'">'
+	$label	= '<label for="mod-finder-searchword" class="finder'.$suffix.'">'
 			. $params->get('alt_label', JText::_('JSEARCH_FILTER_SUBMIT'))
 			. '</label>';
+
+	switch ($params->get('label_pos', 'left')):
+		case 'top' :
+			$label = $label.'<br />';
+			$output = $label.$output;
+		break;
+
+		case 'bottom' :
+			$label = '<br />'.$label;
+			$output = $output.$label;
+			break;
+
+		case 'right' :
+			$output = $output.$label;
+			break;
+
+		case 'left' :
+		default :
+			$output = $label.$output;
+			break;
+	endswitch;
 }
 
 if ($params->get('show_button', 1))
 {
 	$button	= '<button class="button'.$suffix.' finder'.$suffix.'" type="submit">'.JText::_('MOD_FINDER_SEARCH_BUTTON').'</button>';
+
+	switch ($params->get('button_pos', 'right')):
+		case 'top' :
+			$button = $button.'<br />';
+			$output = $button.$output;
+			break;
+
+		case 'bottom' :
+			$button = '<br />'.$button;
+			$output = $output.$button;
+			break;
+
+		case 'right' :
+			$output = $output.$button;
+			break;
+
+		case 'left' :
+		default :
+			$output = $button.$output;
+			break;
+	endswitch;
 }
-
-switch ($params->get('label_pos', 'left')):
-    case 'top' :
-	    $label = $label.'<br />';
-	    $output = $label.$output;
-	    break;
-
-    case 'bottom' :
-	    $label = '<br />'.$label;
-	    $output = $output.$label;
-	    break;
-
-    case 'right' :
-	    $output = $output.$label;
-	    break;
-
-    case 'left' :
-    default :
-	    $output = $label.$output;
-	    break;
-endswitch;
-
-switch ($params->get('button_pos', 'right')):
-    case 'top' :
-	    $button = $button.'<br />';
-	    $output = $button.$output;
-	    break;
-
-    case 'bottom' :
-	    $button = '<br />'.$button;
-	    $output = $output.$button;
-	    break;
-
-    case 'right' :
-	    $output = $output.$button;
-	    break;
-
-    case 'left' :
-    default :
-	    $output = $button.$output;
-	    break;
-endswitch;
 
 JHtml::stylesheet('com_finder/finder.css', false, true, false);
 ?>
@@ -92,22 +91,22 @@ JHtml::stylesheet('com_finder/finder.css', false, true, false);
 		var value;
 
 		// Set the input value if not already set.
-		if (!document.id('<?php echo $fldId; ?>').getProperty('value')) {
-			document.id('<?php echo $fldId; ?>').setProperty('value', '<?php echo JText::_('MOD_FINDER_SEARCH_VALUE', true); ?>');
+		if (!document.id('mod-finder-searchword').getProperty('value')) {
+			document.id('mod-finder-searchword').setProperty('value', '<?php echo JText::_('MOD_FINDER_SEARCH_VALUE', true); ?>');
 		}
 
 		// Get the current value.
-		value = document.id('<?php echo $fldId; ?>').getProperty('value');
+		value = document.id('mod-finder-searchword').getProperty('value');
 
 		// If the current value equals the previous value, clear it.
-		document.id('<?php echo $fldId; ?>').addEvent('focus', function() {
+		document.id('mod-finder-searchword').addEvent('focus', function() {
 			if (this.getProperty('value') == value) {
 				this.setProperty('value', '');
 			}
 		});
 
 		// If the current value is empty, set the previous value.
-		document.id('<?php echo $fldId; ?>').addEvent('blur', function() {
+		document.id('mod-finder-searchword').addEvent('blur', function() {
 			if (!this.getProperty('value')) {
 				this.setProperty('value', value);
 			}
@@ -136,17 +135,15 @@ JHtml::stylesheet('com_finder/finder.css', false, true, false);
 <?php if ($params->get('show_autosuggest', 1)): ?>
 	<?php JHtml::script('com_finder/autocompleter.js', false, true); ?>
 	var url = '<?php echo JRoute::_('index.php?option=com_finder&task=suggestions.display&format=json&tmpl=component', false); ?>';
-	var ModCompleter = new Autocompleter.Request.JSON(document.id('<?php echo $fldId; ?>'), url, {'postVar': 'q'});
+	var ModCompleter = new Autocompleter.Request.JSON(document.id('mod-finder-searchword'), url, {'postVar': 'q'});
 <?php endif; ?>
 	});
 //]]>
 </script>
 
-<div class="finder<?php echo $suffix; ?>">
-	<form id="<?php echo $formId; ?>" action="<?php echo JRoute::_($route); ?>" method="get">
+<form id="<?php echo $formId; ?>" action="<?php echo JRoute::_($route); ?>" method="get">
+	<div class="finder<?php echo $suffix; ?>">
 		<?php
-		echo modFinderHelper::getGetFields($route);
-
 		// Show the form fields.
 		echo $output;
 		?>
@@ -161,5 +158,7 @@ JHtml::stylesheet('com_finder/finder.css', false, true, false);
 		</div>
 	<?php endif; ?>
 <?php endif; ?>
-	</form>
-</div>
+		<?php echo modFinderHelper::getGetFields($route); ?>
+		<input type="hidden" name="Itemid" value="<?php echo JFactory::getApplication()->input->get('Itemid', '', 'int'); ?>" />
+	</div>
+</form>
