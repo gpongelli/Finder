@@ -69,17 +69,6 @@
 					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
 					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
 				<field
-					name="show_text"
-					type="radio"
-					default="1"
-					label="MOD_FINDER_FIELDSET_ADVANCED_SHOW_TEXT_LABEL"
-					description="MOD_FINDER_FIELDSET_ADVANCED_SHOW_TEXT_DESCRIPTION">
-					<option
-						value="1">JSHOW</option>
-					<option
-						value="0">JHIDE</option>
-				</field>
-				<field
 					name="field_size"
 					type="text"
 					default="25"
