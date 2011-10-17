@@ -25,7 +25,7 @@ class FinderModelMaps extends JModelList
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @return  void
+	 * @return  FinderModelMaps
 	 *
 	 * @since   2.5
 	 * @see     JController
@@ -230,7 +230,7 @@ class FinderModelMaps extends JModelList
 	/**
 	 * Returns a Table object, always creating it.
 	 *
-	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $type    The table type to instantiate
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
 	 *
@@ -265,7 +265,7 @@ class FinderModelMaps extends JModelList
 		$state = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
 		$this->setState('filter.state', $state);
 
-		$branch = $this->getUserStateFromRequest($this->context.'.filter.branch', 'filter_branch', '', 'string');
+		$branch = $this->getUserStateFromRequest($this->context.'.filter.branch', 'filter_branch', '1', 'string');
 		$this->setState('filter.branch', $branch);
 
 		// Load the parameters.
