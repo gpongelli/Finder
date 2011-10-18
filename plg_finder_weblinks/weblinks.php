@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
  * @subpackage  Finder.Weblinks
  * @since       2.5
  */
-class plgFinderWeblinks extends FinderIndexerAdapter
+class PlgFinderWeblinks extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -59,7 +59,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return  plgFinderWeblinks
+	 * @return  PlgFinderWeblinks
 	 *
 	 * @since   2.5
 	 */
@@ -131,7 +131,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 		{
 			$id = $table->id;
 		}
-		else if ($context == 'com_finder.index')
+		elseif ($context == 'com_finder.index')
 		{
 			$id = $table->link_id;
 		}
@@ -148,9 +148,9 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param	string   $context  The context of the content passed to the plugin.
-	 * @param	JTable   &$row     A JTable object
-	 * @param	boolean  $isNew    If the content is just about to be created
+	 * @param   string   $context  The context of the content passed to the plugin.
+	 * @param   JTable   &$row     A JTable object
+	 * @param   boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -297,7 +297,7 @@ class plgFinderWeblinks extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the category access level.
-		else if ($property === 'access')
+		elseif ($property === 'access')
 		{
 			// The weblink access state is tied to the category access state so
 			// we need to look up all access states before we change anything.

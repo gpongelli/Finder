@@ -278,7 +278,7 @@ class FinderModelSearch extends JModelList
 			{
 				$query->where($db->quoteName('l.start_date').' <= '.$date1);
 			}
-			else if ($this->_query->when1 == 'after')
+			elseif ($this->_query->when1 == 'after')
 			{
 				$query->where($db->quoteName('l.start_date').' >= '.$date1);
 			}
@@ -299,7 +299,7 @@ class FinderModelSearch extends JModelList
 			{
 				$query->where($db->quoteName('l.start_date').' <= '.$date2);
 			}
-			else if ($this->_query->when2 == 'after')
+			elseif ($this->_query->when2 == 'after')
 			{
 				$query->where($db->quoteName('l.start_date').' >= '.$date2);
 			}
@@ -530,7 +530,7 @@ class FinderModelSearch extends JModelList
 					$reqTemp = $this->retrieve($setId);
 				}
 				// Check if the token was matched.
-				else if (empty($required))
+				elseif (empty($required))
 				{
 					return null;
 				}
@@ -799,7 +799,7 @@ class FinderModelSearch extends JModelList
 			 * If we are ordering by start date we have to add convert the
 			 * dates to unix timestamps.
 			 */
-			else if ($ordering === 'l.start_date')
+			elseif ($ordering === 'l.start_date')
 			{
 				// Iterate through the set to extract the unique items.
 				for ($i = 0, $c = count($results); $i < $c; $i++)
@@ -877,7 +877,7 @@ class FinderModelSearch extends JModelList
 					$reqTemp = $this->retrieve($setId);
 				}
 				// Check if the token was matched.
-				else if (empty($required))
+				elseif (empty($required))
 				{
 					return null;
 				}
@@ -1079,7 +1079,7 @@ class FinderModelSearch extends JModelList
 	 * ordering requirements.
 	 *
 	 * @param   string   $id    An identifier string to generate the store id.
-	 * @param   boolean  $page
+	 * @param   boolean  $page  True to store the data paged, false to store all data
 	 *
 	 * @return  string  A store id.
 	 *

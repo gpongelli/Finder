@@ -353,7 +353,7 @@ class FinderIndexerResponse
 				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_COMPLETE');
 				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_COMPLETE');
 			}
-			else if ($this->totalItems <= 0)
+			elseif ($this->totalItems <= 0)
 			{
 				$this->header	= JText::_('COM_FINDER_INDEXER_HEADER_OPTIMIZE');
 				$this->message	= JText::_('COM_FINDER_INDEXER_MESSAGE_OPTIMIZE');

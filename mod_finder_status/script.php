@@ -9,21 +9,28 @@
 
 /**
  * Installation class to perform additional changes during install/uninstall/update
+ *
+ * @package     Joomla.Administrator
+ * @subpackage  mod_finder_status
+ * @since       2.5
  */
-class Mod_Finder_StatusInstallerScript {
-
+class Mod_Finder_StatusInstallerScript
+{
 	/**
 	 * Function to act prior to installation process begins
 	 *
-	 * @param	string	$type	The action being performed
-	 * @param	string	$parent	The function calling this method
+	 * @param   string  $type    The action being performed
+	 * @param   string  $parent  The function calling this method
 	 *
-	 * @return	void
-	 * @since	1.8
+	 * @return  mixed  False on error, void otherwise.
+	 *
+	 * @since   2.5
 	 */
-	function preflight($type, $parent) {
+	function preflight($type, $parent)
+	{
 		// Check if Finder is installed
-		if (!JFolder::exists(JPATH_BASE.'/components/com_finder')) {
+		if (!JFolder::exists(JPATH_BASE.'/components/com_finder'))
+		{
 			JError::raiseNotice(null, JText::_('MOD_FINDER_STATUS_ERROR_COMPONENT'));
 			return false;
 		}
@@ -32,22 +39,26 @@ class Mod_Finder_StatusInstallerScript {
 	/**
 	 * Function to perform changes when plugin is initially installed
 	 *
-	 * @param	$parent
+	 * @param   string  $parent  The function calling this method
 	 *
-	 * @return	void
-	 * @since	1.6
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
-	function install($parent) {
+	function install($parent)
+	{
 		$this->activateModule();
 	}
 
 	/**
 	 * Function to preconfigure the status module at installation
 	 *
-	 * @return	void
-	 * @since	1.7
+	 * @return  void
+	 *
+	 * @since   2.5
 	 */
-	function activateModule() {
+	function activateModule()
+	{
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);
 
@@ -61,7 +72,8 @@ class Mod_Finder_StatusInstallerScript {
 		$query->set($db->quoteName('ordering').' = 2');
 		$query->where($db->quoteName('module').' = '.$db->quote('mod_finder_status'));
 		$db->setQuery($query);
-		if (!$db->query()) {
+		if (!$db->query())
+		{
 			JError::raiseNotice(1, JText::_('MOD_FINDER_STATUS_ERROR_PRECONFIGURE'));
 		}
 
@@ -71,9 +83,12 @@ class Mod_Finder_StatusInstallerScript {
 		$query->from($db->quoteName('#__modules'));
 		$query->where($db->quoteName('module').' = '.$db->quote('mod_finder_status'));
 		$db->setQuery($query);
-		if (!$db->loadObject()) {
+		if (!$db->loadObject())
+		{
 			JError::raiseWarning(1, JText::sprintf('JLIB_INSTALLER_ERROR_SQL_ERROR', $db->stderr(true)));
-		} else {
+		}
+		else
+		{
 			$record = $db->loadObject();
 		}
 		$moduleId	= json_decode($record->id);
@@ -83,7 +98,8 @@ class Mod_Finder_StatusInstallerScript {
 		$query->insert($db->quoteName('#__modules_menu'));
 		$query->values($moduleId.', 0');
 		$db->setQuery($query);
-		if (!$db->query()) {
+		if (!$db->query())
+		{
 			JError::raiseNotice(1, JText::_('MOD_FINDER_STATUS_ERROR_PUBLISH'));
 		}
 	}

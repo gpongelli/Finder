@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
  * @subpackage  Finder.Categories
  * @since       2.5
  */
-class plgFinderCategories extends FinderIndexerAdapter
+class PlgFinderCategories extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -112,7 +112,7 @@ class plgFinderCategories extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the category access level.
-		else if ($property === 'access')
+		elseif ($property === 'access')
 		{
 			// The article access state is tied to the category
 			// access state so we need to look up all access states
@@ -158,7 +158,7 @@ class plgFinderCategories extends FinderIndexerAdapter
 		{
 			$id = $table->id;
 		}
-		else if ($context == 'com_finder.index')
+		elseif ($context == 'com_finder.index')
 		{
 			$id = $table->link_id;
 		}
@@ -175,9 +175,9 @@ class plgFinderCategories extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param	string   $context  The context of the content passed to the plugin.
-	 * @param	JTable   &$row     A JTable object
-	 * @param	boolean  $isNew    If the content is just about to be created
+	 * @param   string   $context  The context of the content passed to the plugin.
+	 * @param   JTable   &$row     A JTable object
+	 * @param   boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *

@@ -14,7 +14,7 @@
  * @subpackage  Finder.Categories
  * @since       2.5
  */
-class plgFinderCategoriesInstallerScript
+class PlgFinderCategoriesInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed

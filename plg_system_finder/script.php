@@ -14,7 +14,7 @@
  * @subpackage  System.Finder
  * @since       2.5
  */
-class plgSystemFinderInstallerScript
+class PlgSystemFinderInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
@@ -51,4 +51,3 @@ class plgSystemFinderInstallerScript
 		}
 	}
 }
-

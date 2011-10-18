@@ -19,7 +19,7 @@ require_once JPATH_ADMINISTRATOR.'/components/com_finder/helpers/indexer/adapter
  * @subpackage  Finder.Newsfeeds
  * @since       2.5
  */
-class plgFinderNewsfeeds extends FinderIndexerAdapter
+class PlgFinderNewsfeeds extends FinderIndexerAdapter
 {
 	/**
 	 * The plugin identifier.
@@ -59,7 +59,7 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return  plgFinderNewsfeeds
+	 * @return  PlgFinderNewsfeeds
 	 *
 	 * @since   2.5
 	 */
@@ -131,7 +131,7 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 		{
 			$id = $table->id;
 		}
-		else if ($context == 'com_finder.index')
+		elseif ($context == 'com_finder.index')
 		{
 			$id = $table->link_id;
 		}
@@ -148,9 +148,9 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 	 * This event is fired before the data is actually saved so we are going
 	 * to queue the item to be indexed later.
 	 *
-	 * @param	string   $context  The context of the content passed to the plugin.
-	 * @param	JTable   &$row     A JTable object
-	 * @param	boolean  $isNew    If the content is just about to be created
+	 * @param   string   $context  The context of the content passed to the plugin.
+	 * @param   JTable   &$row     A JTable object
+	 * @param   boolean  $isNew    If the content is just about to be created
 	 *
 	 * @return  boolean  True on success.
 	 *
@@ -251,7 +251,7 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the news feed access level.
-		else if ($property === 'access')
+		elseif ($property === 'access')
 		{
 			// The news feed access state is tied to the category
 			// access state so we need to look up all access states
@@ -319,7 +319,7 @@ class plgFinderNewsfeeds extends FinderIndexerAdapter
 			}
 		}
 		// Check if we are changing the category access level.
-		else if ($property === 'access')
+		elseif ($property === 'access')
 		{
 			// The news feed access state is tied to the category access state so
 			// we need to look up all access states before we change anything.

@@ -14,7 +14,7 @@
  * @subpackage  Finder.Weblinks
  * @since       2.5
  */
-class plgFinderWeblinksInstallerScript
+class PlgFinderWeblinksInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
@@ -51,4 +51,3 @@ class plgFinderWeblinksInstallerScript
 		}
 	}
 }
-

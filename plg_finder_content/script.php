@@ -14,7 +14,7 @@
  * @subpackage  Finder.Content
  * @since       2.5
  */
-class plgFinderContentInstallerScript
+class PlgFinderContentInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
@@ -51,4 +51,3 @@ class plgFinderContentInstallerScript
 		}
 	}
 }
-

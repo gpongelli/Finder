@@ -14,7 +14,7 @@
  * @subpackage  Finder.Newsfeeds
  * @since       2.5
  */
-class plgFinderNewsfeedsInstallerScript
+class PlgFinderNewsfeedsInstallerScript
 {
 	/**
 	 * Function to perform changes when plugin is initially installed
@@ -51,4 +51,3 @@ class plgFinderNewsfeedsInstallerScript
 		}
 	}
 }
-
