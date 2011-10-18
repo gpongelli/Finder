@@ -165,7 +165,7 @@ class FinderIndexer
 	/**
 	 * Method to set the indexer state.
 	 *
-	 * @param   array  $data  A new indexer state object.
+	 * @param   object  $data  A new indexer state object.
 	 *
 	 * @return  boolean  True on success, false on failure.
 	 *

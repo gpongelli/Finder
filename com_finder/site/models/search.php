@@ -641,8 +641,8 @@ class FinderModelSearch extends JModelList
 
 		// Get the base query and add the ordering information.
 		$base = $this->getListQuery();
-		$base->select($this->_db->getEscaped($ordering).' AS ordering');
-		$base->order($this->_db->getEscaped($ordering).' '.$this->_db->getEscaped($direction));
+		$base->select($this->_db->escape($ordering).' AS ordering');
+		$base->order($this->_db->escape($ordering).' '.$this->_db->escape($direction));
 
 		/*
 		 * If there are no optional or required search terms in the query, we
@@ -651,7 +651,7 @@ class FinderModelSearch extends JModelList
 		if (empty($this->_includedTerms))
 		{
 			// Get the results from the database.
-			$this->_db->setQuery($base, $this->getState('list.start'), $this->getState('list.limit'));
+			$this->_db->setQuery($base, (int)$this->getState('list.start'), (int)$this->getState('list.limit'));
 			$return = $this->_db->loadObjectList('link_id');
 
 			// Check for a database error.
@@ -855,7 +855,7 @@ class FinderModelSearch extends JModelList
 				$this->store($store, $sorted);
 
 				// Return the requested set.
-				return array_slice($this->retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
+				return array_slice($this->retrieve($store), (int)$this->getState('list.start'), (int)$this->getState('list.limit'), true);
 			}
 
 			/*
@@ -956,7 +956,7 @@ class FinderModelSearch extends JModelList
 		$this->store($store, $items);
 
 		// Return the requested set.
-		return array_slice($this->retrieve($store), $this->getState('list.start'), $this->getState('list.limit'), true);
+		return array_slice($this->retrieve($store), (int)$this->getState('list.start'), (int)$this->getState('list.limit'), true);
 	}
 
 	/**

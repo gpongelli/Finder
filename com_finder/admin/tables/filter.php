@@ -25,7 +25,7 @@ class FinderTableFilter extends JTable
 	 *
 	 * @param   object  &$db  JDatabase connector object.
 	 *
-	 * @return  void
+	 * @return  FinderTableFilter
 	 *
 	 * @since   2.5
 	 */

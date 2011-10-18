@@ -180,7 +180,7 @@ class FinderUpdaterResponse
 	 *
 	 * @param   int  $state  The processing state for the updater
 	 *
-	 * @return  void
+	 * @return  FinderUpdaterResponse
 	 *
 	 * @since   2.5
 	 */
