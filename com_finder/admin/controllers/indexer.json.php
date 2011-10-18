@@ -62,6 +62,10 @@ class FinderControllerIndexer extends JController
 		// Import the finder plugins.
 		JPluginHelper::importPlugin('finder');
 
+		// Add the indexer language to JS
+		JText::script('COM_FINDER_AN_ERROR_HAS_OCCURRED');
+		JText::script('COM_FINDER_NO_ERROR_RETURNED');
+
 		// Start the indexer.
 		try
 		{
