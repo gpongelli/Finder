@@ -127,7 +127,7 @@ class FinderIndexerToken
 			 *
 			 * 1. Length of the token up to 15 and divide by 15.
 			 * 2. If common term, divide weight by 8.
-			 * 3. If numeric, mutiply weight by 1.5.
+			 * 3. If numeric, multiply weight by 1.5.
 			 * 4. Round weight to 4 decimal points.
 			 */
 			$this->weight	= (($this->length >= 15 ? 15 : $this->length) / 15);

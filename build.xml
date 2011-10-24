@@ -18,7 +18,7 @@
 	</target>
 	<target name="release" description="Builds release packages based on the development head" depends="rebuild-packages">
 		<echo msg="Build Finder package" />
-		<zip destfile="releases/pkg_finder_20111014.zip">
+		<zip destfile="releases/pkg_finder_20111022.zip">
 			<fileset dir=".">
 				<include name="packages/**" />
 				<include name="language/**" />

@@ -22,7 +22,7 @@ class Mod_Finder_StatusInstallerScript
 	 * @param   string  $type    The action being performed
 	 * @param   string  $parent  The function calling this method
 	 *
-	 * @return  mixed  False on error, void otherwise.
+	 * @return  boolean  True on success.
 	 *
 	 * @since   2.5
 	 */
@@ -34,6 +34,8 @@ class Mod_Finder_StatusInstallerScript
 			JError::raiseNotice(null, JText::_('MOD_FINDER_STATUS_ERROR_COMPONENT'));
 			return false;
 		}
+
+		return true;
 	}
 
 	/**

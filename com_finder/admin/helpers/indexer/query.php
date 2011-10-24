@@ -113,7 +113,7 @@ class FinderIndexerQuery
 	public $filter;
 
 	/**
-	 * The taxonomy filters. This is a multi-dimensonal array of taxonomy
+	 * The taxonomy filters. This is a multi-dimensional array of taxonomy
 	 * branches as the first level and then the taxonomy nodes as the values.
 	 *
 	 * For example:
