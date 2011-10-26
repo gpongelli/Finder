@@ -117,8 +117,8 @@ class FinderModelSuggestions extends JModelList
 		// Get the query input.
 		$this->setState('input', JRequest::getString('q', '', 'request'));
 		$this->setState('language', JRequest::getString('l', '', 'request'));
-		//$this->setState('input', $input->get('q', '', 'string'));
-		//$this->setState('language', $input->get('l', '', 'string'));
+		//$this->setState('input', $input->request->get('q', '', 'string'));
+		//$this->setState('language', $input->request->get('l', '', 'string'));
 
 		// Load the list state.
 		$this->setState('list.start', 0);

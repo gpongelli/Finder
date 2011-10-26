@@ -289,7 +289,7 @@ class FinderIndexerQuery
 		// Get the filters in the request.
 		$input = JFactory::getApplication()->input;
 		$t = JRequest::getVar('t', array(), 'request', 'array');
-		//$t = $input->get('t', array(), 'array');
+		//$t = $input->request->get('t', array(), 'array');
 
 		// Add the dynamic taxonomy filters if present.
 		if (!empty($this->filters))
