@@ -88,7 +88,7 @@ class FinderIndexerHelper
 		 *  5. Remove orphaned apostrophe, plus, dash, period, and comma characters.
 		 *  6. Remove orphaned quote characters.
 		 *  7. Replace the assorted single quotation marks with the ASCII standard single quotation.
-		 *	8. Remove multiple space characters and replaces with a single space.
+		 *  8. Remove multiple space characters and replaces with a single space.
 		 */
 			$input	= JString::strtolower($input);
 			$input	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $input);
@@ -197,40 +197,6 @@ class FinderIndexerHelper
 		{
 			return count($tokens) > 1 ? $tokens : array_shift($tokens);
 		}
-	}
-
-	/**
-	 * Method to gracefully truncate a string to within a certain number of
-	 * characters. It is graceful because it does not truncate the text in the
-	 * middle of a word, it will search backward to truncate to the last full
-	 * word.
-	 *
-	 * @param   string   $input   The text to truncate.
-	 * @param   integer  $length  The maximum length of the text.
-	 *
-	 * @return  string  The truncated text.
-	 *
-	 * @since   2.5
-	 */
-	public static function truncate($input, $length = 0)
-	{
-		// Truncate the item text if it is too long.
-		if ($length > 0 && JString::strlen($input) > $length)
-		{
-			// Find the first space within the allowed length.
-			$tmp = JString::substr($input, 0, $length);
-			$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
-
-			// If we don't have 3 characters of room, go to the second space within the limit.
-			if (JString::strlen($tmp) >= $length - 3)
-			{
-				$tmp = JString::substr($tmp, 0, JString::strrpos($tmp, ' '));
-			}
-
-			$input = $tmp.'...';
-		}
-
-		return $input;
 	}
 
 	/**
