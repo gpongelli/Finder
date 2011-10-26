@@ -182,8 +182,6 @@ class FinderUpdaterResponse
 	 *
 	 * @param   mixed  $state  The processing state for the updater
 	 *
-	 * @return  FinderUpdaterResponse
-	 *
 	 * @since   2.5
 	 */
 	public function __construct($state)

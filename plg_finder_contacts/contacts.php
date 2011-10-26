@@ -59,8 +59,6 @@ class PlgFinderContacts extends FinderIndexerAdapter
 	 * @param   object  &$subject  The object to observe
 	 * @param   array   $config    An array that holds the plugin configuration
 	 *
-	 * @return  PlgFinderContacts
-	 *
 	 * @since   2.5
 	 */
 	public function __construct(&$subject, $config)

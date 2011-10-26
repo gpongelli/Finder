@@ -25,8 +25,6 @@ class FinderModelMaps extends JModelList
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @return  FinderModelMaps
-	 *
 	 * @since   2.5
 	 * @see     JController
 	 */

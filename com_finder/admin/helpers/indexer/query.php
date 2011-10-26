@@ -165,8 +165,6 @@ class FinderIndexerQuery
 	 *
 	 * @param   array  $options  An array of query options.
 	 *
-	 * @return  FinderIndexerQuery
-	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
 	 */

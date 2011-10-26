@@ -86,8 +86,6 @@ class FinderIndexerToken
 	 * @param   string  $lang    The simple language identifier.
 	 * @param   string  $spacer  The space separator for phrases.
 	 *
-	 * @return  FinderIndexerToken
-	 *
 	 * @since   2.5
 	 */
 	public function __construct($term, $lang, $spacer = ' ')
