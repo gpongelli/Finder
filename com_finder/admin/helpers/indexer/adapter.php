@@ -358,7 +358,6 @@ abstract class FinderIndexerAdapter extends JPlugin
 			$iState->totalItems -= count($queue);
 		}
 
-
 		// Update the indexer state.
 		$aState['offset'] = $offset;
 		$iState->pluginState[$this->context] = $aState;

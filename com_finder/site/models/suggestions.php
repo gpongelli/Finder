@@ -26,7 +26,7 @@ class FinderModelSuggestions extends JModelList
 	 * @var    string
 	 * @since  2.5
 	 */
-	protected $_context = 'com_finder.suggestions';
+	protected $context = 'com_finder.suggestions';
 
 	/**
 	 * Method to get an array of data items.
