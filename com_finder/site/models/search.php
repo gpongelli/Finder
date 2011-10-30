@@ -1138,39 +1138,40 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Initialize variables.
-		$request = JRequest::get('request');
+		//$request = JRequest::get('request');
+		$request = $input->request;
 		$options = array();
 
 		// Get the query string.
-		$options['input'] = isset($request['q']) ? $request['q'] : $params->get('q');
+		$options['input'] = !is_null($request->get('q')) ? $request->get('q') : $params->get('q');
 		$options['input'] = $filter->clean($options['input'], 'string');
 
 		// Get the empty query setting.
 		$options['empty'] = $params->get('allow_emptyquery', 0);
 
 		// Get the query language.
-		$options['language'] = isset($request['l']) ? $request['l'] : $params->get('l');
+		$options['language'] = !is_null($request->get('l')) ? $request->get('l') : $params->get('l');
 		$options['language'] = $filter->clean($options['language'], 'cmd');
 
 		// Get the static taxonomy filters.
-		$options['filter'] = isset($request['f']) ? $request['f'] : $params->get('f');
+		$options['filter'] = !is_null($request->get('f')) ? $request->get('f') : $params->get('f');
 		$options['filter'] = $filter->clean($options['filter'], 'int');
 
 		// Get the dynamic taxonomy filters.
-		$options['filters'] = isset($request['t']) ? $request['t'] : array();
+		$options['filters'] = !is_null($request->get('t')) ? $request->get('t') : $params->get('t');
 		$options['filters'] = $filter->clean($options['filters'], 'array');
 		JArrayHelper::toInteger($options['filters']);
 
 		// Get the start date and start date modifier filters.
-		$options['date1'] = isset($request['d1']) ? $request['d1'] : $params->get('d1');
+		$options['date1'] = !is_null($request->get('d1')) ? $request->get('d1') : $params->get('d1');
 		$options['date1'] = $filter->clean($options['date1'], 'string');
-		$options['when1'] = isset($request['w1']) ? $request['w1'] : $params->get('w1');
+		$options['when1'] = !is_null($request->get('w1')) ? $request->get('w1') : $params->get('w1');
 		$options['when1'] = $filter->clean($options['when1'], 'string');
 
 		// Get the end date and end date modifier filters.
-		$options['date2'] = isset($request['d2']) ? $request['d2'] : $params->get('d2');
+		$options['date2'] = !is_null($request->get('d2')) ? $request->get('d2') : $params->get('d2');
 		$options['date2'] = $filter->clean($options['date2'], 'string');
-		$options['when2'] = isset($request['w2']) ? $request['w2'] : $params->get('w2');
+		$options['when2'] = !is_null($request->get('w2')) ? $request->get('w2') : $params->get('w2');
 		$options['when2'] = $filter->clean($options['when2'], 'string');
 
 		// Load the query object.
