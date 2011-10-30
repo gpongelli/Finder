@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="finder" default="dev_head" basedir=".">
+	<tstamp>
+		<format property="build.date" pattern="%Y-%m-%d" />
+	</tstamp>
 	<target name="dev_head" description="Builds test packages based on the development head" depends="rebuild-packages">
 		<echo msg="Deleting old master builds" />
 		<delete quiet="yes" includeemptydirs="true">
@@ -18,7 +21,7 @@
 	</target>
 	<target name="release" description="Builds release packages based on the development head" depends="rebuild-packages">
 		<echo msg="Build Finder package" />
-		<zip destfile="releases/pkg_finder_20111022.zip">
+		<zip destfile="releases/pkg_finder_${build.date}.zip">
 			<fileset dir=".">
 				<include name="packages/**" />
 				<include name="language/**" />
