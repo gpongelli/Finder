@@ -9,7 +9,7 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('FinderIndexer', dirname(__FILE__).'/indexer.php');
+JLoader::register('FinderIndexer', dirname(__FILE__) . '/indexer.php');
 
 /**
  * Result class for the Finder indexer package.
@@ -41,11 +41,11 @@ class FinderIndexerResult
 	 * @since  2.5
 	 */
 	protected $instructions = array(
-		FinderIndexer::TITLE_CONTEXT	=> array('title', 'subtitle', 'id'),
-		FinderIndexer::TEXT_CONTEXT		=> array('summary', 'body'),
-		FinderIndexer::META_CONTEXT		=> array('meta', 'list_price', 'sale_price'),
-		FinderIndexer::PATH_CONTEXT		=> array('path', 'alias'),
-		FinderIndexer::MISC_CONTEXT		=> array('comments'),
+		FinderIndexer::TITLE_CONTEXT => array('title', 'subtitle', 'id'),
+		FinderIndexer::TEXT_CONTEXT => array('summary', 'body'),
+		FinderIndexer::META_CONTEXT => array('meta', 'list_price', 'sale_price'),
+		FinderIndexer::PATH_CONTEXT => array('path', 'alias'),
+		FinderIndexer::MISC_CONTEXT => array('comments')
 	);
 
 	/**
@@ -179,7 +179,7 @@ class FinderIndexerResult
 	public $type_id;
 
 	/**
-	 * The magic set method is used to push aditional values into the elements
+	 * The magic set method is used to push additional values into the elements
 	 * array in order to preserve the cleanliness of the object.
 	 *
 	 * @param   string  $name   The name of the element.
@@ -361,7 +361,7 @@ class FinderIndexerResult
 		if ($branch !== null && isset($this->taxonomy[$branch]))
 		{
 			// Filter the input.
-				$branch	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
+			$branch = preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
 
 			return $this->taxonomy[$branch];
 		}
@@ -384,13 +384,13 @@ class FinderIndexerResult
 	public function addTaxonomy($branch, $title, $state = 1, $access = 1)
 	{
 		// Filter the input.
-		$branch	= preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
+		$branch = preg_replace('#[^\pL\pM\pN\p{Pi}\p{Pf}\'+-.,]+#mui', ' ', $branch);
 
 		// Create the taxonomy node.
 		$node = new JObject;
-		$node->title	= $title;
-		$node->state	= (int)$state;
-		$node->access	= (int)$access;
+		$node->title = $title;
+		$node->state = (int) $state;
+		$node->access = (int) $access;
 
 		// Add the node to the taxonomy branch.
 		$this->taxonomy[$branch][$node->title] = $node;
