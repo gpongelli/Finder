@@ -210,7 +210,7 @@ class FinderIndexer
 	 * Method to index a content item.
 	 *
 	 * @param   object  $item    The content item to index.
-	 * @param   string  $format  The format of the content.
+	 * @param   string  $format  The format of the content. [optional]
 	 *
 	 * @return  integer  The id of the record in the links table.
 	 *
@@ -1086,7 +1086,7 @@ class FinderIndexer
 	 * Method to add a set of tokens to the database.
 	 *
 	 * @param   mixed  $tokens   An array or single FinderIndexerToken object.
-	 * @param   mixed  $context  The context of the tokens. See context constants.
+	 * @param   mixed  $context  The context of the tokens. See context constants. [optional]
 	 *
 	 * @return  integer  The number of tokens inserted into the database.
 	 *

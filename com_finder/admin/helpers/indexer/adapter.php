@@ -531,7 +531,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 *
 	 * @param   integer  $id  The id of the content item.
 	 *
-	 * @return  object  A FinderIndexerResult object.
+	 * @return  FinderIndexerResult  A FinderIndexerResult object.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
@@ -648,7 +648,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 *
 	 * @param   string  $time  The modified timestamp.
 	 *
-	 * @return  object  A JDatabaseQuery object.
+	 * @return  JDatabaseQuery  A database object.
 	 *
 	 * @since   2.5
 	 */
@@ -668,7 +668,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 *
 	 * @param   array  $ids  The ids to load.
 	 *
-	 * @return  object  A JDatabaseQuery object.
+	 * @return  JDatabaseQuery  A database object.
 	 *
 	 * @since   2.5
 	 */
@@ -793,7 +793,7 @@ abstract class FinderIndexerAdapter extends JPlugin
 	 * indexer can use.
 	 *
 	 * @param   integer  $item      The item state.
-	 * @param   integer  $category  The category state if supplied.
+	 * @param   integer  $category  The category state. [optional]
 	 *
 	 * @return  integer  The translated indexer state.
 	 *
@@ -822,5 +822,8 @@ abstract class FinderIndexerAdapter extends JPlugin
 			case 1:
 				return 1;
 		}
+
+		// Shouldn't get this far, but return the original item just in case
+		return $item;
 	}
 }

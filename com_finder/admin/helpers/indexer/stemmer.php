@@ -31,7 +31,7 @@ abstract class FinderIndexerStemmer
 	 *
 	 * @param   string  $adapter  The type of stemmer to load.
 	 *
-	 * @return  object  A FinderIndexerStemmer.
+	 * @return  FinderIndexerStemmer  A FinderIndexerStemmer instance.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on invalid stemmer.

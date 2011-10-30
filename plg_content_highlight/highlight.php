@@ -21,10 +21,10 @@ jimport('joomla.application.component.helper');
 class PlgContentHighlight extends JPlugin
 {
 	/**
-	 * Method to catch the onAfterDispatch event.
+	 * Method to catch the onContentPrepare event.
 	 *
-	 * This is where we setup the click-through content highlighting for Finder
-	 * search results. The highlighting is done with JavaScript so we just
+	 * This is where we setup the click-through content highlighting for.
+	 * The highlighting is done with JavaScript so we just
 	 * need to check a few parameters and the JHtml behavior will do the rest.
 	 *
 	 * @param   string   $context   The context of the content being passed to the plugin.

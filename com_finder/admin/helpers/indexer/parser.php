@@ -23,7 +23,7 @@ abstract class FinderIndexerParser
 	 *
 	 * @param   string  $format  The type of parser to load.
 	 *
-	 * @return  object  A FinderIndexerParser.
+	 * @return  FinderIndexerParser  A FinderIndexerParser instance.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on invalid parser.

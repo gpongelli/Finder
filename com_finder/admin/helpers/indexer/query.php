@@ -1270,7 +1270,7 @@ class FinderIndexerQuery
 	 *
 	 * @param   object  $token  A FinderIndexerToken object.
 	 *
-	 * @return  object  A FinderIndexerToken object.
+	 * @return  FinderIndexerToken  A FinderIndexerToken object.
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.

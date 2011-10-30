@@ -26,7 +26,7 @@ class FinderIndexerHelper
 	 * The token stemmer object. The stemmer is set by whatever class
 	 * wishes to use it but it must be an instance of FinderIndexerStemmer.
 	 *
-	 * @var		object
+	 * @var		FinderIndexerStemmer
 	 * @since	2.5
 	 */
 	public static $stemmer;

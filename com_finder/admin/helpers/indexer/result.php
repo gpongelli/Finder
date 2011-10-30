@@ -349,7 +349,7 @@ class FinderIndexerResult
 	/**
 	 * Method to get the taxonomy maps for an item.
 	 *
-	 * @param   string  $branch  The taxonomy branch to get.
+	 * @param   string  $branch  The taxonomy branch to get. [optional]
 	 *
 	 * @return  array  An array of taxonomy maps.
 	 *
@@ -374,8 +374,8 @@ class FinderIndexerResult
 	 *
 	 * @param   string   $branch  The title of the taxonomy branch to add the node to.
 	 * @param   string   $title   The title of the taxonomy node.
-	 * @param   integer  $state   The published state of the taxonomy node.
-	 * @param   integer  $access  The access level of the taxonomy node.
+	 * @param   integer  $state   The published state of the taxonomy node. [optional]
+	 * @param   integer  $access  The access level of the taxonomy node. [optional]
 	 *
 	 * @return  void
 	 *
