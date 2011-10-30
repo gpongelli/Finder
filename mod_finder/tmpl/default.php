@@ -22,7 +22,7 @@ JLoader::register('FinderIndexerQuery', FINDER_PATH_INDEXER . '/query.php');
 $query = new FinderIndexerQuery(array('filter' => $params->get('f')));
 
 $suffix = $params->get('moduleclass_sfx');
-$output = '<input type="text" name="q" id="mod-finder-searchword" class="inputbox" size="' . $params->get('field_size', 20) . '" value="' . htmlspecialchars(JFactory::getApplication()->input->get('q')) . '" />';
+$output = '<input type="text" name="q" id="mod-finder-searchword" class="inputbox" size="' . $params->get('field_size', 20) . '" value="' . htmlspecialchars(JFactory::getApplication()->input->get('q', '', 'string')) . '" />';
 $button = '';
 $label = '';
 
