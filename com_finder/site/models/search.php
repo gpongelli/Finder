@@ -866,6 +866,7 @@ class FinderModelSearch extends JModelList
 			 * current terms which means we would have to loop through all of
 			 * the possibilities.
 			 */
+			//@TODO: In this foreach is where multi-word searches are failing
 			foreach ($this->requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
