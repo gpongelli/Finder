@@ -1150,15 +1150,15 @@ class FinderModelSearch extends JModelList
 		$options['empty'] = $params->get('allow_emptyquery', 0);
 
 		// Get the query language.
-		$options['language'] = !is_null($request->get('l')) ? $request->get('l', '', 'string') : $params->get('l');
+		$options['language'] = !is_null($request->get('l')) ? $request->get('l', '', 'cmd') : $params->get('l');
 		$options['language'] = $filter->clean($options['language'], 'cmd');
 
 		// Get the static taxonomy filters.
-		$options['filter'] = !is_null($request->get('f')) ? $request->get('f', '', 'string') : $params->get('f');
+		$options['filter'] = !is_null($request->get('f')) ? $request->get('f', '', 'int') : $params->get('f');
 		$options['filter'] = $filter->clean($options['filter'], 'int');
 
 		// Get the dynamic taxonomy filters.
-		$options['filters'] = !is_null($request->get('t')) ? $request->get('t', '', 'string') : $params->get('t');
+		$options['filters'] = !is_null($request->get('t')) ? $request->get('t', '', 'array') : $params->get('t');
 		$options['filters'] = $filter->clean($options['filters'], 'array');
 		JArrayHelper::toInteger($options['filters']);
 
