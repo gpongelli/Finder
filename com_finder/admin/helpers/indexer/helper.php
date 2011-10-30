@@ -201,7 +201,7 @@ class FinderIndexerHelper
 
 	/**
 	 * Method to get the base word of a token. This method uses the public
-	 * FinderIndexerHelper::$stemmer object if it is set. If no stemmer is set,
+	 * {@link FinderIndexerHelper::$stemmer} object if it is set. If no stemmer is set,
 	 * the original token is returned.
 	 *
 	 * @param   string  $token  The token to stem.

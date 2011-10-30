@@ -1268,7 +1268,7 @@ class FinderIndexerQuery
 	 * that term and we should try to find a similar term to use that we can
 	 * match so that we can suggest the alternative search query to the user.
 	 *
-	 * @param   object  $token  A FinderIndexerToken object.
+	 * @param   FinderIndexerToken  $token  A FinderIndexerToken object.
 	 *
 	 * @return  FinderIndexerToken  A FinderIndexerToken object.
 	 *
