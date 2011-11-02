@@ -218,7 +218,7 @@ class FinderModelSearch extends JModelList
 	protected function getListQuery()
 	{
 		// Get the store id.
-		$store = $this->getStoreId('getListQuery');
+		$store = $this->getStoreId('_getListQuery');
 
 		// Use the cached data if possible.
 		if ($this->retrieve($store, false))
