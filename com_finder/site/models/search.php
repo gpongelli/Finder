@@ -309,12 +309,12 @@ class FinderModelSearch extends JModelList
 			}
 		}
 
-		//Return a copy of the query object. Note that this code is left commented intentionally for the
-		// time being so th
+		// Note that the old code is left commented intentionally.
 		// Push the data into cache.
 		//$this->store($store, $query, false);
-		return clone($query);
 		// Return a copy of the query object.
+		return clone($query);
+
 		//return clone($this->retrieve($store, false));
 	}
 
