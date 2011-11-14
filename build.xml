@@ -43,12 +43,12 @@
 		<zip destfile="packages/files_finder_hathor.zip" basedir="files_finder_hathor" />
 		<zip destfile="packages/mod_finder.zip" basedir="mod_finder" />
 		<zip destfile="packages/mod_finder_status.zip" basedir="mod_finder_status" />
-		<zip destfile="packages/plg_content_highlight.zip" basedir="plg_content_highlight" />
 		<zip destfile="packages/plg_finder_categories.zip" basedir="plg_finder_categories" />
 		<zip destfile="packages/plg_finder_contacts.zip" basedir="plg_finder_contacts" />
 		<zip destfile="packages/plg_finder_content.zip" basedir="plg_finder_content" />
 		<zip destfile="packages/plg_finder_newsfeeds.zip" basedir="plg_finder_newsfeeds" />
 		<zip destfile="packages/plg_finder_weblinks.zip" basedir="plg_finder_weblinks" />
 		<zip destfile="packages/plg_system_finder.zip" basedir="plg_system_finder" />
+		<zip destfile="packages/plg_system_highlight.zip" basedir="plg_system_highlight" />
 	</target>
 </project>
