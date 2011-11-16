@@ -29,7 +29,7 @@ class Mod_Finder_StatusInstallerScript
 	function preflight($type, $parent)
 	{
 		// Check if Finder is installed
-		if (!JFolder::exists(JPATH_BASE.'/components/com_finder'))
+		if (!JFolder::exists(JPATH_BASE . '/components/com_finder'))
 		{
 			JError::raiseNotice(null, JText::_('MOD_FINDER_STATUS_ERROR_COMPONENT'));
 			return false;
@@ -66,13 +66,13 @@ class Mod_Finder_StatusInstallerScript
 
 		// Set the module configuration
 		$query->update($db->quoteName('#__modules'));
-		$query->set($db->quoteName('published').' = 1');
-		$query->set($db->quoteName('title').' = '.$db->quote(JText::_('MOD_FINDER_STATUS_TITLE')));
-		$query->set($db->quoteName('position').' = '.$db->quote('status'));
-		$query->set($db->quoteName('access').' = 3');
-		$query->set($db->quoteName('showtitle').' = 0');
-		$query->set($db->quoteName('ordering').' = 2');
-		$query->where($db->quoteName('module').' = '.$db->quote('mod_finder_status'));
+		$query->set($db->quoteName('published') . ' = 1');
+		$query->set($db->quoteName('title') . ' = ' . $db->quote(JText::_('MOD_FINDER_STATUS_TITLE')));
+		$query->set($db->quoteName('position') . ' = ' . $db->quote('status'));
+		$query->set($db->quoteName('access') . ' = 3');
+		$query->set($db->quoteName('showtitle') . ' = 0');
+		$query->set($db->quoteName('ordering') . ' = 2');
+		$query->where($db->quoteName('module') . ' = ' . $db->quote('mod_finder_status'));
 		$db->setQuery($query);
 		if (!$db->query())
 		{
@@ -83,7 +83,7 @@ class Mod_Finder_StatusInstallerScript
 		$query->clear();
 		$query->select($db->quoteName('id'));
 		$query->from($db->quoteName('#__modules'));
-		$query->where($db->quoteName('module').' = '.$db->quote('mod_finder_status'));
+		$query->where($db->quoteName('module') . ' = ' . $db->quote('mod_finder_status'));
 		$db->setQuery($query);
 		if (!$db->loadObject())
 		{
@@ -98,7 +98,7 @@ class Mod_Finder_StatusInstallerScript
 		// Publish the module
 		$query->clear();
 		$query->insert($db->quoteName('#__modules_menu'));
-		$query->values($moduleId.', 0');
+		$query->values($moduleId . ', 0');
 		$db->setQuery($query);
 		if (!$db->query())
 		{
