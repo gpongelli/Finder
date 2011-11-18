@@ -214,6 +214,7 @@ class FinderIndexerTaxonomy
 		// Insert the map.
 		$db = JFactory::getDBO();
 
+		//@TODO: PostgreSQL doesn't support REPLACE INTO
 		$db->setQuery(
 			'REPLACE INTO ' . $db->quoteName('#__finder_taxonomy_map') . ' SET' .
 			$db->quoteName('link_id') . ' = ' . (int) $linkId . ',' .
