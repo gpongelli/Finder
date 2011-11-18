@@ -380,6 +380,9 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterLinking') : null;
 
 		// Truncate the tokens tables.
+		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
+		//$query->clear();
+		//$query->truncate('#__finder_tokens');
 		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
 		$db->query();
 
@@ -391,6 +394,9 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
+		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
+		//$query->clear();
+		//$query->truncate('#__finder_tokens_aggregate');
 		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
 		$db->query();
 
@@ -692,6 +698,9 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterSigning') : null;
 
 		// Truncate the tokens tables.
+		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
+		//$query->clear();
+		//$query->truncate('#__finder_tokens');
 		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
 		$db->query();
 
@@ -703,6 +712,9 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
+		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
+		//$query->clear();
+		//$query->truncate('#__finder_tokens_aggregate');
 		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
 		$db->query();
 
