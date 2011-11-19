@@ -309,7 +309,7 @@ class FinderIndexer
 		{
 			// Insert the link.
 			$db->setQuery(
-				'INSERT INTO `#__finder_links`'
+				'INSERT INTO ' . $db->nameQuote('#__finder_links')
 				. ' SET url = ' . $db->quote($item->url)
 				. ', route = ' . $db->quote($item->route)
 				. ', title = ' . $db->quote($item->title)
@@ -344,7 +344,7 @@ class FinderIndexer
 		{
 			// Update the link.
 			$db->setQuery(
-				'UPDATE `#__finder_links`'
+				'UPDATE ' . $db->nameQuote('#__finder_links')
 				. ' SET route = ' . $db->quote($item->route)
 				. ', title = ' . $db->quote($item->title)
 				. ', description = ' . $db->quote($item->description)
@@ -380,7 +380,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterLinking') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens'));
 		$db->query();
 
 		// Check for a database error.
@@ -391,7 +391,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens_aggregate'));
 		$db->query();
 
 		// Check for a database error.
@@ -497,18 +497,25 @@ class FinderIndexer
 		 * aggregated data will be inserted into #__finder_tokens_aggregate
 		 * table.
 		 */
-		$query	= 'INSERT INTO `#__finder_tokens_aggregate`' .
-				' (`term_id`, `term`, `stem`, `common`, `phrase`, `term_weight`, `context`, `context_weight`)' .
+		$query	= 'INSERT INTO ' . $db->quoteName('#__finder_tokens_aggregate') .
+				' (' . $db->quoteName('term_id') .
+				', ' . $db->quoteName('term') .
+				', ' . $db->quoteName('stem') .
+				', ' . $db->quoteName('common') .
+				', ' . $db->quoteName('phrase') .
+				', ' . $db->quoteName('term_weight') .
+				', ' . $db->quoteName('context') .
+				', ' . $db->quoteName('context_weight') . ')' .
 				' SELECT' .
 				' t.term_id, t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context,' .
 				' ROUND( t1.weight * COUNT( t2.term ) * %F, 8 ) AS context_weight' .
 				' FROM (' .
 				'   SELECT DISTINCT t1.term, t1.stem, t1.common, t1.phrase, t1.weight, t1.context' .
-				'   FROM `#__finder_tokens` AS t1' .
+				'   FROM ' . $db->quoteName('#__finder_tokens') . ' AS t1' .
 				'   WHERE t1.context = %d' .
 				' ) AS t1' .
-				' JOIN `#__finder_tokens` AS t2 ON t2.term = t1.term' .
-				' LEFT JOIN `#__finder_terms` AS t ON t.term = t1.term' .
+				' JOIN ' . $db->quoteName('#__finder_tokens') . ' AS t2 ON t2.term = t1.term' .
+				' LEFT JOIN ' . $db->quoteName('#__finder_terms')  . ' AS t ON t.term = t1.term' .
 				' WHERE t2.context = %d' .
 				' GROUP BY t1.term' .
 				' ORDER BY t1.term DESC';
@@ -539,10 +546,15 @@ class FinderIndexer
 		 * term so we need to add it to the terms table.
 		 */
 		$db->setQuery(
-			'INSERT IGNORE INTO `#__finder_terms`' .
-			' (`term`, `stem`, `common`, `phrase`, `weight`, `soundex`)' .
+			'INSERT IGNORE INTO ' . $db->quoteName('#__finder_terms') .
+			' (' . $db->quoteName('term') .
+			', ' . $db->quoteName('stem') .
+			', ' . $db->quoteName('common') .
+			', ' . $db->quoteName('phrase') .
+			', ' . $db->quoteName('weight') .
+			', ' . $db->quoteName('soundex') . ')' .
 			' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-			' FROM `#__finder_tokens_aggregate` AS ta' .
+			' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
 			' WHERE ta.term_id = 0' .
 			' GROUP BY ta.term'
 		);
@@ -552,10 +564,15 @@ class FinderIndexer
 		if ($db->getErrorNum())
 		{
 			$db->setQuery(
-				'REPLACE INTO `#__finder_terms`' .
-				' (`term`, `stem`, `common`, `phrase`, `weight`, `soundex`)' .
+				'REPLACE INTO ' . $db->quoteName('#__finder_terms') .
+				' (' . $db->quoteName('term') .
+				', ' . $db->quoteName('stem') .
+				', ' . $db->quoteName('common') .
+				', ' . $db->quoteName('phrase') .
+				', ' . $db->quoteName('weight') .
+				', ' . $db->quoteName('soundex') . ')' .
 				' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-				' FROM `#__finder_tokens_aggregate` AS ta' .
+				' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
 				' WHERE ta.term_id = 0' .
 				' GROUP BY ta.term'
 			);
@@ -574,8 +591,8 @@ class FinderIndexer
 		 * new term ids.
 		 */
 		$db->setQuery(
-			'UPDATE `#__finder_tokens_aggregate` AS ta' .
-			' JOIN `#__finder_terms` AS t ON t.term = ta.term' .
+			'UPDATE ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
+			' JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = ta.term' .
 			' SET ta.term_id = t.term_id' .
 			' WHERE ta.term_id = 0'
 		);
@@ -622,7 +639,7 @@ class FinderIndexer
 		 */
 		$query->clear();
 		$query->update($db->quoteName('#__finder_tokens_aggregate'));
-		$query->set($db->quoteName('map_suffix') . ' = SUBSTR(MD5(SUBSTR(`term`, 1, 1)), 1, 1)');
+		$query->set($db->quoteName('map_suffix') . ' = SUBSTR(MD5(SUBSTR(' . $db->quoteName('term') . ', 1, 1)), 1, 1)');
 		$db->setQuery($query);
 		$db->query();
 
@@ -651,14 +668,16 @@ class FinderIndexer
 			 * mapping table.
 			 */
 			$db->setQuery(
-				'INSERT INTO `#__finder_links_terms' . $suffix . '`' .
-				' (`link_id`, `term_id`, `weight`)' .
-				' SELECT ' . (int) $linkId . ', `term_id`,' .
-				' ROUND(SUM(`context_weight`), 8)' .
-				' FROM `#__finder_tokens_aggregate`' .
-				' WHERE `map_suffix` = ' . $db->quote($suffix) .
-				' GROUP BY `term`' .
-				' ORDER BY `term` DESC'
+				'INSERT INTO ' . $db->quoteName('#__finder_links_terms' . $suffix) .
+				' (' . $db->quoteName('link_id') .
+				', ' . $db->quoteName('term_id') .
+				', ' . $db->quoteName('weight') . ')' .
+				' SELECT ' . (int) $linkId . ', ' . $db->quoteName('term_id') . ',' .
+				' ROUND(SUM(' . $db->quoteName('context_weight') . '), 8)' .
+				' FROM ' . $db->quoteName('#__finder_tokens_aggregate') .
+				' WHERE ' . $db->quoteName('map_suffix') . ' = ' . $db->quote($suffix) .
+				' GROUP BY ' . $db->quoteName('term') .
+				' ORDER BY ' . $db->quoteName('term') . ' DESC'
 			);
 			$db->query();
 
