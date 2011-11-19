@@ -599,7 +599,7 @@ class FinderIndexer
 		$query = $db->getQuery(true);
 		$query->update($db->quoteName('#__finder_terms') . ' AS t');
 		$query->join('INNER', $db->quoteName('#__finder_tokens_aggregate') . ' AS ta ON ta.term_id = t.term_id');
-		$query->set($db->quoteName('t.links') . ' = t.links + 1');
+		$query->set('t.' . $db->quoteName('links') . ' = t.links + 1');
 		$db->setQuery($query);
 		$db->query();
 
@@ -692,7 +692,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterSigning') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens'));
 		$db->query();
 
 		// Check for a database error.
@@ -703,7 +703,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens_aggregate'));
 		$db->query();
 
 		// Check for a database error.
@@ -752,8 +752,8 @@ class FinderIndexer
 			//$query->where($db->quoteName('m.link_id') . ' = ' . (int) $linkId);
 			$sql = 'UPDATE ' . $db->quoteName('#__finder_terms') . ' AS t' .
 					' INNER JOIN ' . $db->quoteName('#__finder_links_terms' . dechex($i)) . ' AS m ON m.term_id = t.term_id' .
-					' SET ' . $db->quoteName('t.links') . ' = ' . $db->quoteName('t.links') . ' - 1' .
-					' WHERE ' . $db->quoteName('m.link_id') . ' = ' . (int) $linkId;
+					' SET t.' . $db->quoteName('links') . ' = t.' . $db->quoteName('links') . ' - 1' .
+					' WHERE m.' . $db->quoteName('link_id') . ' = ' . (int) $linkId;
 			$db->setQuery($sql);
 			$db->query();
 
