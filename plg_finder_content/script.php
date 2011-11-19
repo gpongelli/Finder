@@ -42,8 +42,8 @@ class PlgFinderContentInstallerScript
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);
 		$query->update($db->quoteName('#__extensions'));
-		$query->set($db->quoteName('enabled').' = 1');
-		$query->where($db->quoteName('name').' = '.$db->quote('plg_finder_content'));
+		$query->set($db->quoteName('enabled') . ' = 1');
+		$query->where($db->quoteName('name') . ' = ' . $db->quote('plg_finder_content'));
 		$db->setQuery($query);
 		if (!$db->query())
 		{
