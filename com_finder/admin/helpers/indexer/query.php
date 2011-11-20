@@ -1334,9 +1334,11 @@ class FinderIndexerQuery
 		if (empty($token->matches))
 		{
 			// Create a database query to get the similar terms.
+			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 			$query->clear();
 			$query->select('DISTINCT t.term_id AS id, t.term AS term');
 			$query->from('#__finder_terms AS t');
+			//$query->where('t.soundex = ' . soundex($db->quote($token->term)));
 			$query->where('t.soundex = SOUNDEX(' . $db->quote($token->term) . ')');
 			$query->where('t.phrase = ' . (int) $token->phrase);
 

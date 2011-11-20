@@ -16,8 +16,8 @@
 	<files folder="packages">
 		<!-- The id for each extension is the element stored in the DB -->
 		<file type="component" id="com_finder">com_finder.zip</file>
-		<file type="file" id="finder_cli">files_finder_cli.zip</file>
-		<file type="file" id="finder_hathor">files_finder_hathor.zip</file>
+		<file type="file" id="files_finder_cli">files_finder_cli.zip</file>
+		<file type="file" id="files_finder_hathor">files_finder_hathor.zip</file>
 		<file type="module" id="mod_finder" client="site">mod_finder.zip</file>
 		<file type="module" id="mod_finder_status" client="administrator">mod_finder_status.zip</file>
 		<file type="plugin" id="categories" group="finder">plg_finder_categories.zip</file>

@@ -308,6 +308,27 @@ class FinderIndexer
 		if ($isNew)
 		{
 			// Insert the link.
+			//@TODO: Implement this
+			/*$query->clear();
+			$query->insert('$__finder_links');
+			$query->set('url = ' . $db->quote($item->url));
+			$query->set('route = ' . $db->quote($item->route));
+			$query->set('title = ' . $db->quote($item->title));
+			$query->set('description = ' . $db->quote($item->description));
+			$query->set('indexdate = NOW()');
+			$query->set('published = 1');
+			$query->set('state = ' . (int) $item->state);
+			$query->set('access = ' . (int) $item->access);
+			$query->set('language = ' . $db->quote($item->language));
+			$query->set('type_id = ' . (int) $item->type_id);
+			$query->set('object = ' . $db->quote(serialize($item)));
+			$query->set('publish_start_date = ' . $db->quote($item->publish_start_date));
+			$query->set('publish_end_date = ' . $db->quote($item->publish_end_date));
+			$query->set('start_date = ' . $db->quote($item->start_date));
+			$query->set('end_date = ' . $db->quote($item->end_date));
+			$query->set('list_price = ' . $db->quote($item->list_price));
+			$query->set('sale_price = ' . $db->quote($item->sale_price));
+			$db->setQuery($query);*/
 			$db->setQuery(
 				'INSERT INTO ' . $db->nameQuote('#__finder_links')
 				. ' SET url = ' . $db->quote($item->url)
@@ -343,6 +364,26 @@ class FinderIndexer
 		else
 		{
 			// Update the link.
+			//@TODO: Implement this
+			/*$query->clear();
+			$query->update('$__finder_links');
+			$query->set('route = ' . $db->quote($item->route));
+			$query->set('title = ' . $db->quote($item->title));
+			$query->set('description = ' . $db->quote($item->description));
+			$query->set('indexdate = NOW()');
+			$query->set('state = ' . (int) $item->state);
+			$query->set('access = ' . (int) $item->access);
+			$query->set('language = ' . $db->quote($item->language));
+			$query->set('type_id = ' . (int) $item->type_id);
+			$query->set('object = ' . $db->quote(serialize($item)));
+			$query->set('publish_start_date = ' . $db->quote($item->publish_start_date));
+			$query->set('publish_end_date = ' . $db->quote($item->publish_end_date));
+			$query->set('start_date = ' . $db->quote($item->start_date));
+			$query->set('end_date = ' . $db->quote($item->end_date));
+			$query->set('list_price = ' . $db->quote($item->list_price));
+			$query->set('sale_price = ' . $db->quote($item->sale_price));
+			$query->where('link_id = ' . (int) $linkId);
+			$db->setQuery($query);*/
 			$db->setQuery(
 				'UPDATE ' . $db->nameQuote('#__finder_links')
 				. ' SET route = ' . $db->quote($item->route)
@@ -545,6 +586,8 @@ class FinderIndexer
 		 * table have a term of 0, then no term record exists for that
 		 * term so we need to add it to the terms table.
 		 */
+		//@TODO: PostgreSQL doesn't support INSERT IGNORE INTO
+		//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 		$db->setQuery(
 			'INSERT IGNORE INTO ' . $db->quoteName('#__finder_terms') .
 			' (' . $db->quoteName('term') .
@@ -563,6 +606,8 @@ class FinderIndexer
 		// Check for a database error.
 		if ($db->getErrorNum())
 		{
+			//@TODO: PostgreSQL doesn't support REPLACE INTO
+			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 			$db->setQuery(
 				'REPLACE INTO ' . $db->quoteName('#__finder_terms') .
 				' (' . $db->quoteName('term') .
@@ -590,6 +635,13 @@ class FinderIndexer
 		 * so we need to go back and update the aggregate table with all the
 		 * new term ids.
 		 */
+		//@TODO: Convert to JDatabaseQuery
+		/*$query->clear();
+		$query->update('#__finder_tokens_aggregate AS ta');
+		$query->join('INNER', '#__finder_terms AS t ON t.term = ta.term');
+		$query->set('ta.term_id = t.term_id');
+		$query->where('ta.term_id = 0');
+		$db->setQuery($query);*/
 		$db->setQuery(
 			'UPDATE ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
 			' JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = ta.term' .
@@ -667,6 +719,7 @@ class FinderIndexer
 			 * We have to run this query 16 times, one for each link => term
 			 * mapping table.
 			 */
+			//@TODO: Convert to JDatabaseQuery
 			$db->setQuery(
 				'INSERT INTO ' . $db->quoteName('#__finder_links_terms' . $suffix) .
 				' (' . $db->quoteName('link_id') .
@@ -871,6 +924,7 @@ class FinderIndexer
 		}
 
 		// Optimize the links table.
+		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
 		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links'));
 		$db->query();
 
@@ -884,6 +938,7 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Optimize the terms mapping table.
+			//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
 			$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms' . dechex($i)));
 			$db->query();
 
@@ -896,6 +951,7 @@ class FinderIndexer
 		}
 
 		// Optimize the terms mapping table.
+		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
 		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms'));
 		$db->query();
 
@@ -910,6 +966,7 @@ class FinderIndexer
 		FinderIndexerTaxonomy::removeOrphanNodes();
 
 		// Optimize the taxonomy mapping table.
+		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
 		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_taxonomy_map'));
 		$db->query();
 
@@ -1162,6 +1219,7 @@ class FinderIndexer
 	 *
 	 * @since   2.5
 	 * @throws  Exception on database error.
+	 * @todo    PostgreSQL doesn't support setting ENGINEs, determine how to handle setting tables
 	 */
 	protected static function toggleTables($memory)
 	{
