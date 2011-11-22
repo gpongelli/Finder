@@ -338,10 +338,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the tokens tables.
-		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
-		//$query->clear();
-		//$query->truncate('#__finder_tokens');
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens'));
 		$db->query();
 
 		// Check for a database error.
@@ -352,10 +349,7 @@ class FinderModelIndex extends JModelList
 		}
 
 		// Truncate the tokens aggregate table.
-		//@TODO: Convert to JDatabaseQuery once implemented in Platform/CMS
-		//$query->clear();
-		//$query->truncate('#__finder_tokens_aggregate');
-		$db->setQuery('TRUNCATE TABLE `#__finder_tokens_aggregate`');
+		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens_aggregate'));
 		$db->query();
 
 		// Check for a database error.
