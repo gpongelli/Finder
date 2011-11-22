@@ -330,7 +330,7 @@ class FinderIndexer
 			$query->set('sale_price = ' . $db->quote($item->sale_price));
 			$db->setQuery($query);*/
 			$db->setQuery(
-				'INSERT INTO ' . $db->nameQuote('#__finder_links')
+				'INSERT INTO ' . $db->quoteName('#__finder_links')
 				. ' SET url = ' . $db->quote($item->url)
 				. ', route = ' . $db->quote($item->route)
 				. ', title = ' . $db->quote($item->title)
@@ -385,7 +385,7 @@ class FinderIndexer
 			$query->where('link_id = ' . (int) $linkId);
 			$db->setQuery($query);*/
 			$db->setQuery(
-				'UPDATE ' . $db->nameQuote('#__finder_links')
+				'UPDATE ' . $db->quoteName('#__finder_links')
 				. ' SET route = ' . $db->quote($item->route)
 				. ', title = ' . $db->quote($item->title)
 				. ', description = ' . $db->quote($item->description)
