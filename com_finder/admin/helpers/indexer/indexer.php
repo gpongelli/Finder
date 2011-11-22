@@ -588,7 +588,24 @@ class FinderIndexer
 		 */
 		//@TODO: PostgreSQL doesn't support INSERT IGNORE INTO
 		//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
-		$db->setQuery(
+
+		$queryInsIgn = 'INSERT INTO ' . $db->quoteName('#__finder_terms') .
+						' (' . $db->quoteName('term') .
+						', ' . $db->quoteName('stem') .
+						', ' . $db->quoteName('common') .
+						', ' . $db->quoteName('phrase') .
+						', ' . $db->quoteName('weight') .
+						', ' . $db->quoteName('soundex') . ')' .
+						' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
+						' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
+						' WHERE 1 NOT IN ' .
+								'( SELECT 1 FROM ' . $db->quoteName('#__finder_terms') .
+								' WHERE ta.term_id = 0 )' .
+						' AND ta.term_id = 0' .
+						' GROUP BY ta.term';
+
+		$db->setQuery($queryInsIgn);
+		/*$db->setQuery(
 			'INSERT IGNORE INTO ' . $db->quoteName('#__finder_terms') .
 			' (' . $db->quoteName('term') .
 			', ' . $db->quoteName('stem') .
@@ -600,15 +617,66 @@ class FinderIndexer
 			' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
 			' WHERE ta.term_id = 0' .
 			' GROUP BY ta.term'
-		);
+		);*/
 		$db->query();
 
 		// Check for a database error.
 		if ($db->getErrorNum())
 		{
+			$query->clear();
+			$query->select('ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)')
+					->from($db->quoteName('#__finder_tokens_aggregate') . ' AS ta')
+					->where('ta.term_id = 0');
+			$db->setQuery($query);
+			$subQuVal = $db->loadObject();
+
+			$quRepl_p1 = 'UPDATE ' . $db->quoteName('#__finder_terms') . ' AS ta' .
+							' SET ' .
+								' (' . $db->quoteName('term') .
+								', ' . $db->quoteName('stem') .
+								', ' . $db->quoteName('common') .
+								', ' . $db->quoteName('phrase') .
+								', ' . $db->quoteName('weight') .
+								', ' . $db->quoteName('soundex') . ')' .
+							' = ' .
+								' (' . $db->quote($subQuVal->term) .
+								', ' . $db->quote($subQuVal->stem) .
+								', ' . $db->quote($subQuVal->common) .
+								', ' . $db->quote($subQuVal->phrase) .
+								', ' . $db->quote($subQuVal->weight) .
+								', ' . $db->quote($subQuVal->soundex) . ')' .
+							' WHERE ' .
+									$db->quoteName('term') . ' = ' . $db->quote($subQuVal->term) . ' AND ' .
+									$db->quoteName('stem') . ' = ' . $db->quote($subQuVal->stem) . ' AND ' .
+									$db->quoteName('common') . ' = ' . $db->quote($subQuVal->common) . ' AND ' .
+									$db->quoteName('phrase') . ' = ' . $db->quote($subQuVal->phrase) . ' AND ' .
+									$db->quoteName('weight') . ' = ' . $db->quote($subQuVal->weight) . ' AND ' .
+									$db->quoteName('soundex') . ' = ' . $db->quote($subQuVal->soundex);
+
+			$db->setQuery($quRepl_p1);
+			$db->query();
+
+			$quRepl_p2 = 'INSERT INTO ' . $db->quoteName('#__finder_terms') .
+						' (' . $db->quoteName('term') .
+								', ' . $db->quoteName('stem') .
+								', ' . $db->quoteName('common') .
+								', ' . $db->quoteName('phrase') .
+								', ' . $db->quoteName('weight') .
+								', ' . $db->quoteName('soundex') . ')' .
+						' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
+						' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
+						' WHERE 1 NOT IN ' .
+								'( SELECT 1 FROM ' . $db->quoteName('#__finder_terms') .
+								' WHERE ta.term_id = 0 )' .
+						' AND ta.term_id = 0' .
+						' GROUP BY ta.term';
+
+			$db->setQuery($quRepl_p2);
+			$db->query();
+
 			//@TODO: PostgreSQL doesn't support REPLACE INTO
 			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
-			$db->setQuery(
+			/*$db->setQuery(
 				'REPLACE INTO ' . $db->quoteName('#__finder_terms') .
 				' (' . $db->quoteName('term') .
 				', ' . $db->quoteName('stem') .
@@ -621,7 +689,7 @@ class FinderIndexer
 				' WHERE ta.term_id = 0' .
 				' GROUP BY ta.term'
 			);
-			$db->query();
+			$db->query();*/
 
 			// Check for a database error.
 			if ($db->getErrorNum())
