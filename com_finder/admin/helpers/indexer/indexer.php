@@ -309,27 +309,28 @@ class FinderIndexer
 		{
 			// Insert the link.
 			//@TODO: Implement this
-			/*$query->clear();
-			$query->insert('$__finder_links');
-			$query->set('url = ' . $db->quote($item->url));
-			$query->set('route = ' . $db->quote($item->route));
-			$query->set('title = ' . $db->quote($item->title));
-			$query->set('description = ' . $db->quote($item->description));
-			$query->set('indexdate = NOW()');
-			$query->set('published = 1');
-			$query->set('state = ' . (int) $item->state);
-			$query->set('access = ' . (int) $item->access);
-			$query->set('language = ' . $db->quote($item->language));
-			$query->set('type_id = ' . (int) $item->type_id);
-			$query->set('object = ' . $db->quote(serialize($item)));
-			$query->set('publish_start_date = ' . $db->quote($item->publish_start_date));
-			$query->set('publish_end_date = ' . $db->quote($item->publish_end_date));
-			$query->set('start_date = ' . $db->quote($item->start_date));
-			$query->set('end_date = ' . $db->quote($item->end_date));
-			$query->set('list_price = ' . $db->quote($item->list_price));
-			$query->set('sale_price = ' . $db->quote($item->sale_price));
-			$db->setQuery($query);*/
-			$db->setQuery(
+			$query->clear();
+			$query->insert($db->qn('$__finder_links'));
+			$query->set($db->qn('url') . ' = ' . $db->quote($item->url));
+			$query->set($db->qn('route') . ' = ' . $db->quote($item->route));
+			$query->set($db->qn('title') . ' = ' . $db->quote($item->title));
+			$query->set($db->qn('description') . ' = ' . $db->quote($item->description));
+			$query->set($db->qn('indexdate') . ' = ' . $query->currentTimestamp());
+			$query->set($db->qn('published') . ' = 1');
+			$query->set($db->qn('state') . ' = ' . (int) $item->state);
+			$query->set($db->qn('access') . ' = ' . (int) $item->access);
+			$query->set($db->qn('language') . ' = ' . $db->quote($item->language));
+			$query->set($db->qn('type_id') . ' = ' . (int) $item->type_id);
+			$query->set($db->qn('object') . ' = ' . $db->quote(serialize($item)));
+			$query->set($db->qn('publish_start_date') . ' = ' . $db->quote($item->publish_start_date));
+			$query->set($db->qn('publish_end_date') . ' = ' . $db->quote($item->publish_end_date));
+			$query->set($db->qn('start_date') . ' = ' . $db->quote($item->start_date));
+			$query->set($db->qn('end_date') . ' = ' . $db->quote($item->end_date));
+			$query->set($db->qn('list_price') . ' = ' . $db->quote($item->list_price));
+			$query->set($db->qn('sale_price') . ' = ' . $db->quote($item->sale_price));
+			$db->setQuery($query);
+
+			/*$db->setQuery(
 				'INSERT INTO ' . $db->nameQuote('#__finder_links')
 				. ' SET url = ' . $db->quote($item->url)
 				. ', route = ' . $db->quote($item->route)
@@ -348,7 +349,7 @@ class FinderIndexer
 				. ', end_date = ' . $db->quote($item->end_date)
 				. ', list_price = ' . $db->quote($item->list_price)
 				. ', sale_price = ' . $db->quote($item->sale_price)
-			);
+			);*/
 			$db->query();
 
 			// Check for a database error.
@@ -365,26 +366,27 @@ class FinderIndexer
 		{
 			// Update the link.
 			//@TODO: Implement this
-			/*$query->clear();
-			$query->update('$__finder_links');
-			$query->set('route = ' . $db->quote($item->route));
-			$query->set('title = ' . $db->quote($item->title));
-			$query->set('description = ' . $db->quote($item->description));
-			$query->set('indexdate = NOW()');
-			$query->set('state = ' . (int) $item->state);
-			$query->set('access = ' . (int) $item->access);
-			$query->set('language = ' . $db->quote($item->language));
-			$query->set('type_id = ' . (int) $item->type_id);
-			$query->set('object = ' . $db->quote(serialize($item)));
-			$query->set('publish_start_date = ' . $db->quote($item->publish_start_date));
-			$query->set('publish_end_date = ' . $db->quote($item->publish_end_date));
-			$query->set('start_date = ' . $db->quote($item->start_date));
-			$query->set('end_date = ' . $db->quote($item->end_date));
-			$query->set('list_price = ' . $db->quote($item->list_price));
-			$query->set('sale_price = ' . $db->quote($item->sale_price));
+			$query->clear();
+			$query->update($db->qn('$__finder_links'));
+			$query->set($db->qn('route') . ' = ' . $db->quote($item->route));
+			$query->set($db->qn('title') . ' = ' . $db->quote($item->title));
+			$query->set($db->qn('description') . ' = ' . $db->quote($item->description));
+			$query->set($db->qn('indexdate') . ' = ' . $query->currentTimestamp());
+			$query->set($db->qn('state') . ' = ' . (int) $item->state);
+			$query->set($db->qn('access') . ' = ' . (int) $item->access);
+			$query->set($db->qn('language') . ' = ' . $db->quote($item->language));
+			$query->set($db->qn('type_id') . ' = ' . (int) $item->type_id);
+			$query->set($db->qn('object') . ' = ' . $db->quote(serialize($item)));
+			$query->set($db->qn('publish_start_date') . ' = ' . $db->quote($item->publish_start_date));
+			$query->set($db->qn('publish_end_date') . ' = ' . $db->quote($item->publish_end_date));
+			$query->set($db->qn('start_date') . ' = ' . $db->quote($item->start_date));
+			$query->set($db->qn('end_date') . ' = ' . $db->quote($item->end_date));
+			$query->set($db->qn('list_price') . ' = ' . $db->quote($item->list_price));
+			$query->set($db->qn('sale_price') . ' = ' . $db->quote($item->sale_price));
 			$query->where('link_id = ' . (int) $linkId);
-			$db->setQuery($query);*/
-			$db->setQuery(
+			$db->setQuery($query);
+
+			/*$db->setQuery(
 				'UPDATE ' . $db->nameQuote('#__finder_links')
 				. ' SET route = ' . $db->quote($item->route)
 				. ', title = ' . $db->quote($item->title)
@@ -402,7 +404,7 @@ class FinderIndexer
 				. ', list_price = ' . $db->quote($item->list_price)
 				. ', sale_price = ' . $db->quote($item->sale_price)
 				. ' WHERE link_id = ' . (int) $linkId
-			);
+			);*/
 			$db->query();
 
 			// Check for a database error.
@@ -1259,11 +1261,14 @@ class FinderIndexer
 		}
 
 		// Insert the tokens into the database.
-		$query->insert(
-					$db->quoteName('#__finder_tokens')
-					. '(' . $db->quoteName('term') . ', ' . $db->quoteName('stem') . ', ' . $db->quoteName('common') . ','
-					. $db->quoteName('phrase') . ', ' . $db->quoteName('weight') . ', ' . $db->quoteName('context') . ')'
-		);
+		$query->insert($db->quoteName('#__finder_tokens'));
+		$query->columns($db->quoteName('term'));
+		$query->columns($db->quoteName('stem'));
+		$query->columns($db->quoteName('common'));
+		$query->columns($db->quoteName('phrase'));
+		$query->columns($db->quoteName('weight'));
+		$query->columns($db->quoteName('context'));
+
 		$db->setQuery($query);
 		$db->query();
 
