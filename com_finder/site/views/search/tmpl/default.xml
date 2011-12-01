@@ -6,7 +6,7 @@
 		</message>
 	</layout>
 
-	<fields name="request" addpath="/administrator/components/com_finder/models/fields">
+	<fields name="request" addfieldpath="/administrator/components/com_finder/models/fields">
 		<fieldset name="request">
 			<field name="q"
 				type="text"
@@ -22,7 +22,7 @@
 			/>
 		</fieldset>
 	</fields>
-	<fields name="params" addpath="/administrator/components/com_finder/models/fields">
+	<fields name="params" addfieldpath="/administrator/components/com_finder/models/fields">
 		<fieldset name="basic">
 			<field name="show_date_filters"
 				type="list"
