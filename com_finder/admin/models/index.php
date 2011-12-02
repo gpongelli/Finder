@@ -145,12 +145,10 @@ class FinderModelIndex extends JModelList
 					if ($error)
 					{
 						$this->setError($error);
-						//JError::raiseWarning(500, $error);
 					}
 					else
 					{
 						$this->setError(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
-						//JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
 					}
 				}
 			}
@@ -411,7 +409,6 @@ class FinderModelIndex extends JModelList
 					// Prune items that you can't change.
 					unset($pks[$i]);
 					$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-					//JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 					return false;
 				}
 			}
