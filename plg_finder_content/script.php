@@ -25,7 +25,7 @@ class PlgFinderContentInstallerScript
 	 *
 	 * @since   2.5
 	 */
-	function install($parent)
+	public function install($parent)
 	{
 		$this->activateButton();
 	}
@@ -37,7 +37,7 @@ class PlgFinderContentInstallerScript
 	 *
 	 * @since   2.5
 	 */
-	function activateButton()
+	protected function activateButton()
 	{
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);

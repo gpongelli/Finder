@@ -26,7 +26,7 @@ class Mod_Finder_StatusInstallerScript
 	 *
 	 * @since   2.5
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, $parent)
 	{
 		// Check if Finder is installed
 		if (!JFolder::exists(JPATH_BASE . '/components/com_finder'))
@@ -47,7 +47,7 @@ class Mod_Finder_StatusInstallerScript
 	 *
 	 * @since   2.5
 	 */
-	function install($parent)
+	public function install($parent)
 	{
 		$this->activateModule();
 	}
@@ -59,7 +59,7 @@ class Mod_Finder_StatusInstallerScript
 	 *
 	 * @since   2.5
 	 */
-	function activateModule()
+	protected function activateModule()
 	{
 		$db = JFactory::getDBO();
 		$query	= $db->getQuery(true);

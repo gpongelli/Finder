@@ -172,7 +172,7 @@ class FinderModelIndex extends JModelList
 	 *
 	 * @since   2.5
 	 */
-	function getListQuery()
+	protected function getListQuery()
 	{
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
@@ -386,7 +386,7 @@ class FinderModelIndex extends JModelList
 	 *
 	 * @since   2.5
 	 */
-	function publish(&$pks, $value = 1)
+	public function publish(&$pks, $value = 1)
 	{
 		// Initialise variables.
 		$dispatcher = JDispatcher::getInstance();
