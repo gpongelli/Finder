@@ -9,12 +9,6 @@
 
 defined('_JEXEC') or die;
 
-// Detect if we have full UTF-8 and unicode support.
-if (!defined('JX_FINDER_UNICODE'))
-{
-	define('JX_FINDER_UNICODE', (bool) @preg_match('/\pL/u', 'a'));
-}
-
 // Register dependent classes.
 JLoader::register('FinderIndexerHelper', dirname(__FILE__) . '/helper.php');
 JLoader::register('FinderIndexerParser', dirname(__FILE__) . '/parser.php');
@@ -513,7 +507,7 @@ class FinderIndexer
 				'   WHERE t1.context = %d' .
 				' ) AS t1' .
 				' JOIN ' . $db->quoteName('#__finder_tokens') . ' AS t2 ON t2.term = t1.term' .
-				' LEFT JOIN ' . $db->quoteName('#__finder_terms')  . ' AS t ON t.term = t1.term' .
+				' LEFT JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = t1.term' .
 				' WHERE t2.context = %d' .
 				' GROUP BY t1.term' .
 				' ORDER BY t1.term DESC';
