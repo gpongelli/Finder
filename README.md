@@ -24,4 +24,8 @@ Contributing
 
 Known Issues
 ===============
+
 A list of known issues can be found on the Issues Tracker.  Additionally, when running the CLI script, it appears that the port must be specified with your database host info in your site configuration.
+
+Currently the indexer can not run on MySQLi. Please edit the libraries/joomla/database/mysqli/mysqli.php. Please edit the condition of the destructor
+to be is_resource rather than is_object.
