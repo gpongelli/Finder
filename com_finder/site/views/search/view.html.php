@@ -20,6 +20,11 @@ jimport('joomla.application.component.view');
  */
 class FinderViewSearch extends JView
 {
+	protected $query;
+	protected $params;
+	protected $state;
+	protected $user;
+
 	/**
 	 * Method to display the view.
 	 *
