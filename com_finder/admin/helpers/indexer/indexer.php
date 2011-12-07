@@ -299,6 +299,10 @@ class FinderIndexer
 		 * already exists in the database, we need to use an UPDATE query.
 		 * Otherwise, we need to use an INSERT to get the link id back.
 		 */
+
+		// Get the current time for the queries
+		$now = JFactory::getDate();
+
 		if ($isNew)
 		{
 			// Insert the link.
@@ -308,7 +312,7 @@ class FinderIndexer
 			$query->set('route = ' . $db->quote($item->route));
 			$query->set('title = ' . $db->quote($item->title));
 			$query->set('description = ' . $db->quote($item->description));
-			$query->set('indexdate = NOW()');
+			$query->set('indexdate = ' . $db->quote($now));
 			$query->set('published = 1');
 			$query->set('state = ' . (int) $item->state);
 			$query->set('access = ' . (int) $item->access);
@@ -342,7 +346,7 @@ class FinderIndexer
 			$query->set('route = ' . $db->quote($item->route));
 			$query->set('title = ' . $db->quote($item->title));
 			$query->set('description = ' . $db->quote($item->description));
-			$query->set('indexdate = NOW()');
+			$query->set('indexdate = ' . $db->quote($now));
 			$query->set('state = ' . (int) $item->state);
 			$query->set('access = ' . (int) $item->access);
 			$query->set('language = ' . $db->quote($item->language));
