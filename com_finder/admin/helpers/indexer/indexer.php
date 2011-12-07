@@ -302,26 +302,34 @@ class FinderIndexer
 
 		if ($isNew)
 		{
+			$columnsArray = array(
+				$db->quoteName('url'), $db->quoteName('route'), $db->quoteName('title'), $db->quoteName('description'),
+				$db->quoteName('indexdate'), $db->quoteName('published'), $db->quoteName('state'), $db->quoteName('access'),
+				$db->quoteName('language'), $db->quoteName('type_id'), $db->quoteName('object'), $db->quoteName('publish_start_date'),
+				$db->quoteName('publish_end_date'), $db->quoteName('start_date'), $db->quoteName('end_date'), $db->quoteName('list_price'),
+				$db->quoteName('sale_price')
+			);
 			// Insert the link.
 			$query->clear();
-			$query->insert('#__finder_links');
-			$query->set('url = ' . $db->quote($item->url));
-			$query->set('route = ' . $db->quote($item->route));
-			$query->set('title = ' . $db->quote($item->title));
-			$query->set('description = ' . $db->quote($item->description));
-			$query->set('indexdate = ' . $query->currentTimestamp());
-			$query->set('published = 1');
-			$query->set('state = ' . (int) $item->state);
-			$query->set('access = ' . (int) $item->access);
-			$query->set('language = ' . $db->quote($item->language));
-			$query->set('type_id = ' . (int) $item->type_id);
-			$query->set('object = ' . $db->quote(serialize($item)));
-			$query->set('publish_start_date = ' . $db->quote($item->publish_start_date));
-			$query->set('publish_end_date = ' . $db->quote($item->publish_end_date));
-			$query->set('start_date = ' . $db->quote($item->start_date));
-			$query->set('end_date = ' . $db->quote($item->end_date));
-			$query->set('list_price = ' . $db->quote($item->list_price));
-			$query->set('sale_price = ' . $db->quote($item->sale_price));
+			$query->insert($db->quoteName('#__finder_links'));
+			$query->columns($columnsArray);
+			$query->values($db->quote($item->url));
+			$query->values($db->quote($item->route));
+			$query->values($db->quote($item->title));
+			$query->values($db->quote($item->description));
+			$query->values($query->currentTimestamp());
+			$query->values('1');
+			$query->values((int) $item->state);
+			$query->values((int) $item->access);
+			$query->values($db->quote($item->language));
+			$query->values((int) $item->type_id);
+			$query->values($db->quote(serialize($item)));
+			$query->values($db->quote($item->publish_start_date));
+			$query->values($db->quote($item->publish_end_date));
+			$query->values($db->quote($item->start_date));
+			$query->values($db->quote($item->end_date));
+			$query->values($db->quote($item->list_price));
+			$query->values($db->quote($item->sale_price));
 			$db->setQuery($query);
 			$db->query();
 
