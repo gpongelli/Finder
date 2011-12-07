@@ -1142,8 +1142,8 @@ class FinderIndexer
 		// Force tokens to an array.
 		$tokens = is_array($tokens) ? $tokens : array($tokens);
 
-		// Create an array of token values.
-		$values = array();
+		// Count the number of token values.
+		$values = 0;
 
 		// Iterate through the tokens to create SQL value sets.
 		foreach ($tokens as $token)
@@ -1156,6 +1156,7 @@ class FinderIndexer
 				. (float) $token->weight . ', '
 				. (int) $context
 			);
+			$values++;
 		}
 
 		// Insert the tokens into the database.
