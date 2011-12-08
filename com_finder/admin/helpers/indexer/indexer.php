@@ -652,7 +652,6 @@ class FinderIndexer
 		 * so we need to go back and update the aggregate table with all the
 		 * new term ids.
 		 */
-		//@TODO: PostgreSQL doesn't support JOINs on an UPDATE query
 		$query = $db->getQuery(true);
 		$query->update($db->quoteName('#__finder_tokens_aggregate') . ' AS ta');
 		$query->join('INNER', $db->quoteName('#__finder_terms') . ' AS t ON t.term = ta.term');
@@ -676,7 +675,6 @@ class FinderIndexer
 		 * and the aggregate table has the correct term ids, we need to update
 		 * the links counter for each term by one.
 		 */
-		//@TODO: PostgreSQL doesn't support JOINs on an UPDATE query
 		$query->clear();
 		$query->update($db->quoteName('#__finder_terms') . ' AS t');
 		$query->join('INNER', $db->quoteName('#__finder_tokens_aggregate') . ' AS ta ON ta.term_id = t.term_id');
@@ -826,7 +824,6 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Update the link counts for the terms.
-			//@TODO: PostgreSQL doesn't support JOINs on a UPDATE query
 			$query->update($db->quoteName('#__finder_terms') . ' AS t');
 			$query->join('INNER', $db->quoteName('#__finder_links_terms' . dechex($i)) . ' AS m ON m.term_id = t.term_id');
 			$query->set('t.' . $db->quoteName('links') . ' = t.' . $db->quoteName('links') . ' - 1');
