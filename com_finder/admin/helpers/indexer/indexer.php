@@ -549,7 +549,6 @@ class FinderIndexer
 		 * table have a term of 0, then no term record exists for that
 		 * term so we need to add it to the terms table.
 		 */
-		//@TODO: PostgreSQL doesn't support INSERT IGNORE INTO
 		//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 
 		$queryInsIgn = 'INSERT INTO ' . $db->quoteName('#__finder_terms') .
@@ -568,19 +567,6 @@ class FinderIndexer
 						' GROUP BY ta.term';
 
 		$db->setQuery($queryInsIgn);
-		/*$db->setQuery(
-			'INSERT IGNORE INTO ' . $db->quoteName('#__finder_terms') .
-			' (' . $db->quoteName('term') .
-			', ' . $db->quoteName('stem') .
-			', ' . $db->quoteName('common') .
-			', ' . $db->quoteName('phrase') .
-			', ' . $db->quoteName('weight') .
-			', ' . $db->quoteName('soundex') . ')' .
-			' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-			' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
-			' WHERE ta.term_id = 0' .
-			' GROUP BY ta.term'
-		);*/
 		$db->query();
 
 		// Check for a database error.
