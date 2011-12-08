@@ -350,7 +350,7 @@ class FinderIndexer
 			// Update the link.
 			//@TODO: Implement this
 			$query->clear();
-			$query->update($db->qn('$__finder_links'));
+			$query->update($db->qn('#__finder_links'));
 			$query->set($db->qn('route') . ' = ' . $db->quote($item->route));
 			$query->set($db->qn('title') . ' = ' . $db->quote($item->title));
 			$query->set($db->qn('description') . ' = ' . $db->quote($item->description));
