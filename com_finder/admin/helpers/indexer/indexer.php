@@ -9,12 +9,6 @@
 
 defined('_JEXEC') or die;
 
-// Detect if we have full UTF-8 and unicode support.
-if (!defined('JX_FINDER_UNICODE'))
-{
-	define('JX_FINDER_UNICODE', (bool) @preg_match('/\pL/u', 'a'));
-}
-
 // Register dependent classes.
 JLoader::register('FinderIndexerHelper', dirname(__FILE__) . '/helper.php');
 JLoader::register('FinderIndexerParser', dirname(__FILE__) . '/parser.php');
@@ -305,51 +299,40 @@ class FinderIndexer
 		 * already exists in the database, we need to use an UPDATE query.
 		 * Otherwise, we need to use an INSERT to get the link id back.
 		 */
+
 		if ($isNew)
 		{
+			$columnsArray = array(
+				$db->quoteName('url'), $db->quoteName('route'), $db->quoteName('title'), $db->quoteName('description'),
+				$db->quoteName('indexdate'), $db->quoteName('published'), $db->quoteName('state'), $db->quoteName('access'),
+				$db->quoteName('language'), $db->quoteName('type_id'), $db->quoteName('object'), $db->quoteName('publish_start_date'),
+				$db->quoteName('publish_end_date'), $db->quoteName('start_date'), $db->quoteName('end_date'), $db->quoteName('list_price'),
+				$db->quoteName('sale_price')
+			);
 			// Insert the link.
-			//@TODO: Implement this
 			$query->clear();
-			$query->insert($db->qn('$__finder_links'));
-			$query->set($db->qn('url') . ' = ' . $db->quote($item->url));
-			$query->set($db->qn('route') . ' = ' . $db->quote($item->route));
-			$query->set($db->qn('title') . ' = ' . $db->quote($item->title));
-			$query->set($db->qn('description') . ' = ' . $db->quote($item->description));
-			$query->set($db->qn('indexdate') . ' = ' . $query->currentTimestamp());
-			$query->set($db->qn('published') . ' = 1');
-			$query->set($db->qn('state') . ' = ' . (int) $item->state);
-			$query->set($db->qn('access') . ' = ' . (int) $item->access);
-			$query->set($db->qn('language') . ' = ' . $db->quote($item->language));
-			$query->set($db->qn('type_id') . ' = ' . (int) $item->type_id);
-			$query->set($db->qn('object') . ' = ' . $db->quote(serialize($item)));
-			$query->set($db->qn('publish_start_date') . ' = ' . $db->quote($item->publish_start_date));
-			$query->set($db->qn('publish_end_date') . ' = ' . $db->quote($item->publish_end_date));
-			$query->set($db->qn('start_date') . ' = ' . $db->quote($item->start_date));
-			$query->set($db->qn('end_date') . ' = ' . $db->quote($item->end_date));
-			$query->set($db->qn('list_price') . ' = ' . $db->quote($item->list_price));
-			$query->set($db->qn('sale_price') . ' = ' . $db->quote($item->sale_price));
+			$query->insert($db->quoteName('#__finder_links'));
+			$query->columns($columnsArray);
+			$query->values(
+				$db->quote($item->url) . ', '
+				. $db->quote($item->route) . ', '
+				. $db->quote($item->title) . ', '
+				. $db->quote($item->description) . ', '
+				. $query->currentTimestamp() . ', '
+				. '1, '
+				. (int) $item->state . ', '
+				. (int) $item->access . ', '
+				. $db->quote($item->language) . ', '
+				. (int) $item->type_id . ', '
+				. $db->quote(serialize($item)) . ', '
+				. $db->quote($item->publish_start_date) . ', '
+				. $db->quote($item->publish_end_date) . ', '
+				. $db->quote($item->start_date) . ', '
+				. $db->quote($item->end_date) . ', '
+				. $db->quote($item->list_price) . ', '
+				. $db->quote($item->sale_price)
+			);
 			$db->setQuery($query);
-
-			/*$db->setQuery(
-				'INSERT INTO ' . $db->nameQuote('#__finder_links')
-				. ' SET url = ' . $db->quote($item->url)
-				. ', route = ' . $db->quote($item->route)
-				. ', title = ' . $db->quote($item->title)
-				. ', description = ' . $db->quote($item->description)
-				. ', indexdate = NOW()'
-				. ', published = 1'
-				. ', state = ' . (int) $item->state
-				. ', access = ' . (int) $item->access
-				. ', language = ' . $db->quote($item->language)
-				. ', type_id = ' . (int) $item->type_id
-				. ', object = ' . $db->quote(serialize($item))
-				. ', publish_start_date = ' . $db->quote($item->publish_start_date)
-				. ', publish_end_date = ' . $db->quote($item->publish_end_date)
-				. ', start_date = ' . $db->quote($item->start_date)
-				. ', end_date = ' . $db->quote($item->end_date)
-				. ', list_price = ' . $db->quote($item->list_price)
-				. ', sale_price = ' . $db->quote($item->sale_price)
-			);*/
 			$db->query();
 
 			// Check for a database error.
@@ -385,26 +368,6 @@ class FinderIndexer
 			$query->set($db->qn('sale_price') . ' = ' . $db->quote($item->sale_price));
 			$query->where('link_id = ' . (int) $linkId);
 			$db->setQuery($query);
-
-			/*$db->setQuery(
-				'UPDATE ' . $db->nameQuote('#__finder_links')
-				. ' SET route = ' . $db->quote($item->route)
-				. ', title = ' . $db->quote($item->title)
-				. ', description = ' . $db->quote($item->description)
-				. ', indexdate = NOW()'
-				. ', state = ' . (int) $item->state
-				. ', access = ' . (int) $item->access
-				. ', language = ' . $db->quote($item->language)
-				. ', type_id = ' . (int) $item->type_id
-				. ', object = ' . $db->quote(serialize($item))
-				. ', publish_start_date = ' . $db->quote($item->publish_start_date)
-				. ', publish_end_date = ' . $db->quote($item->publish_end_date)
-				. ', start_date = ' . $db->quote($item->start_date)
-				. ', end_date = ' . $db->quote($item->end_date)
-				. ', list_price = ' . $db->quote($item->list_price)
-				. ', sale_price = ' . $db->quote($item->sale_price)
-				. ' WHERE link_id = ' . (int) $linkId
-			);*/
 			$db->query();
 
 			// Check for a database error.
@@ -423,8 +386,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterLinking') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens'));
-		$db->query();
+		$db->truncateTable('#__finder_tokens');
 
 		// Check for a database error.
 		if ($db->getErrorNum())
@@ -434,8 +396,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens_aggregate'));
-		$db->query();
+		$db->truncateTable('#__finder_tokens_aggregate');
 
 		// Check for a database error.
 		if ($db->getErrorNum())
@@ -558,7 +519,7 @@ class FinderIndexer
 				'   WHERE t1.context = %d' .
 				' ) AS t1' .
 				' JOIN ' . $db->quoteName('#__finder_tokens') . ' AS t2 ON t2.term = t1.term' .
-				' LEFT JOIN ' . $db->quoteName('#__finder_terms')  . ' AS t ON t.term = t1.term' .
+				' LEFT JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = t1.term' .
 				' WHERE t2.context = %d' .
 				' GROUP BY t1.term' .
 				' ORDER BY t1.term DESC';
@@ -705,19 +666,13 @@ class FinderIndexer
 		 * so we need to go back and update the aggregate table with all the
 		 * new term ids.
 		 */
-		//@TODO: Convert to JDatabaseQuery
-		/*$query->clear();
-		$query->update('#__finder_tokens_aggregate AS ta');
-		$query->join('INNER', '#__finder_terms AS t ON t.term = ta.term');
+		//@TODO: PostgreSQL doesn't support JOINs on an UPDATE query
+		$query = $db->getQuery(true);
+		$query->update($db->quoteName('#__finder_tokens_aggregate') . ' AS ta');
+		$query->join('INNER', $db->quoteName('#__finder_terms') . ' AS t ON t.term = ta.term');
 		$query->set('ta.term_id = t.term_id');
 		$query->where('ta.term_id = 0');
-		$db->setQuery($query);*/
-		$db->setQuery(
-			'UPDATE ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
-			' JOIN ' . $db->quoteName('#__finder_terms') . ' AS t ON t.term = ta.term' .
-			' SET ta.term_id = t.term_id' .
-			' WHERE ta.term_id = 0'
-		);
+		$db->setQuery($query);
 		$db->query();
 
 		// Check for a database error.
@@ -735,7 +690,8 @@ class FinderIndexer
 		 * and the aggregate table has the correct term ids, we need to update
 		 * the links counter for each term by one.
 		 */
-		$query = $db->getQuery(true);
+		//@TODO: PostgreSQL doesn't support JOINs on an UPDATE query
+		$query->clear();
 		$query->update($db->quoteName('#__finder_terms') . ' AS t');
 		$query->join('INNER', $db->quoteName('#__finder_tokens_aggregate') . ' AS ta ON ta.term_id = t.term_id');
 		$query->set('t.' . $db->quoteName('links') . ' = t.links + 1');
@@ -834,8 +790,7 @@ class FinderIndexer
 		self::$profiler ? self::$profiler->mark('afterSigning') : null;
 
 		// Truncate the tokens tables.
-		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens'));
-		$db->query();
+		$db->truncateTable('#__finder_tokens');
 
 		// Check for a database error.
 		if ($db->getErrorNum())
@@ -845,8 +800,7 @@ class FinderIndexer
 		}
 
 		// Truncate the tokens aggregate table.
-		$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__finder_tokens_aggregate'));
-		$db->query();
+		$db->truncateTable('#__finder_tokens_aggregate');
 
 		// Check for a database error.
 		if ($db->getErrorNum())
@@ -886,17 +840,12 @@ class FinderIndexer
 		for ($i = 0; $i <= 15; $i++)
 		{
 			// Update the link counts for the terms.
-			//@TODO: The join clause isn't setting the join properly for some reason, debug later
-			//$query->clear();
-			//$query->update($db->quoteName('#__finder_terms') . ' AS t');
-			//$query->join('INNER', $db->quoteName('#__finder_links_terms' . dechex($i)) . ' AS m ON m.term_id = t.term_id');
-			//$query->set($db->quoteName('t.links') . ' = ' . $db->quoteName('t.links') . ' - 1');
-			//$query->where($db->quoteName('m.link_id') . ' = ' . (int) $linkId);
-			$sql = 'UPDATE ' . $db->quoteName('#__finder_terms') . ' AS t' .
-					' INNER JOIN ' . $db->quoteName('#__finder_links_terms' . dechex($i)) . ' AS m ON m.term_id = t.term_id' .
-					' SET t.' . $db->quoteName('links') . ' = t.' . $db->quoteName('links') . ' - 1' .
-					' WHERE m.' . $db->quoteName('link_id') . ' = ' . (int) $linkId;
-			$db->setQuery($sql);
+			//@TODO: PostgreSQL doesn't support JOINs on a UPDATE query
+			$query->update($db->quoteName('#__finder_terms') . ' AS t');
+			$query->join('INNER', $db->quoteName('#__finder_links_terms' . dechex($i)) . ' AS m ON m.term_id = t.term_id');
+			$query->set('t.' . $db->quoteName('links') . ' = t.' . $db->quoteName('links') . ' - 1');
+			$query->where('m.' . $db->quoteName('link_id') . ' = ' . (int) $linkId);
+			$db->setQuery($query);
 			$db->query();
 
 			// Check for a database error.
@@ -995,21 +944,10 @@ class FinderIndexer
 
 		// Optimize the links table.
 		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
-		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links'));
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
+		// Temporary workaround for non-MySQL solutions
+		if (strpos($db->name, 'mysql') === 0)
 		{
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
-		}
-
-		for ($i = 0; $i <= 15; $i++)
-		{
-			// Optimize the terms mapping table.
-			//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
-			$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms' . dechex($i)));
+			$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links'));
 			$db->query();
 
 			// Check for a database error.
@@ -1020,16 +958,39 @@ class FinderIndexer
 			}
 		}
 
+		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
+		// Temporary workaround for non-MySQL solutions
+		if (strpos($db->name, 'mysql') === 0)
+		{
+			for ($i = 0; $i <= 15; $i++)
+			{
+				// Optimize the terms mapping table.
+				$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms' . dechex($i)));
+				$db->query();
+
+				// Check for a database error.
+				if ($db->getErrorNum())
+				{
+					// Throw database error exception.
+					throw new Exception($db->getErrorMsg(), 500);
+				}
+			}
+		}
+
 		// Optimize the terms mapping table.
 		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
-		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms'));
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
+		// Temporary workaround for non-MySQL solutions
+		if (strpos($db->name, 'mysql') === 0)
 		{
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
+			$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_links_terms'));
+			$db->query();
+
+			// Check for a database error.
+			if ($db->getErrorNum())
+			{
+				// Throw database error exception.
+				throw new Exception($db->getErrorMsg(), 500);
+			}
 		}
 
 		// Remove the orphaned taxonomy nodes.
@@ -1037,14 +998,18 @@ class FinderIndexer
 
 		// Optimize the taxonomy mapping table.
 		//@TODO: PostgreSQL doesn't support OPTIMIZE TABLE
-		$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_taxonomy_map'));
-		$db->query();
-
-		// Check for a database error.
-		if ($db->getErrorNum())
+		// Temporary workaround for non-MySQL solutions
+		if (strpos($db->name, 'mysql') === 0)
 		{
-			// Throw database error exception.
-			throw new Exception($db->getErrorMsg(), 500);
+			$db->setQuery('OPTIMIZE TABLE ' . $db->quoteName('#__finder_taxonomy_map'));
+			$db->query();
+
+			// Check for a database error.
+			if ($db->getErrorNum())
+			{
+				// Throw database error exception.
+				throw new Exception($db->getErrorMsg(), 500);
+			}
 		}
 
 		return true;
@@ -1248,27 +1213,35 @@ class FinderIndexer
 		// Force tokens to an array.
 		$tokens = is_array($tokens) ? $tokens : array($tokens);
 
-		// Create an array of token values.
-		$values = array();
+		// Count the number of token values.
+		$values = 0;
 
 		// Iterate through the tokens to create SQL value sets.
 		foreach ($tokens as $token)
 		{
 			$query->values(
-				$db->quote($token->term) . ', ' . $db->quote($token->stem) . ', ' . (int) $token->common .
-				', ' . (int) $token->phrase . ', ' . (float) $token->weight . ', ' . (int) $context
+				$db->quote($token->term) . ', '
+				. $db->quote($token->stem) . ', '
+				. (int) $token->common . ', '
+				. (int) $token->phrase . ', '
+				. (float) $token->weight . ', '
+				. (int) $context
 			);
+			$values++;
 		}
 
 		// Insert the tokens into the database.
 		$query->insert($db->quoteName('#__finder_tokens'));
-		$query->columns($db->quoteName('term'));
-		$query->columns($db->quoteName('stem'));
-		$query->columns($db->quoteName('common'));
-		$query->columns($db->quoteName('phrase'));
-		$query->columns($db->quoteName('weight'));
-		$query->columns($db->quoteName('context'));
-
+		$query->columns(
+					array(
+						$db->quoteName('term'),
+						$db->quoteName('stem'),
+						$db->quoteName('common'),
+						$db->quoteName('phrase'),
+						$db->quoteName('weight'),
+						$db->quoteName('context')
+					)
+		);
 		$db->setQuery($query);
 		$db->query();
 
@@ -1300,7 +1273,12 @@ class FinderIndexer
 
 		// Get the database adapter.
 		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
+
+		// Temporary workaround for non-MySQL solutions
+		if (strpos($db->name, 'mysql') !== 0)
+		{
+			return true;
+		}
 
 		// Check if we are setting the tables to the Memory engine.
 		if ($memory === true && $state !== true)

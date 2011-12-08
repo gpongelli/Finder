@@ -20,6 +20,11 @@ jimport('joomla.application.component.view');
  */
 class FinderViewSearch extends JView
 {
+	protected $query;
+	protected $params;
+	protected $state;
+	protected $user;
+
 	/**
 	 * Method to display the view.
 	 *
@@ -208,6 +213,11 @@ class FinderViewSearch extends JView
 		}
 
 		$this->document->setTitle($title);
+
+		if ($layout = $this->params->get('article_layout'))
+		{
+			$this->setLayout($layout);
+		}
 
 		// Configure the document meta-description.
 		if (!empty($this->explained))

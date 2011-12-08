@@ -309,13 +309,11 @@ class FinderModelSearch extends JModelList
 			}
 		}
 
-		// Note that the old code is left commented intentionally.
 		// Push the data into cache.
-		//$this->store($store, $query, false);
-		// Return a copy of the query object.
-		return clone($query);
+		$this->store($store, $query, false);
 
-		//return clone($this->retrieve($store, false));
+		// Return a copy of the query object.
+		return clone($this->retrieve($store, false));
 	}
 
 	/**
@@ -428,13 +426,9 @@ class FinderModelSearch extends JModelList
 				{
 					$temp = $this->retrieve($setId);
 				}
-					// Load the data from the database.
+				// Load the data from the database.
 				else
 				{
-					// Get the base query and add the ordering information.
-					$base = $this->getListQuery();
-					$base->select('0 AS ordering');
-
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
 					$sql->join('INNER', '#__finder_links_terms' . $suffix . ' AS m ON m.link_id = l.link_id');
@@ -552,10 +546,6 @@ class FinderModelSearch extends JModelList
 					{
 						// Get the map table suffix.
 						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
-
-						// Get the base query and add the ordering information.
-						$base = $this->getListQuery();
-						$base->select('0 AS ordering');
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
@@ -735,14 +725,9 @@ class FinderModelSearch extends JModelList
 				{
 					$temp = $this->retrieve($setId);
 				}
-					// Load the data from the database.
+				// Load the data from the database.
 				else
 				{
-
-					// Get the base query and add the ordering information.
-					$base = $this->getListQuery();
-					$base->select('0 AS ordering');
-
 					// Adjust the query to join on the appropriate mapping table.
 					$sql = clone($base);
 					$sql->join('INNER', $this->_db->quoteName('#__finder_links_terms' . $suffix) . ' AS m ON m.link_id = l.link_id');
@@ -879,7 +864,6 @@ class FinderModelSearch extends JModelList
 			 * current terms which means we would have to loop through all of
 			 * the possibilities.
 			 */
-			//@TODO: In this foreach is where multi-word searches are failing
 			foreach ($this->requiredTerms as $token => $required)
 			{
 				// Create a storage key for this set.
@@ -907,10 +891,6 @@ class FinderModelSearch extends JModelList
 					{
 						// Get the map table suffix.
 						$suffix = JString::substr(md5(JString::substr($token, 0, 1)), 0, 1);
-
-						// Get the base query and add the ordering information.
-						$base = $this->getListQuery();
-						$base->select('0 AS ordering');
 
 						// Adjust the query to join on the appropriate mapping table.
 						$sql = clone($base);
@@ -958,6 +938,7 @@ class FinderModelSearch extends JModelList
 				continue;
 			}
 			// Otherwise, end the loop.
+			else
 			{
 				// Set the found items.
 				$items = $sorted;
@@ -1155,7 +1136,6 @@ class FinderModelSearch extends JModelList
 		}
 
 		// Initialize variables.
-		//$request = JRequest::get('request');
 		$request = $input->request;
 		$options = array();
 
@@ -1164,7 +1144,7 @@ class FinderModelSearch extends JModelList
 		$options['input'] = $filter->clean($options['input'], 'string');
 
 		// Get the empty query setting.
-		$options['empty'] = $params->get('allow_emptyquery', 0);
+		$options['empty'] = $params->get('allow_empty_query', 0);
 
 		// Get the query language.
 		$options['language'] = !is_null($request->get('l')) ? $request->get('l', '', 'cmd') : $params->get('l');
@@ -1265,9 +1245,9 @@ class FinderModelSearch extends JModelList
 		$data = null;
 
 		// Use the internal cache if possible.
-		if (isset($this->_cache[$id]))
+		if (isset($this->cache[$id]))
 		{
-			return $this->_cache[$id];
+			return $this->cache[$id];
 		}
 
 		// Use the external cache if data is persistent.
@@ -1280,7 +1260,7 @@ class FinderModelSearch extends JModelList
 		// Store the data in internal cache.
 		if ($data)
 		{
-			$this->_cache[$id] = $data;
+			$this->cache[$id] = $data;
 		}
 
 		return $data;
@@ -1300,7 +1280,7 @@ class FinderModelSearch extends JModelList
 	protected function store($id, $data, $persistent = true)
 	{
 		// Store the data in internal cache.
-		$this->_cache[$id] = $data;
+		$this->cache[$id] = $data;
 
 		// Store the data in external cache if data is persistent.
 		if ($persistent)

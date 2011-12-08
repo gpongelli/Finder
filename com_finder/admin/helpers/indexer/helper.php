@@ -278,7 +278,8 @@ class FinderIndexerHelper
 
 		// Add the type.
 		$query->clear();
-		$query->insert($db->quoteName('#__finder_types') . ' (' . $db->quoteName('title') . ', ' . $db->quoteName('mime') . ')');
+		$query->insert($db->quoteName('#__finder_types'));
+		$query->columns(array($db->quoteName('title'), $db->quoteName('mime')));
 		$query->values($db->quote($title) . ', ' . $db->quote($mime));
 		$db->setQuery($query);
 		$db->query();
@@ -495,9 +496,39 @@ class FinderIndexerHelper
 	 */
 	public static function prepareContent($text, $params = null)
 	{
+		static $loaded;
+
 		// Get the dispatcher.
 		$dispatcher = JDispatcher::getInstance();
-		JPluginHelper::importPlugin('content');
+
+		// Load the content plugins if necessary and remove any problematic ones.
+		if (empty($loaded))
+		{
+			JPluginHelper::importPlugin('content');
+			$loaded = true;
+
+			// Create an array of problematic plugins
+			$conflicts = array('plgContentEmailCloak', 'plgContentLoadmodule');
+
+			// Check if we can access the observers
+			if (isset($dispatcher->_observers))
+			{
+				// Remove problematic plugins.
+				foreach ($dispatcher->_observers as $key => $handler)
+				{
+					// Remove any function based event handlers that conflict with Finder.
+					if (is_array($handler) && isset($handler['handler']) && in_array($handler['handler'], $conflicts))
+					{
+						unset($dispatcher->_observers[$key]);
+					}
+					// Remove any object based event handlers that conflict with Finder.
+					elseif (is_object($handler) && method_exists($handler, 'update') && in_array(get_class($handler), $conflicts))
+					{
+						unset($dispatcher->_observers[$key]);
+					}
+				}
+			}
+		}
 
 		// Instantiate the parameter object if necessary.
 		if (!($params instanceof JRegistry))
