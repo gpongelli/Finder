@@ -572,6 +572,7 @@ class FinderIndexer
 		// Check for a database error.
 		if ($db->getErrorNum())
 		{
+			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
 			$query->clear();
 			$query->select('ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)')
 					->from($db->quoteName('#__finder_tokens_aggregate') . ' AS ta')
@@ -622,23 +623,6 @@ class FinderIndexer
 
 			$db->setQuery($quRepl_p2);
 			$db->query();
-
-			//@TODO: PostgreSQL doesn't support REPLACE INTO
-			//@TODO: PostgreSQL doesn't support SOUNDEX out of the box
-			/*$db->setQuery(
-				'REPLACE INTO ' . $db->quoteName('#__finder_terms') .
-				' (' . $db->quoteName('term') .
-				', ' . $db->quoteName('stem') .
-				', ' . $db->quoteName('common') .
-				', ' . $db->quoteName('phrase') .
-				', ' . $db->quoteName('weight') .
-				', ' . $db->quoteName('soundex') . ')' .
-				' SELECT ta.term, ta.stem, ta.common, ta.phrase, ta.term_weight, SOUNDEX(ta.term)' .
-				' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
-				' WHERE ta.term_id = 0' .
-				' GROUP BY ta.term'
-			);
-			$db->query();*/
 
 			// Check for a database error.
 			if ($db->getErrorNum())
