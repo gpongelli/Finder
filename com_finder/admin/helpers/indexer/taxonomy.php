@@ -235,14 +235,6 @@ class FinderIndexerTaxonomy
 		$db->setQuery($queryRepl_p2);
 		$db->query();
 
-		//@TODO: PostgreSQL doesn't support REPLACE INTO
-/*		$db->setQuery(
-			'REPLACE INTO ' . $db->quoteName('#__finder_taxonomy_map') . ' SET' .
-			$db->quoteName('link_id') . ' = ' . (int) $linkId . ',' .
-			$db->quoteName('node_id') . ' = ' . (int) $nodeId
-		);
-		$db->query();*/
-
 		// Check for a database error.
 		if ($db->getErrorNum())
 		{
