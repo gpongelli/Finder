@@ -1040,7 +1040,7 @@ CREATE TABLE "#__finder_tokens_aggregate" (
   "total_weight" numeric(8,2) NOT NULL
 );
 CREATE INDEX "#__finder_tokens_aggregate_token" on "#__finder_tokens_aggregate" ("term");
-CREATE INDEX "_#__finder_tokens_aggregatekeyword_id" on "#__finder_tokens_aggregate" ("term_id");
+CREATE INDEX "_#__finder_tokens_aggregate_keyword_id" on "#__finder_tokens_aggregate" ("term_id");
 
 --
 -- Table: #__finder_types
